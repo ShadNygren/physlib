@@ -1186,6 +1186,34 @@ theorem sandwichedRelRentropy_nonneg {α : ℝ} (hα : 0 < α) (h : σ.M.ker ≤
   · have : α < 1 := by push Not at hα₂; exact lt_of_le_of_ne hα₂ h1
     exact sandwichedRelRentropy_nonneg_α_lt_1 h hα this
 
+/-- Klein-gap form of the relative-entropy pairing: `⟪ρ, log ρ − log σ⟫` is exactly the gap
+in Klein's inequality for the von Neumann entropy, i.e. the amount by which the tangent-line
+expansion of `Sᵥₙ` around `σ` (with slope function `t ↦ -(Real.log t + 1)`, the derivative
+of `Real.negMulLog`) overshoots `Sᵥₙ ρ`. -/
+lemma inner_log_sub_log_eq_klein_gap (ρ σ : MState d) :
+    ⟪ρ.M, ρ.M.log - σ.M.log⟫ =
+      Sᵥₙ σ + ⟪σ.M.cfc (fun t ↦ -(Real.log t + 1)), ρ.M - σ.M⟫ - Sᵥₙ ρ := by
+  rw [HermitianMat.cfc_neg_log_add_one, Sᵥₙ_eq_neg_trace_log, Sᵥₙ_eq_neg_trace_log,
+    HermitianMat.inner_neg_left, HermitianMat.inner_add_left, HermitianMat.one_inner,
+    HermitianMat.trace_sub, ρ.tr, σ.tr, HermitianMat.inner_sub_left,
+    HermitianMat.inner_sub_left, HermitianMat.inner_comm ρ.M ρ.M.log,
+    HermitianMat.inner_comm ρ.M σ.M.log]
+  ring
+
+/-- Nonnegativity of the relative-entropy pairing for positive definite `σ`, proved
+*elementarily*: Klein's inequality `HermitianMat.klein_of_tangent` for `Real.negMulLog`
+(via the tangent bound `Real.negMulLog_le_tangent`) says the Klein gap is nonnegative, and
+by `inner_log_sub_log_eq_klein_gap` that gap is `⟪ρ, log ρ − log σ⟫`. This is a special
+case of `inner_log_sub_log_nonneg` (positive definiteness gives `σ.M.ker = ⊥`), which is
+instead proved through sandwiched Rényi entropy limits. -/
+lemma inner_log_sub_log_nonneg_of_posDef (hσ : σ.M.mat.PosDef) :
+    0 ≤ ⟪ρ.M, ρ.M.log - σ.M.log⟫ := by
+  have hK := HermitianMat.klein_of_tangent Real.negMulLog (fun t ↦ -(Real.log t + 1))
+    ρ.M σ.M ρ.nonneg hσ fun x hx y hy ↦ Real.negMulLog_le_tangent hx hy
+  rw [← Sᵥₙ_eq_trace_cfc_negMulLog, ← Sᵥₙ_eq_trace_cfc_negMulLog] at hK
+  rw [inner_log_sub_log_eq_klein_gap]
+  linarith
+
 section additivity
 
 --TODO Cleanup. Ugh.
