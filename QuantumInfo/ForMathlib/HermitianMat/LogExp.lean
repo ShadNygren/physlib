@@ -125,6 +125,12 @@ theorem log_zero : (0 : HermitianMat d 𝕜).log = 0 := by
 theorem log_one : (1 : HermitianMat d 𝕜).log = 0 := by
   simp [log]
 
+/-- `cfc` of the tangent-slope function `t ↦ -(Real.log t + 1)` (the derivative of
+`Real.negMulLog`) in terms of the matrix logarithm. -/
+lemma cfc_neg_log_add_one (A : HermitianMat d 𝕜) :
+    A.cfc (fun t ↦ -(Real.log t + 1)) = -(A.log + 1) := by
+  rw [cfc_neg_apply, cfc_add_apply, cfc_const, one_smul, log]
+
 theorem log_smul_of_pos (A : HermitianMat d 𝕜) (hx : x ≠ 0) :
     (x • A).log = Real.log x • A.supportProj + A.log := by
   ext1

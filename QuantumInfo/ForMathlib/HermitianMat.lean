@@ -8,6 +8,7 @@ module
 public import QuantumInfo.ForMathlib.HermitianMat.Basic
 public import QuantumInfo.ForMathlib.HermitianMat.CFC
 public import QuantumInfo.ForMathlib.HermitianMat.Inner
+public import QuantumInfo.ForMathlib.HermitianMat.Klein
 public import QuantumInfo.ForMathlib.HermitianMat.LiebConcavity
 public import QuantumInfo.ForMathlib.HermitianMat.LogExp
 public import QuantumInfo.ForMathlib.HermitianMat.Order
