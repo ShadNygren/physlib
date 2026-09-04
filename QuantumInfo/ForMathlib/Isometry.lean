@@ -283,6 +283,21 @@ theorem Matrix.cfc_reindex (f : ℝ → ℝ) (e : d ≃ d₂) :
   · rw [conjTranspose_reindex, conjTranspose_one]
     apply reindex_one_isometry
 
+/-- If each column of a unitary matrix `U` is an eigenvector of `M`, with eigenvalue `μ j` for
+column `j`, then `M` is the conjugate of `diagonal μ` by `U`. -/
+lemma Matrix.eq_mul_diagonal_mul_star_of_mulVec_transpose {M U : Matrix d d R}
+    (hU : U ∈ Matrix.unitaryGroup d R) {μ : d → R}
+    (h : ∀ j, M *ᵥ Uᵀ j = μ j • Uᵀ j) :
+    M = U * Matrix.diagonal μ * star U := by
+  have h1 : M * U = U * Matrix.diagonal μ := by
+    ext i j
+    have hij : ∑ k, M i k * U k j = μ j * U i j := by
+      simpa [Matrix.mulVec, dotProduct] using congrFun (h j) i
+    rw [Matrix.mul_apply, Matrix.mul_diagonal, hij, mul_comm]
+  calc M = M * (U * star U) := by rw [Matrix.mem_unitaryGroup_iff.mp hU, mul_one]
+    _ = M * U * star U := by rw [mul_assoc]
+    _ = U * Matrix.diagonal μ * star U := by rw [h1]
+
 theorem Matrix.commute_euclideanLin (hAB : Commute A B) :
     Commute A.toEuclideanLin B.toEuclideanLin := by
   rw [commute_iff_eq] at hAB ⊢
@@ -583,6 +598,32 @@ theorem star_shared_mul_B_mul_IsDiag : IsDiag
     simp_all [ mul_comm, Finset.mul_sum];
     rw [ Finset.sum_comm ]
     simp_all [ mul_assoc, mul_left_comm] ;
+
+/-- Analogous to `Matrix.IsHermitian.spectral_theorem` for the shared basis: `A` is the
+conjugate of the real diagonal matrix of `sharedEigenvalueA` by `sharedEigenvectorUnitary`. -/
+lemma spectral_theoremA :
+    A = (sharedEigenvectorUnitary hA hB hAB).val *
+      Matrix.diagonal (RCLike.ofReal ∘ sharedEigenvalueA hA hB hAB) *
+      star (sharedEigenvectorUnitary hA hB hAB).val := by
+  refine eq_mul_diagonal_mul_star_of_mulVec_transpose (sharedEigenvectorUnitary hA hB hAB).2
+    fun j => ?_
+  have hcol : ((sharedEigenvectorUnitary hA hB hAB).val)ᵀ j =
+      WithLp.ofLp (sharedEigenbasis hA hB hAB j) := funext fun i => rfl
+  rw [hcol, Function.comp_apply, ← RCLike.real_smul_eq_coe_smul]
+  exact mulVec_sharedEigenbasisA hA hB hAB j
+
+/-- Analogous to `Matrix.IsHermitian.spectral_theorem` for the shared basis: `B` is the
+conjugate of the real diagonal matrix of `sharedEigenvalueB` by `sharedEigenvectorUnitary`. -/
+lemma spectral_theoremB :
+    B = (sharedEigenvectorUnitary hA hB hAB).val *
+      Matrix.diagonal (RCLike.ofReal ∘ sharedEigenvalueB hA hB hAB) *
+      star (sharedEigenvectorUnitary hA hB hAB).val := by
+  refine eq_mul_diagonal_mul_star_of_mulVec_transpose (sharedEigenvectorUnitary hA hB hAB).2
+    fun j => ?_
+  have hcol : ((sharedEigenvectorUnitary hA hB hAB).val)ᵀ j =
+      WithLp.ofLp (sharedEigenbasis hA hB hAB j) := funext fun i => rfl
+  rw [hcol, Function.comp_apply, ← RCLike.real_smul_eq_coe_smul]
+  exact mulVec_sharedEigenbasisB hA hB hAB j
 
 end Matrix.SharedEigenbasis
 

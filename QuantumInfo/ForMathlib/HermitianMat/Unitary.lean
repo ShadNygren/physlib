@@ -112,4 +112,20 @@ theorem eigenvalues_conj : (A.conj U.val).H.eigenvalues = A.H.eigenvalues := by
   change (U.val * A.mat * star U.val).charpoly = _
   rw [Matrix.charpoly_mul_comm, ← mul_assoc, U.2.1, one_mul]
 
+/-- Simultaneous unitary diagonalization: two commuting Hermitian matrices are conjugates of
+real diagonal matrices by a *common* unitary. Compare `HermitianMat.eq_conj_diagonal` for a
+single matrix, and `Commute.exists_unitary` for the `Matrix.IsDiag` version of this fact. -/
+lemma exists_conj_diagonal_of_commute (hAB : Commute A.mat B.mat) :
+    ∃ (U : Matrix.unitaryGroup n 𝕜) (v w : n → ℝ),
+      A = (diagonal 𝕜 v).conj U.val ∧ B = (diagonal 𝕜 w).conj U.val := by
+  refine ⟨Matrix.sharedEigenvectorUnitary A.H B.H hAB,
+    Matrix.SharedEigenbasis.sharedEigenvalueA A.H B.H hAB,
+    Matrix.SharedEigenbasis.sharedEigenvalueB A.H B.H hAB, ?_, ?_⟩
+  · ext1
+    rw [conj_apply_mat, diagonal_mat, ← Matrix.star_eq_conjTranspose]
+    exact Matrix.SharedEigenbasis.spectral_theoremA A.H B.H hAB
+  · ext1
+    rw [conj_apply_mat, diagonal_mat, ← Matrix.star_eq_conjTranspose]
+    exact Matrix.SharedEigenbasis.spectral_theoremB A.H B.H hAB
+
 end HermitianMat
