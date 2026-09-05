@@ -16,13 +16,18 @@ information** (MMI, `I₃ ≤ 0`) in it.
 
 ## Why this model
 
-For a *general* min-cut on an *arbitrary* graph, MMI reduces to an irreducible
-≥3-commodity max-flow packing problem (a genuine flow–cut gap — a proven wall).  But
-the physically relevant case, AdS₃/CFT₂, is special: the boundary is a **circle**,
+The physically relevant case, AdS₃/CFT₂, is special: the boundary is a **circle**,
 regions are **arcs** (intervals), and RT surfaces are **non-crossing geodesic chords**
-of a planar disk.  In this laminar setting MMI is not a flow-packing theorem; it is a
-**combinatorial fact about non-crossing chords together with a metric (“uncrossing”)
-property of geodesic lengths**.
+of a planar disk.  In this laminar setting MMI has a clean combinatorial proof: it is a
+**fact about non-crossing chords together with a metric (“uncrossing”) property of
+geodesic lengths**, established directly here without any flow machinery.
+
+(Scope note: this file makes no claim about — and does not depend on any claim about —
+whether MMI in a *general* weighted-graph min-cut model requires multicommodity flow.
+For the undirected min-cut model MMI in fact admits a universal fixed cut certificate
+via the disjoint atoms `(X∩Y)\Z, (X∩Z)\Y, (Y∩Z)\X, X∪Y∪Z`.  The interval/laminar route
+below is a self-contained, geometry-specific proof, not a rescue from a general-graph
+obstruction.)
 
 ## The model (`Point`, `Between`, `Crosses`, `NonCrossing`, `Uncrossing`, `S`)
 
@@ -6147,8 +6152,11 @@ ENGINE (item 10, termination included), and the **disconnected-regime** general 
   unconditional), whose single-interval (−1), two-arc (−3) and connected-pairs (−5) instances are
   already exhibited (items 7, 8, 15).
 
-The honest tractability verdict: the interval/laminar model **dissolves the
-multicommodity wall**.  The model, the strict instances (single-interval **and**
+The honest tractability verdict: the interval/laminar model gives a clean, flow-free MMI
+proof (it never needs multicommodity flow).  This is a statement about *this* proof route;
+it is not a claim that the general undirected min-cut model requires flow — that model has a
+fixed cut certificate via disjoint atoms (see the scope note in the module header).  The
+model, the strict instances (single-interval **and**
 two-arc), the uncrossing move (bare, list-level, and at-any-position), a general
 recombination theorem (subadditivity), **the general MMI assembly theorem
 `mmi_of_recombination`, fully general single-interval MMI `general_single_interval_mmi`, a
@@ -6165,8 +6173,8 @@ disconnected pairs, and the direct-inequality `weight_bound_mmi` for ≤ 1 disco
 fully-general uncrossing engine (termination included), and `recomb_of_uncrossing_chain(_le)` in
 hand — to the finite overlay path/cycle chord bookkeeping above (a chord-bag `Perm` for the
 former, an `Uncrossing`-chain weight bound for the latter), which is *not* a flow-packing
-statement (there is no flow, only chord re-pairing), so the wall that blocked the general-graph
-development does not recur here.  Fully-unconditional multi-arc MMI now needs only the MULTI-ARC
+statement (there is no flow, only chord re-pairing), so the ≥3-commodity flow route that
+obstructed the *flow-based* general-graph development is simply not invoked here.  Fully-unconditional multi-arc MMI now needs only the MULTI-ARC
 supply of that `Uncrossing`-chain weight bound (single intervals and a ≥ 2-connected instance
 are already discharged).
 
