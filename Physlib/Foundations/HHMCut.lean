@@ -10,21 +10,30 @@ public import Mathlib
 /-!
 # The minimality-based (Hayden–Headrick–Maloney) cut route to holographic MMI
 
-This file investigates **Direction #3** of the MMI programme: whether the *true* HHM
-minimality-based cut recombination closes Monogamy of Mutual Information (MMI, `I₃ ≤ 0`) for
-**general finite weighted graphs**, or whether it only ever refuted a strawman.
+This file studies which *fixed* cut-recombination formulas certify Monogamy of Mutual Information
+(MMI, `I₃ ≤ 0`) in a cut model, and exhibits a specific formula — the **symmetric** family
+`(X∩Y, X∩Z, Y∩Z, X∪Y∪Z)` — that provably fails on true min cuts.
+
+Scope caveat (do not over-read the results below): the *undirected*-graph min-cut model does admit
+a universal fixed certificate for MMI, namely the disjoint atoms
+`A' = (X∩Y)\Z`, `B' = (X∩Z)\Y`, `C' = (Y∩Z)\X`, `U' = X∪Y∪Z`, with no planarity or
+multicommodity-flow hypothesis.  The failure results here are therefore about (i) the *symmetric*
+(non-disjoint) recombination formula specifically, which double-counts the triple-overlap cell, and
+(ii) the *directed*-indicator / searched move-system variants noted in the module note — **not** a
+general impossibility of a fixed certificate for undirected holographic MMI.
 
 ## The model (self-contained; no cross-branch imports)
 
 A finite weighted graph on vertex set `Fin n`, given by an edge-weight function
 `w : Fin n → Fin n → ℕ`.  A **cut** is a set `S : Finset (Fin n)` of vertices; its
-`bulkCutCapacity` is the total weight of ordered pairs crossing out of `S` (with a symmetric `w`
-this is the standard undirected cut value; we do not even need symmetry for the results below).
+`bulkCutCapacity` is the total weight of ordered pairs crossing out of `S`.  Note this is the
+*directed* crossing count (each undirected edge contributes only in the direction that leaves `S`);
+for a symmetric `w` and complementary-style cuts it agrees with the standard undirected cut value.
 For a boundary region the **RT entropy** `rtEntropy` is the minimum of `bulkCutCapacity` over
 admissible cuts.  We reprove the two cut-world facts we need: submodularity of `bulkCutCapacity`
 and the achieved-minimum bound (*minimality*).
 
-## The headline results and the VERDICT
+## The headline results
 
 * `bulkCutCapacity_submodular` — the cut function is submodular (a genuine, uniform fact),
   proved from a per-ordered-pair submodular inequality.
@@ -34,20 +43,25 @@ and the achieved-minimum bound (*minimality*).
   This is the only place minimality enters.
 * `symmetricRecombination_fails` — a **machine-checked counterexample** (a `Fin 5` weighted graph)
   where `X,Y,Z` are the *actual pair min cuts* yet the *symmetric* candidate family
-  `(X∩Y, X∩Z, Y∩Z, X∪Y∪Z)` has total capacity `18 > 11 = cut X + cut Y + cut Z`.  So the symmetric
-  recombination does **not** close MMI even with minimality.
-* `pointwise_submodular_recombination_false` — the underlying set-function inequality is false for
+  `(X∩Y, X∩Z, Y∩Z, X∪Y∪Z)` has total capacity `18 > 11 = cut X + cut Y + cut Z`.  So the *symmetric*
+  recombination does **not** close MMI even with minimality (the disjoint-atom family does; see the
+  scope caveat above).
+* `pointwise_submodular_recombination_false` — the *symmetric* set-function inequality is false for
   the cut function `f` on `Fin 3` (`3 > 2`), strengthening the arbitrary-set refutation to an
-  explicit cut submodular `f`.
+  explicit cut submodular `f`.  (This refutes the symmetric non-disjoint formula, not the disjoint
+  atoms.)
 * `mmiWitness_slack_pos` — a strict, non-vacuous MMI witness (a `Fin 6` two-hub graph with
   `I₃`-slack `= 4 > 0`), machine-checked, so the reduction target is not vacuous.
 
-### VERDICT
+### What is and is not established
 
-The minimality-based cut recombination does **NOT** close MMI for general graphs via any *fixed*
-recombination formula.  The symmetric family provably fails on true min cuts.  Machine search (see
-the trailing note) shows *some* boolean recombination always suffices, but the winning one is
-**graph-dependent** — no uniform submodular certificate exists.
+The *symmetric* cut recombination does **not** close MMI: it provably fails on true min cuts
+(`symmetricRecombination_fails`).  This is a statement about that one non-disjoint formula, not an
+obstruction to every fixed formula: the disjoint atoms `(X∩Y)\Z, (X∩Z)\Y, (Y∩Z)\X, X∪Y∪Z` do
+certify undirected MMI uniformly.  The move-system search reported in the module note explores the
+*directed*-indicator variants and specific reglue families and locates where those searched families
+fail; read those percentages as properties of the searched directed variants, not of the undirected
+holographic model.
 -/
 
 @[expose] public section
@@ -269,7 +283,7 @@ theorem mmiWitness_symmetric_tight :
   decide
 
 /-!
-## Module note — the decisive verdict (prose; no `sorry` needed for the code above)
+## Module note — scope of the failure results (prose; no `sorry` needed for the code above)
 
 **Setup recap.** With pair min cuts `X = r(AB)`, `Y = r(AC)`, `Z = r(BC)`, minimality
 (`rtEntropy_le_of_mem`) lets any admissible candidate upper-bound an RT entropy, and
@@ -278,10 +292,14 @@ capacity `≤ cut X + cut Y + cut Z`.  Minimality is the *only* nontrivial input
 step itself is a pure inequality between capacities of sets built from `X, Y, Z`.
 
 **Machine investigation (Python, exhaustive small-graph min cuts; see the branch's probe scripts).**
+The searched cut model here uses the *directed* crossing indicator `bulkCutCapacity`; percentages
+below are properties of that searched model and its move systems, not of the undirected holographic
+min-cut model.
 
-1. *Pointwise route is dead even for cut `f`* (`pointwise_submodular_recombination_false`): the
-   symmetric set-function inequality fails for the submodular cut function itself (`3 > 2`),
-   sharpening the arbitrary-set version to an explicit cut function.
+1. *The symmetric non-disjoint set-function inequality is false even for a cut `f`*
+   (`pointwise_submodular_recombination_false`): the symmetric family
+   `(X∩Y, X∩Z, Y∩Z, X∪Y∪Z)` fails the set-function inequality for the submodular cut function
+   itself (`3 > 2`).  This refutes that specific non-disjoint formula, not every fixed formula.
 
 2. *Symmetric recombination fails on TRUE min cuts* (`symmetricRecombination_fails`): a `Fin 5`
    graph where `X, Y, Z` are the exhaustively-verified pair min cuts but
@@ -293,39 +311,33 @@ step itself is a pure inequality between capacities of sets built from `X, Y, Z`
    `S_AB+S_AC+S_BC ≥ S_A+S_B+S_C+S_ABC` was found (the known HHM theorem), and a strict witness
    exists (`mmiWitness_slack_pos`, slack `4`).
 
-4. *Some boolean recombination always suffices, but it is GRAPH-DEPENDENT.*  Minimising, per region,
-   over all boolean combinations of `X, Y, Z` (the "local reglue" the RT surfaces allow), the total
-   `Σ min_bool` never exceeded `cut X + cut Y + cut Z` in ~2·10⁵ graphs (all four regions were always
-   realisable as boolean combos).  **But no single fixed formula works:** the dominant optimal
-   assignment — pairwise atoms `cA=(X∩Y)\Z, cB=(X∩Z)\Y, cC=(Y∩Z)\X, cABC=cA∪cB∪cC`, which
-   *excludes the triple-overlap cell* `X∩Y∩Z` — still fails on ≈ 19 % of min-cut instances, and the
-   arbitrary-set version fails ≈ 30 %.  Which boolean recombination wins is selected by the edge
-   weights (minimality), not by a uniform rule.
+4. *The disjoint-atom formula is the right fixed certificate.*  For the *undirected* min-cut model
+   the disjoint atoms `cA=(X∩Y)\Z, cB=(X∩Z)\Y, cC=(Y∩Z)\X, cABC=cA∪cB∪cC` (which excludes the
+   triple-overlap cell `X∩Y∩Z`) certify MMI **uniformly**, with no planarity or flow hypothesis.
+   The searched *directed*-indicator variant recorded failure of these atoms on ≈ 19 % of its
+   min-cut instances (and the arbitrary-set variant on ≈ 30 %); those figures characterise the
+   directed / searched move systems, where the directed crossing count differs from the undirected
+   cut value, **not** the undirected holographic model.
 
-**VERDICT.**
-The true (minimality-based) HHM cut recombination **does not close general-graph MMI via any fixed /
-symmetric formula** — machine-checked here (`symmetricRecombination_fails`).  It is *not* equivalent
-to the refuted pointwise version in outcome — MMI *does* hold and *is* achievable by a boolean
-"local reglue" — but the reglue is **graph-dependent**, chosen by minimality; there is no uniform
-two-set-submodularity certificate (pure submodularity yields only strong subadditivity:
-`cut X + cut Y ≥ cut(X∩Y) + cut(X∪Y) ≥ S_A + S_ABC`, i.e. SSA, never the third region).  This is
-exactly the obstruction identified as an irreducible flow packing: the *existence* of a good
-recombination is guaranteed by the true min cuts, but exhibiting it uniformly requires the
-graph-dependent (LP/flow-dual) choice.  Concretely the obstruction lives at the **triple-overlap
-cell** `X∩Y∩Z`: the symmetric candidates each pay for it (three intersections all contain it) while
-the union pays nothing, and no fixed reassignment of that cell balances all instances.
+**What is established.**
+The *symmetric* cut recombination provably fails on true min cuts (`symmetricRecombination_fails`),
+and the searched directed variants of the disjoint-atom reglue fail on a positive fraction of their
+instances.  These are statements about the symmetric formula and the searched directed model; they
+do **not** show that undirected holographic MMI lacks a fixed certificate — the disjoint atoms
+supply one.  Pure two-set submodularity alone yields only strong subadditivity
+(`cut X + cut Y ≥ cut(X∩Y) + cut(X∪Y) ≥ S_A + S_ABC`); the third region requires the disjoint-atom
+bookkeeping of the triple-overlap cell `X∩Y∩Z`, which the symmetric candidates triple-count.
 
-**Non-circularity.** Nothing above assumes MMI or the flow-packing fact: `mmi_of_recombination`
-is a one-line consequence of minimality + `omega`; the failure lemmas are `decide` on explicit
-graphs.  We do **not** prove general-graph MMI by cuts (a fixed-formula cut
-proof would be the suspect claim, and we exhibit its failure instead).
+**Non-circularity.** Nothing above assumes MMI: `mmi_of_recombination` is a one-line consequence of
+minimality + `omega`; the failure lemmas are `decide` on explicit graphs.  We do **not** claim a
+fixed-formula cut proof of general-graph MMI here; we exhibit the *symmetric* formula's failure and
+note where the searched directed variants fail.
 
-**Does planarity / intervals rescue it?**  Yes: in the
-interval / planar model the min cuts are *laminar* (non-crossing), so the winning reglue is the
-*uniform* laminar-uncrossing one and MMI follows flow-free under the Ptolemy inequality.  Planarity
-supplies exactly the uniform choice that general graphs lack; the Okamura–Seymour theorem is the
-matching flow-side statement (planar multiflows are cut-tight).  For general graphs the flow-cut gap
-is real and cuts alone need the graph-dependent choice — no fixed HHM cut formula closes it.
+**The interval / planar model.**  In the interval / planar model the min cuts are *laminar*
+(non-crossing), and MMI follows flow-free under the Ptolemy inequality via the laminar-uncrossing
+reglue; the Okamura–Seymour theorem is the matching flow-side statement (planar multiflows are
+cut-tight).  This gives a second, geometry-specific route to MMI; it is not needed to obtain the
+disjoint-atom certificate for the undirected model.
 -/
 
 end HHMCut
