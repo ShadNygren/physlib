@@ -25,6 +25,19 @@ sub-lemmas that close this pass. The residual crux — the *nested/simultaneous 
 construction of the bit-threads proof — is handed to Pass 2 with a precise prose contract (NO
 `sorry`).
 
+**Scope caveat (read before interpreting the "OPEN" / "obstruction" prose below).** This file
+pursues MMI along the *bit-threads / multicommodity-flow* route specifically.  The difficulties it
+records (disjoint-region packing, the joint antisymmetric multiflow) are difficulties *of that flow
+route*, not a proof that MMI is unreachable in general.  In particular, MMI in the *undirected*
+min-cut model **does** follow from a fixed cut-level set-function certificate — the disjoint atoms
+`(X∩Y)\Z, (X∩Z)\Y, (Y∩Z)\X, X∪Y∪Z` — so remarks below that a *cut-level submodularity/nesting*
+argument cannot close MMI should be read as: the *symmetric non-disjoint* submodular route and the
+*two-set-nesting* route do not close it, not that no cut-level argument does.
+
+Note also: the single-commodity max-flow–min-cut foundation folded in here (`Network`…
+`maxFlow_eq_minCut`) is a VERBATIM duplicate of `Physlib.MaxFlowMinCut`, carried only for
+in-file usability; it is not re-derived and not new content on this branch.
+
 ## Provenance of the folded-in foundation (unchanged)
 
 The single-commodity development below (`Network`, `IsFlow`, `flowValue`, `IsCut`, `cutCapacity`,
@@ -2938,10 +2951,14 @@ supplies what the target needs:
   (`exists_bulkFlow_maximal` applied four times) generically COLLIDE — their densities sum `> c` on shared
   bonds — and nesting (which only aligns cuts/flows of COMPARABLE regions) gives no tool to de-conflict
   DISJOINT-region flows sharing bonds. `sharedCert_value_sum_bounded` already shows the shared budget
-  strictly binds. Cut-level nesting cannot substitute: the file PROVES (Route-B dead-end,
-  `edge_pairwise_inter_false`, prior analysis) that MMI is NOT a submodular set-function fact, so no cut-level
-  submodularity/nesting argument — including `exists_nested_rtcuts` — can close it. This is the crucial
-  NON-CIRCULARITY guard: any assembly using only cut nesting would be secretly the false submodular route.
+  strictly binds. Cut-level *two-set nesting* cannot substitute here: the file shows (Route-B dead-end,
+  `edge_pairwise_inter_false`, prior analysis) that MMI is not a *symmetric-family / two-set-submodular*
+  set-function fact, so a *submodularity/nesting* assembly — including `exists_nested_rtcuts` — does not
+  close it via the flow route. (This does not contradict the disjoint-atom cut certificate for undirected
+  MMI noted in the module header: that is a different, non-submodular set-function argument. The point
+  here is only that the *two-set-nesting* assembly this flow development has in hand is insufficient.)
+  This is the NON-CIRCULARITY guard for this route: an assembly using only two-set cut nesting would be
+  secretly the false symmetric-submodular route.
 - **Reciprocity is NOT the extra ingredient — packing is.** `cross_antisymm` shows that the cross-region
   fluxes of a SINGLE integer flow are antisymmetric, so once the four flows are realized as ONE
   antisymmetric thread set (i.e. as components of a single joint flow), `reg` holds automatically (indeed
