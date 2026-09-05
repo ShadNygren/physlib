@@ -41,20 +41,26 @@ the CFT central charge equals a *bulk geometric quantity*. This closes the loop
 `log(ℓ/a)` divergence is the CFT UV divergence = the bulk near-boundary divergence: the same
 physics on both sides.
 
+Scope (honest): this file takes the standard AdS₃ regularized geodesic-length *formula*
+`2·L_AdS·log(ℓ/a)` and the RT prescription `S = Length/(4G)` as GIVEN, and verifies the algebraic
+**coefficient match** against the Calabrese–Cardy law.  It does NOT prove that this curve is the
+minimal geodesic (no length functional, no variational/minimality argument, no bulk metric), and it
+does not derive the RT formula; the geodesic-length expression is posited from AdS₃ geometry and the
+content proved here is the matching of log-coefficients that yields the Brown–Henneaux relation.
+
 This file formalizes, over `ℝ` and with honest side-conditions (`G ≠ 0`, `ℓ, a > 0`):
-* `geodesicLength` — the regularized AdS₃ minimal-geodesic length `2·L_AdS·log(ℓ/a)`;
+* `geodesicLength` — the (posited) regularized AdS₃ geodesic-length formula `2·L_AdS·log(ℓ/a)`;
 * `rtEntropy` — the RT entropy `Length/(4G)`;
 * `rt_entropy_eq` — `rtEntropy = (L_AdS/(2G)) · log(ℓ/a)` (the log-coefficient is a bulk quantity);
-* `rt_matches_calabrese_cardy` — under Brown–Henneaux `c = 3·L_AdS/(2G)`, the *bulk geodesic
-  length reproduces the Calabrese–Cardy CFT entropy* `(c/3)·log(ℓ/a)` exactly;
+* `rt_matches_calabrese_cardy` — under Brown–Henneaux `c = 3·L_AdS/(2G)`, the *bulk geodesic-length
+  formula reproduces the Calabrese–Cardy CFT entropy* `(c/3)·log(ℓ/a)` exactly (a coefficient match);
 * `brown_henneaux_central_charge` — the extraction `c = 3·L_AdS/(2G)`, and the cutoff-independent
   RT entropy difference `(L_AdS/(2G))·log(ℓ₂/ℓ₁)`;
 * the **Ising instance** (`L_AdS = 1, G = 3` ⟹ `c = 1/2`) with a nonzero (`1/6`) log-coefficient
   and a strictly positive concrete geodesic length / entropy (anti-vacuity).
 
-This is the keystone step *"entanglement builds geometry,"* building toward
-`CFT axioms ⟹ emergent spacetime`. The `c = 1/2` instance is the 2D Ising CFT,
-with numerically-measured `c ≈ 0.5023`.
+At the formula level this exhibits the *"entanglement ↔ geometry ↔ central charge"* correspondence.
+The `c = 1/2` instance is the 2D Ising CFT, with numerically-measured `c ≈ 0.5023`.
 
 -/
 
@@ -64,9 +70,10 @@ namespace Physlib.RyuTakayanagi
 
 open Real
 
-/-- The regularized minimal bulk-geodesic length in AdS₃ (radius `Lads`) subtending a boundary
+/-- The standard regularized AdS₃ geodesic-length *formula* (radius `Lads`) for a boundary
 interval of length `ℓ`, with UV cutoff `a`:
-`Length(ℓ) = 2 · Lads · log(ℓ/a)`. This is the *geometric* side of Ryu–Takayanagi. -/
+`Length(ℓ) = 2 · Lads · log(ℓ/a)`. This is the *geometric* side of Ryu–Takayanagi, taken here as a
+GIVEN formula (its minimality is not proved in this file). -/
 noncomputable def geodesicLength (Lads ℓ a : ℝ) : ℝ := 2 * Lads * Real.log (ℓ / a)
 
 /-- The **Ryu–Takayanagi entropy** `S = Length / (4G)`: the boundary entanglement entropy is the
