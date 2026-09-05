@@ -1,0 +1,593 @@
+/-
+Copyright (c) 2026 Shad Nygren. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Shad Nygren (with Claude Code)
+-/
+module
+
+public import Mathlib
+
+/-!
+# The undirected min-cut model satisfies monogamy of mutual information
+
+## Forest-level picture
+
+In the tensor-network / Ryu–Takayanagi picture of emergent spacetime, the entanglement entropy of a
+boundary region is modeled by the capacity of a **minimum cut** separating that region from the rest
+of the boundary in a finite weighted bulk graph.  A geometry built this way obeys sharp entropy
+inequalities that generic quantum states do **not**.  The sharpest is **monogamy of mutual
+information (MMI)**:
+
+  `I₃(A:B:C) = S_A + S_B + S_C − S_{AB} − S_{AC} − S_{BC} + S_{ABC} ≤ 0`,
+
+equivalently
+
+  `S_A + S_B + S_C + S_{ABC} ≤ S_{AB} + S_{AC} + S_{BC}`.
+
+A generic quantum state can violate MMI, so it is a genuine fingerprint of a min-cut geometry.
+
+This file gives a **uniform, explicit certificate** proving MMI for every finite undirected
+nonnegative-edge-weighted graph, with **no planarity** and **no multicommodity-flow** hypothesis.
+
+## The certificate
+
+Let `X, Y, Z` be minimum cuts for the pairs `AB, AC, BC` respectively (as boundary-indicator vertex
+sets).  Form the **fixed recombination**
+
+  `A' = (X ∩ Y) \ Z`,   `B' = (X ∩ Z) \ Y`,   `C' = (Y ∩ Z) \ X`,   `U' = X ∪ Y ∪ Z`.
+
+These four sets are admissible cuts for `A, B, C, A∪B∪C` respectively (`admissible_A'`, …,
+`admissible_U'`).  The single combinatorial engine is `edge_atoms_nonexpansive`: the induced
+`3`-bit → `4`-bit membership map
+`(∈X, ∈Y, ∈Z) ↦ (∈A', ∈B', ∈C', ∈U')` is **Hamming-nonexpansive on every edge** — for any two
+vertex membership patterns, the number of `{A',B',C',U'}` that separate them is at most the number of
+`{X,Y,Z}` that separate them (a finite `64`-case fact, `decide`).  Summing this pointwise inequality
+against the symmetric edge weights (`recombination_capacity_le`) yields
+
+  `cap A' + cap B' + cap C' + cap U' ≤ cap X + cap Y + cap Z`.
+
+Minimality of the pairwise min-cuts (`rtEntropy_le_cap`) then gives MMI (`rtEntropy_MMI`).
+
+## Results
+
+* `edge_atoms_nonexpansive` — the `64`-case combinatorial engine (Hamming-nonexpansiveness).
+* `recombination_capacity_le` — the capacity certificate `cap A'+cap B'+cap C'+cap U' ≤ cap X+cap Y+cap Z`.
+* `admissible_A'`, `admissible_B'`, `admissible_C'`, `admissible_U'` — the four atoms are admissible cuts.
+* `rtEntropy_MMI` — the headline: MMI for the undirected min-cut entropy, fully derived.
+* `rtEntropy_MMI_strict_witness` / `mmi_witness_mincuts_pos` — anti-vacuity: a concrete graph on which
+  MMI is **strict** (`I₃ = −2 < 0`) with every min-cut strictly positive.
+
+## Derived versus posited
+
+The min-cut geometry facts (the capacity certificate and MMI) are **theorems** of finite
+combinatorics, with no extra axioms.  The only modeling **posit** is the physical identification of
+the min-cut capacity with the entanglement entropy of the bulk state; given that identification, MMI
+of the geometric entropy is a theorem.
+-/
+
+@[expose] public section
+
+namespace Physlib.UndirectedMMICertificate
+
+open Finset
+
+/-! ## The finite bulk graph, cut capacity, admissible cuts, and min-cut entropy
+
+Self-contained local restatement (no cross-file dependency): `V` is a finite vertex set with
+decidable equality; `w` is a symmetric nonnegative (ℕ-valued) edge weight. -/
+
+/-- A finite undirected weighted bulk graph: a symmetric ℕ-valued edge weight on a finite vertex
+type.  ℕ-valued makes nonnegativity automatic and the whole model computable. -/
+structure Graph (V : Type*) [Fintype V] [DecidableEq V] where
+  /-- edge weight between two vertices -/
+  w : V → V → ℕ
+  /-- weights are symmetric (the graph is undirected) -/
+  symm : ∀ u v, w u v = w v u
+
+variable {V : Type*} [Fintype V] [DecidableEq V]
+
+/-- The capacity of the cut `S`: the total weight of undirected edges with exactly one endpoint in
+`S`.  Summing the directed indicator `[u ∈ S ∧ v ∉ S] · w u v` over all ordered pairs counts each
+undirected crossing edge exactly once, so this is the standard undirected cut value. -/
+def cutCapacity (G : Graph V) (S : Finset V) : ℕ :=
+  ∑ u, ∑ v, (if u ∈ S ∧ v ∉ S then G.w u v else 0)
+
+/-- Cut capacity is nonnegative (automatic over `ℕ`). -/
+lemma cutCapacity_nonneg (G : Graph V) (S : Finset V) : 0 ≤ cutCapacity G S := Nat.zero_le _
+
+/-- `S` is an **admissible cut** for boundary region `R` inside boundary `bd`: it contains `R` and
+excludes every boundary vertex outside `R` (bulk vertices are free).  This is the correct undirected
+RT admissibility — separating `R` from `bd \ R`. -/
+def IsRTCut (bd R S : Finset V) : Prop := R ⊆ S ∧ ∀ x ∈ bd, x ∉ R → x ∉ S
+
+/-- The finite set of admissible cuts for `R`, used to take the minimum. -/
+def rtCuts (bd R : Finset V) : Finset (Finset V) :=
+  (Finset.univ : Finset V).powerset.filter (fun S => R ⊆ S ∧ ∀ x ∈ bd, x ∈ R ∨ x ∉ S)
+
+lemma mem_rtCuts {bd R S : Finset V} : S ∈ rtCuts bd R ↔ IsRTCut bd R S := by
+  unfold rtCuts IsRTCut
+  simp only [Finset.mem_filter, Finset.mem_powerset]
+  constructor
+  · rintro ⟨_, hR, hbd⟩
+    refine ⟨hR, fun x hx hxR => ?_⟩
+    rcases hbd x hx with h | h
+    · exact absurd h hxR
+    · exact h
+  · rintro ⟨hR, hbd⟩
+    refine ⟨Finset.subset_univ _, hR, fun x hx => ?_⟩
+    by_cases hxR : x ∈ R
+    · exact Or.inl hxR
+    · exact Or.inr (hbd x hx hxR)
+
+/-- When `R ⊆ bd`, the region `R` itself is an admissible cut, so `rtCuts` is nonempty. -/
+lemma rtCuts_nonempty {bd R : Finset V} (_h : R ⊆ bd) : (rtCuts bd R).Nonempty := by
+  refine ⟨R, ?_⟩
+  rw [mem_rtCuts]
+  exact ⟨Finset.Subset.refl _, fun x _ hxR => hxR⟩
+
+/-- **Min-cut entropy** of region `R`: the minimum cut capacity over admissible cuts. -/
+def rtEntropy (G : Graph V) (bd R : Finset V) (h : R ⊆ bd) : ℕ :=
+  ((rtCuts bd R).image (cutCapacity G)).min' ((rtCuts_nonempty h).image (cutCapacity G))
+
+/-- **Minimality:** the min-cut entropy is at most the capacity of any admissible cut. -/
+lemma rtEntropy_le_cap (G : Graph V) {bd R : Finset V} (h : R ⊆ bd)
+    {S : Finset V} (hS : IsRTCut bd R S) : rtEntropy G bd R h ≤ cutCapacity G S := by
+  unfold rtEntropy
+  apply Finset.min'_le
+  rw [Finset.mem_image]
+  exact ⟨S, (mem_rtCuts).2 hS, rfl⟩
+
+/-- The min-cut entropy is achieved by some admissible cut. -/
+lemma rtEntropy_eq_cap (G : Graph V) {bd R : Finset V} (h : R ⊆ bd) :
+    ∃ S, IsRTCut bd R S ∧ rtEntropy G bd R h = cutCapacity G S := by
+  unfold rtEntropy
+  have hmem := Finset.min'_mem ((rtCuts bd R).image (cutCapacity G))
+    ((rtCuts_nonempty h).image (cutCapacity G))
+  rw [Finset.mem_image] at hmem
+  obtain ⟨S, hS, hcap⟩ := hmem
+  exact ⟨S, (mem_rtCuts).1 hS, hcap.symm⟩
+
+/-! ## Symmetric cut capacity and the doubling identity
+
+To sum the edgewise inequality it is convenient to use the **symmetric separation** form, in which
+each ordered pair `(u,v)` contributes when `S` separates `u` and `v` (exactly one of them lies in
+`S`).  Under symmetric weights this equals `2 · cutCapacity` (each undirected crossing edge is now
+counted from both endpoints), and — unlike the directed indicator — the symmetric indicator is the
+quantity for which the recombination map is genuinely nonexpansive. -/
+
+/-- The symmetric-separation capacity: sum over ordered pairs of `[u,v separated by S] · w u v`. -/
+def symCap (G : Graph V) (S : Finset V) : ℕ :=
+  ∑ u, ∑ v, (if (u ∈ S) ≠ (v ∈ S) then G.w u v else 0)
+
+/-- **Doubling identity:** for symmetric weights, `symCap G S = 2 · cutCapacity G S`.
+The separated ordered pairs split into those with `u ∈ S, v ∉ S` and those with `u ∉ S, v ∈ S`; the
+latter reindex to the former using `G.symm`, and each equals `cutCapacity`. -/
+lemma symCap_eq_two_cutCapacity (G : Graph V) (S : Finset V) :
+    symCap G S = 2 * cutCapacity G S := by
+  have hsplit : symCap G S
+      = (∑ u, ∑ v, (if u ∈ S ∧ v ∉ S then G.w u v else 0))
+        + ∑ u, ∑ v, (if u ∉ S ∧ v ∈ S then G.w u v else 0) := by
+    unfold symCap
+    rw [← Finset.sum_add_distrib]
+    refine Finset.sum_congr rfl (fun u _ => ?_)
+    rw [← Finset.sum_add_distrib]
+    refine Finset.sum_congr rfl (fun v _ => ?_)
+    by_cases hu : u ∈ S <;> by_cases hv : v ∈ S <;> simp [hu, hv]
+  have hswap : (∑ u, ∑ v, (if u ∉ S ∧ v ∈ S then G.w u v else 0))
+      = ∑ u, ∑ v, (if u ∈ S ∧ v ∉ S then G.w u v else 0) := by
+    rw [Finset.sum_comm]
+    refine Finset.sum_congr rfl (fun u _ => ?_)
+    refine Finset.sum_congr rfl (fun v _ => ?_)
+    rw [G.symm v u]
+    by_cases hu : u ∈ S <;> by_cases hv : v ∈ S <;> simp [hu, hv, and_comm]
+  rw [hsplit, hswap]
+  unfold cutCapacity
+  ring
+
+/-! ## The combinatorial engine: edgewise Hamming-nonexpansiveness
+
+The recombination sends a vertex's `(∈X, ∈Y, ∈Z)` membership to `(∈A', ∈B', ∈C', ∈U')` with
+`A' = (X∩Y)\Z`, `B' = (X∩Z)\Y`, `C' = (Y∩Z)\X`, `U' = X∪Y∪Z`.  The following boolean lemma states
+that this map does not increase the per-edge separation count: for any two membership patterns
+`(uX,uY,uZ)` and `(vX,vY,vZ)`, the number of atoms `{A',B',C',U'}` separating them is at most the
+number of `{X,Y,Z}` separating them.  It is a finite `64`-case fact, checked by `decide`. -/
+
+/-- Atom membership as a boolean function of `(∈X, ∈Y, ∈Z)`.
+`aA = (X∩Y)\Z`, `aB = (X∩Z)\Y`, `aC = (Y∩Z)\X`, `aU = X∪Y∪Z`. -/
+def aA (x y z : Bool) : Bool := x && y && !z
+def aB (x y z : Bool) : Bool := x && z && !y
+def aC (x y z : Bool) : Bool := y && z && !x
+def aU (x y z : Bool) : Bool := x || y || z
+
+/-- `sepCount` of a boolean 4-tuple against another: the number of coordinates in which they differ,
+as a `ℕ` (used to phrase nonexpansiveness numerically). -/
+def bdiff (a b : Bool) : ℕ := if a ≠ b then 1 else 0
+
+/-- **The engine (Hamming-nonexpansiveness).** For any two vertex membership patterns
+`(uX,uY,uZ)`, `(vX,vY,vZ)`, the recombination atoms `{A',B',C',U'}` separate the two vertices at
+most as often as `{X,Y,Z}` do.  A `64`-case boolean fact. -/
+theorem edge_atoms_nonexpansive :
+    ∀ uX uY uZ vX vY vZ : Bool,
+      bdiff (aA uX uY uZ) (aA vX vY vZ) + bdiff (aB uX uY uZ) (aB vX vY vZ)
+        + bdiff (aC uX uY uZ) (aC vX vY vZ) + bdiff (aU uX uY uZ) (aU vX vY vZ)
+      ≤ bdiff uX vX + bdiff uY vY + bdiff uZ vZ := by
+  decide
+
+/-! ## From the boolean engine to the capacity certificate
+
+We instantiate the engine at each ordered pair with the actual set memberships, then sum against the
+symmetric weights. -/
+
+variable {G : Graph V} {X Y Z : Finset V}
+
+/-- Membership indicator of a vertex in a `Finset`, as a `Bool`. -/
+def mem (S : Finset V) (u : V) : Bool := decide (u ∈ S)
+
+/-- The four recombination atoms as concrete `Finset`s. -/
+def atomA (X Y Z : Finset V) : Finset V := (X ∩ Y) \ Z
+def atomB (X Y Z : Finset V) : Finset V := (X ∩ Z) \ Y
+def atomC (X Y Z : Finset V) : Finset V := (Y ∩ Z) \ X
+def atomU (X Y Z : Finset V) : Finset V := X ∪ Y ∪ Z
+
+/-- Membership of a vertex in `atomA` matches the boolean `aA` of its `X,Y,Z` memberships. -/
+lemma mem_atomA (u : V) : mem (atomA X Y Z) u = aA (mem X u) (mem Y u) (mem Z u) := by
+  simp only [mem, aA, atomA, Finset.mem_sdiff, Finset.mem_inter]
+  by_cases hx : u ∈ X <;> by_cases hy : u ∈ Y <;> by_cases hz : u ∈ Z <;> simp [hx, hy, hz]
+lemma mem_atomB (u : V) : mem (atomB X Y Z) u = aB (mem X u) (mem Y u) (mem Z u) := by
+  simp only [mem, aB, atomB, Finset.mem_sdiff, Finset.mem_inter]
+  by_cases hx : u ∈ X <;> by_cases hy : u ∈ Y <;> by_cases hz : u ∈ Z <;> simp [hx, hy, hz]
+lemma mem_atomC (u : V) : mem (atomC X Y Z) u = aC (mem X u) (mem Y u) (mem Z u) := by
+  simp only [mem, aC, atomC, Finset.mem_sdiff, Finset.mem_inter]
+  by_cases hx : u ∈ X <;> by_cases hy : u ∈ Y <;> by_cases hz : u ∈ Z <;> simp [hx, hy, hz]
+lemma mem_atomU (u : V) : mem (atomU X Y Z) u = aU (mem X u) (mem Y u) (mem Z u) := by
+  simp only [mem, aU, atomU, Finset.mem_union]
+  by_cases hx : u ∈ X <;> by_cases hy : u ∈ Y <;> by_cases hz : u ∈ Z <;> simp [hx, hy, hz]
+
+/-- The symmetric-separation indicator of `S` at ordered pair `(u,v)`, as `[mem S u ≠ mem S v]`. -/
+lemma sep_indicator (S : Finset V) (u v : V) :
+    (if (u ∈ S) ≠ (v ∈ S) then G.w u v else 0) = bdiff (mem S u) (mem S v) * G.w u v := by
+  unfold bdiff mem
+  by_cases hu : u ∈ S <;> by_cases hv : v ∈ S <;> simp [hu, hv]
+
+/-- `symCap` rewritten with the `bdiff`/`mem` indicator form of each ordered pair. -/
+lemma symCap_eq_bdiff_sum (S : Finset V) :
+    symCap G S = ∑ u, ∑ v, bdiff (mem S u) (mem S v) * G.w u v := by
+  unfold symCap
+  exact Finset.sum_congr rfl (fun u _ => Finset.sum_congr rfl (fun v _ => sep_indicator S u v))
+
+/-- **Pointwise capacity inequality**, before summing: at each ordered pair the atoms' separation
+weight is at most that of `X, Y, Z`. -/
+lemma edge_capacity_le (u v : V) :
+    bdiff (mem (atomA X Y Z) u) (mem (atomA X Y Z) v) * G.w u v
+      + bdiff (mem (atomB X Y Z) u) (mem (atomB X Y Z) v) * G.w u v
+      + bdiff (mem (atomC X Y Z) u) (mem (atomC X Y Z) v) * G.w u v
+      + bdiff (mem (atomU X Y Z) u) (mem (atomU X Y Z) v) * G.w u v
+    ≤ bdiff (mem X u) (mem X v) * G.w u v
+      + bdiff (mem Y u) (mem Y v) * G.w u v
+      + bdiff (mem Z u) (mem Z v) * G.w u v := by
+  have hcore := edge_atoms_nonexpansive (mem X u) (mem Y u) (mem Z u) (mem X v) (mem Y v) (mem Z v)
+  rw [mem_atomA, mem_atomA, mem_atomB, mem_atomB, mem_atomC, mem_atomC, mem_atomU, mem_atomU]
+  calc bdiff (aA (mem X u) (mem Y u) (mem Z u)) (aA (mem X v) (mem Y v) (mem Z v)) * G.w u v
+        + bdiff (aB (mem X u) (mem Y u) (mem Z u)) (aB (mem X v) (mem Y v) (mem Z v)) * G.w u v
+        + bdiff (aC (mem X u) (mem Y u) (mem Z u)) (aC (mem X v) (mem Y v) (mem Z v)) * G.w u v
+        + bdiff (aU (mem X u) (mem Y u) (mem Z u)) (aU (mem X v) (mem Y v) (mem Z v)) * G.w u v
+      = (bdiff (aA (mem X u) (mem Y u) (mem Z u)) (aA (mem X v) (mem Y v) (mem Z v))
+          + bdiff (aB (mem X u) (mem Y u) (mem Z u)) (aB (mem X v) (mem Y v) (mem Z v))
+          + bdiff (aC (mem X u) (mem Y u) (mem Z u)) (aC (mem X v) (mem Y v) (mem Z v))
+          + bdiff (aU (mem X u) (mem Y u) (mem Z u)) (aU (mem X v) (mem Y v) (mem Z v))) * G.w u v := by
+        ring
+    _ ≤ (bdiff (mem X u) (mem X v) + bdiff (mem Y u) (mem Y v) + bdiff (mem Z u) (mem Z v)) * G.w u v :=
+        Nat.mul_le_mul_right (k := G.w u v) hcore
+    _ = bdiff (mem X u) (mem X v) * G.w u v + bdiff (mem Y u) (mem Y v) * G.w u v
+          + bdiff (mem Z u) (mem Z v) * G.w u v := by ring
+
+/-- **The capacity certificate.** For every undirected nonnegative-weighted graph, the fixed
+recombination satisfies
+  `cap A' + cap B' + cap C' + cap U' ≤ cap X + cap Y + cap Z`.
+Proved by summing `edge_capacity_le` and dividing the doubling identity `symCap = 2·cutCapacity`. -/
+theorem recombination_capacity_le (G : Graph V) (X Y Z : Finset V) :
+    cutCapacity G (atomA X Y Z) + cutCapacity G (atomB X Y Z)
+        + cutCapacity G (atomC X Y Z) + cutCapacity G (atomU X Y Z)
+      ≤ cutCapacity G X + cutCapacity G Y + cutCapacity G Z := by
+  -- First prove the doubled inequality on `symCap`, then divide by two.
+  have hsum : symCap G (atomA X Y Z) + symCap G (atomB X Y Z)
+        + symCap G (atomC X Y Z) + symCap G (atomU X Y Z)
+      ≤ symCap G X + symCap G Y + symCap G Z := by
+    rw [symCap_eq_bdiff_sum, symCap_eq_bdiff_sum, symCap_eq_bdiff_sum, symCap_eq_bdiff_sum,
+        symCap_eq_bdiff_sum, symCap_eq_bdiff_sum, symCap_eq_bdiff_sum]
+    -- combine the four/three double sums into single double sums and compare pointwise
+    rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib,
+        ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+    refine Finset.sum_le_sum (fun u _ => ?_)
+    rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib,
+        ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+    refine Finset.sum_le_sum (fun v _ => ?_)
+    exact edge_capacity_le (G := G) (X := X) (Y := Y) (Z := Z) u v
+  -- divide by 2
+  have hA := symCap_eq_two_cutCapacity G (atomA X Y Z)
+  have hB := symCap_eq_two_cutCapacity G (atomB X Y Z)
+  have hC := symCap_eq_two_cutCapacity G (atomC X Y Z)
+  have hU := symCap_eq_two_cutCapacity G (atomU X Y Z)
+  have hX := symCap_eq_two_cutCapacity G X
+  have hY := symCap_eq_two_cutCapacity G Y
+  have hZ := symCap_eq_two_cutCapacity G Z
+  rw [hA, hB, hC, hU, hX, hY, hZ] at hsum
+  omega
+
+/-! ## Admissibility of the recombination atoms
+
+For a boundary partition into four disjoint regions `A, B, C, D` and min-cuts `X, Y, Z` for the
+pairs `AB, AC, BC`, the four atoms are admissible cuts for `A, B, C, A∪B∪C`. -/
+
+/-- A **boundary partition** into four pairwise-disjoint regions covering `bd`. -/
+structure BoundaryPartition (bd A B C D : Finset V) : Prop where
+  cover : A ∪ B ∪ C ∪ D = bd
+  dAB : Disjoint A B
+  dAC : Disjoint A C
+  dAD : Disjoint A D
+  dBC : Disjoint B C
+  dBD : Disjoint B D
+  dCD : Disjoint C D
+
+namespace BoundaryPartition
+
+variable {bd A B C D : Finset V}
+
+lemma subA (P : BoundaryPartition bd A B C D) : A ⊆ bd := by
+  rw [← P.cover]; intro x hx
+  exact Finset.mem_union.2 (Or.inl (Finset.mem_union.2 (Or.inl (Finset.mem_union.2 (Or.inl hx)))))
+lemma subB (P : BoundaryPartition bd A B C D) : B ⊆ bd := by
+  rw [← P.cover]; intro x hx
+  exact Finset.mem_union.2 (Or.inl (Finset.mem_union.2 (Or.inl (Finset.mem_union.2 (Or.inr hx)))))
+lemma subC (P : BoundaryPartition bd A B C D) : C ⊆ bd := by
+  rw [← P.cover]; intro x hx
+  exact Finset.mem_union.2 (Or.inl (Finset.mem_union.2 (Or.inr hx)))
+lemma subAB (P : BoundaryPartition bd A B C D) : A ∪ B ⊆ bd :=
+  Finset.union_subset P.subA P.subB
+lemma subAC (P : BoundaryPartition bd A B C D) : A ∪ C ⊆ bd :=
+  Finset.union_subset P.subA P.subC
+lemma subBC (P : BoundaryPartition bd A B C D) : B ∪ C ⊆ bd :=
+  Finset.union_subset P.subB P.subC
+lemma subABC (P : BoundaryPartition bd A B C D) : A ∪ B ∪ C ⊆ bd :=
+  Finset.union_subset (Finset.union_subset P.subA P.subB) P.subC
+
+end BoundaryPartition
+
+/-- Every boundary vertex lies in exactly one of the four regions. -/
+lemma bd_region_cases {bd A B C D : Finset V} (P : BoundaryPartition bd A B C D)
+    {x : V} (hx : x ∈ bd) : x ∈ A ∨ x ∈ B ∨ x ∈ C ∨ x ∈ D := by
+  rw [← P.cover] at hx
+  simp only [Finset.mem_union] at hx
+  tauto
+
+/-- `A' = (X∩Y)\Z` is an admissible cut for `A`, given `X, Y, Z` admissible for `AB, AC, BC`. -/
+theorem admissible_A' {bd A B C D : Finset V} (P : BoundaryPartition bd A B C D)
+    (hX : IsRTCut bd (A ∪ B) X) (hY : IsRTCut bd (A ∪ C) Y) (hZ : IsRTCut bd (B ∪ C) Z) :
+    IsRTCut bd A (atomA X Y Z) := by
+  obtain ⟨hXsub, hXexc⟩ := hX
+  obtain ⟨hYsub, hYexc⟩ := hY
+  obtain ⟨hZsub, hZexc⟩ := hZ
+  refine ⟨fun x hx => ?_, fun x hxbd hxA => ?_⟩
+  · -- A ⊆ X (via A∪B), A ⊆ Y (via A∪C), A ∩ Z = ∅ (A disjoint from B,C ⟹ excluded by Z)
+    rw [atomA, Finset.mem_sdiff, Finset.mem_inter]
+    refine ⟨⟨hXsub (Finset.mem_union_left _ hx), hYsub (Finset.mem_union_left _ hx)⟩, ?_⟩
+    -- x ∈ A ⟹ x ∉ B∪C ⟹ excluded by Z
+    exact hZexc x (P.subA hx) (by
+      simp only [Finset.mem_union, not_or]
+      exact ⟨fun hB => (P.dAB.forall_ne_finset hx hB) rfl,
+             fun hC => (P.dAC.forall_ne_finset hx hC) rfl⟩)
+  · -- x ∈ bd, x ∉ A: show x ∉ (X∩Y)\Z.  x ∈ B,C, or D.
+    rw [atomA, Finset.mem_sdiff, Finset.mem_inter, not_and_or, not_and_or]
+    rcases bd_region_cases P hxbd with hA | hB | hC | hD
+    · exact absurd hA hxA
+    · -- x ∈ B ⟹ x ∉ A∪C ⟹ x ∉ Y
+      left; right
+      exact hYexc x hxbd (by
+        simp only [Finset.mem_union, not_or]
+        exact ⟨hxA, fun hC => (P.dBC.forall_ne_finset hB hC) rfl⟩)
+    · -- x ∈ C ⟹ x ∉ A∪B ⟹ x ∉ X
+      left; left
+      exact hXexc x hxbd (by
+        simp only [Finset.mem_union, not_or]
+        exact ⟨hxA, fun hB => (P.dBC.forall_ne_finset hB hC) rfl⟩)
+    · -- x ∈ D ⟹ x ∉ A∪B ⟹ x ∉ X
+      left; left
+      exact hXexc x hxbd (by
+        simp only [Finset.mem_union, not_or]
+        exact ⟨hxA, fun hB => (P.dBD.forall_ne_finset hB hD) rfl⟩)
+
+/-- `B' = (X∩Z)\Y` is an admissible cut for `B`. -/
+theorem admissible_B' {bd A B C D : Finset V} (P : BoundaryPartition bd A B C D)
+    (hX : IsRTCut bd (A ∪ B) X) (hY : IsRTCut bd (A ∪ C) Y) (hZ : IsRTCut bd (B ∪ C) Z) :
+    IsRTCut bd B (atomB X Y Z) := by
+  obtain ⟨hXsub, hXexc⟩ := hX
+  obtain ⟨hYsub, hYexc⟩ := hY
+  obtain ⟨hZsub, hZexc⟩ := hZ
+  refine ⟨fun x hx => ?_, fun x hxbd hxB => ?_⟩
+  · -- B ⊆ X (via A∪B), B ⊆ Z (via B∪C), B ∩ Y = ∅
+    rw [atomB, Finset.mem_sdiff, Finset.mem_inter]
+    refine ⟨⟨hXsub (Finset.mem_union_right _ hx), hZsub (Finset.mem_union_left _ hx)⟩, ?_⟩
+    exact hYexc x (P.subB hx) (by
+      simp only [Finset.mem_union, not_or]
+      exact ⟨fun hA => (P.dAB.forall_ne_finset hA hx) rfl,
+             fun hC => (P.dBC.forall_ne_finset hx hC) rfl⟩)
+  · rw [atomB, Finset.mem_sdiff, Finset.mem_inter, not_and_or, not_and_or]
+    rcases bd_region_cases P hxbd with hA | hB | hC | hD
+    · -- x ∈ A ⟹ x ∉ B∪C ⟹ x ∉ Z
+      left; right
+      exact hZexc x hxbd (by
+        simp only [Finset.mem_union, not_or]
+        exact ⟨fun hB => (P.dAB.forall_ne_finset hA hB) rfl,
+               fun hC => (P.dAC.forall_ne_finset hA hC) rfl⟩)
+    · exact absurd hB hxB
+    · -- x ∈ C ⟹ x ∉ A∪B ⟹ x ∉ X
+      left; left
+      exact hXexc x hxbd (by
+        simp only [Finset.mem_union, not_or]
+        exact ⟨fun hA => (P.dAC.forall_ne_finset hA hC) rfl, hxB⟩)
+    · -- x ∈ D ⟹ x ∉ A∪B ⟹ x ∉ X
+      left; left
+      exact hXexc x hxbd (by
+        simp only [Finset.mem_union, not_or]
+        exact ⟨fun hA => (P.dAD.forall_ne_finset hA hD) rfl, hxB⟩)
+
+/-- `C' = (Y∩Z)\X` is an admissible cut for `C`. -/
+theorem admissible_C' {bd A B C D : Finset V} (P : BoundaryPartition bd A B C D)
+    (hX : IsRTCut bd (A ∪ B) X) (hY : IsRTCut bd (A ∪ C) Y) (hZ : IsRTCut bd (B ∪ C) Z) :
+    IsRTCut bd C (atomC X Y Z) := by
+  obtain ⟨hXsub, hXexc⟩ := hX
+  obtain ⟨hYsub, hYexc⟩ := hY
+  obtain ⟨hZsub, hZexc⟩ := hZ
+  refine ⟨fun x hx => ?_, fun x hxbd hxC => ?_⟩
+  · -- C ⊆ Y (via A∪C), C ⊆ Z (via B∪C), C ∩ X = ∅
+    rw [atomC, Finset.mem_sdiff, Finset.mem_inter]
+    refine ⟨⟨hYsub (Finset.mem_union_right _ hx), hZsub (Finset.mem_union_right _ hx)⟩, ?_⟩
+    exact hXexc x (P.subC hx) (by
+      simp only [Finset.mem_union, not_or]
+      exact ⟨fun hA => (P.dAC.forall_ne_finset hA hx) rfl,
+             fun hB => (P.dBC.forall_ne_finset hB hx) rfl⟩)
+  · rw [atomC, Finset.mem_sdiff, Finset.mem_inter, not_and_or, not_and_or]
+    rcases bd_region_cases P hxbd with hA | hB | hC | hD
+    · -- x ∈ A ⟹ x ∉ B∪C ⟹ x ∉ Z
+      left; right
+      exact hZexc x hxbd (by
+        simp only [Finset.mem_union, not_or]
+        exact ⟨fun hB => (P.dAB.forall_ne_finset hA hB) rfl,
+               fun hC => (P.dAC.forall_ne_finset hA hC) rfl⟩)
+    · -- x ∈ B ⟹ x ∉ A∪C ⟹ x ∉ Y
+      left; left
+      exact hYexc x hxbd (by
+        simp only [Finset.mem_union, not_or]
+        exact ⟨fun hA => (P.dAB.forall_ne_finset hA hB) rfl, hxC⟩)
+    · exact absurd hC hxC
+    · -- x ∈ D ⟹ x ∉ A∪C ⟹ x ∉ Y
+      left; left
+      exact hYexc x hxbd (by
+        simp only [Finset.mem_union, not_or]
+        exact ⟨fun hA => (P.dAD.forall_ne_finset hA hD) rfl, hxC⟩)
+
+/-- `U' = X∪Y∪Z` is an admissible cut for `A∪B∪C`. -/
+theorem admissible_U' {bd A B C D : Finset V} (P : BoundaryPartition bd A B C D)
+    (hX : IsRTCut bd (A ∪ B) X) (hY : IsRTCut bd (A ∪ C) Y) (hZ : IsRTCut bd (B ∪ C) Z) :
+    IsRTCut bd (A ∪ B ∪ C) (atomU X Y Z) := by
+  obtain ⟨hXsub, hXexc⟩ := hX
+  obtain ⟨hYsub, hYexc⟩ := hY
+  obtain ⟨hZsub, hZexc⟩ := hZ
+  refine ⟨fun x hx => ?_, fun x hxbd hxABC => ?_⟩
+  · -- A∪B∪C ⊆ X∪Y∪Z: A,B ⊆ X; C ⊆ Y
+    rw [atomU]
+    simp only [Finset.mem_union] at hx ⊢
+    rcases hx with (hA | hB) | hC
+    · exact Or.inl (Or.inl (hXsub (Finset.mem_union_left _ hA)))
+    · exact Or.inl (Or.inl (hXsub (Finset.mem_union_right _ hB)))
+    · exact Or.inl (Or.inr (hYsub (Finset.mem_union_right _ hC)))
+  · -- x ∈ bd, x ∉ A∪B∪C ⟹ x ∈ D ⟹ excluded by X, Y, Z all
+    rw [atomU]
+    simp only [Finset.mem_union, not_or] at hxABC ⊢
+    obtain ⟨⟨hxA, hxB⟩, hxC⟩ := hxABC
+    rcases bd_region_cases P hxbd with hA | hB | hC | hD
+    · exact absurd hA hxA
+    · exact absurd hB hxB
+    · exact absurd hC hxC
+    · -- x ∈ D: excluded by all three
+      refine ⟨⟨hXexc x hxbd (by
+                simp only [Finset.mem_union, not_or]
+                exact ⟨fun hA => (P.dAD.forall_ne_finset hA hD) rfl,
+                       fun hB => (P.dBD.forall_ne_finset hB hD) rfl⟩),
+              hYexc x hxbd (by
+                simp only [Finset.mem_union, not_or]
+                exact ⟨fun hA => (P.dAD.forall_ne_finset hA hD) rfl,
+                       fun hC => (P.dCD.forall_ne_finset hC hD) rfl⟩)⟩,
+            hZexc x hxbd (by
+                simp only [Finset.mem_union, not_or]
+                exact ⟨fun hB => (P.dBD.forall_ne_finset hB hD) rfl,
+                       fun hC => (P.dCD.forall_ne_finset hC hD) rfl⟩)⟩
+
+/-! ## Monogamy of mutual information, fully derived
+
+Combine the capacity certificate (`recombination_capacity_le`) with atom admissibility and
+minimality (`rtEntropy_le_cap`) to bound the recombined entropies, then use that the pairwise cuts
+`X, Y, Z` may be taken to *achieve* the pairwise entropies. -/
+
+/-- **Monogamy of mutual information for the undirected min-cut entropy.**
+For pairwise-disjoint boundary regions `A, B, C` (with purifier `D`) in any finite undirected
+nonnegative-weighted graph,
+  `S_A + S_B + S_C + S_{ABC} ≤ S_{AB} + S_{AC} + S_{BC}`
+(equivalently `I₃(A:B:C) ≤ 0`).  No planarity, no multicommodity flow. -/
+theorem rtEntropy_MMI (G : Graph V) {bd A B C D : Finset V} (P : BoundaryPartition bd A B C D) :
+    rtEntropy G bd A P.subA + rtEntropy G bd B P.subB + rtEntropy G bd C P.subC
+        + rtEntropy G bd (A ∪ B ∪ C) P.subABC
+      ≤ rtEntropy G bd (A ∪ B) P.subAB + rtEntropy G bd (A ∪ C) P.subAC
+        + rtEntropy G bd (B ∪ C) P.subBC := by
+  -- pick achieving cuts X, Y, Z for AB, AC, BC
+  obtain ⟨X, hX, hXcap⟩ := rtEntropy_eq_cap G P.subAB
+  obtain ⟨Y, hY, hYcap⟩ := rtEntropy_eq_cap G P.subAC
+  obtain ⟨Z, hZ, hZcap⟩ := rtEntropy_eq_cap G P.subBC
+  -- the four atoms are admissible ⟹ their entropies are below their capacities
+  have hA := rtEntropy_le_cap G P.subA (admissible_A' P hX hY hZ)
+  have hB := rtEntropy_le_cap G P.subB (admissible_B' P hX hY hZ)
+  have hC := rtEntropy_le_cap G P.subC (admissible_C' P hX hY hZ)
+  have hU := rtEntropy_le_cap G P.subABC (admissible_U' P hX hY hZ)
+  -- the capacity certificate
+  have hcert := recombination_capacity_le G X Y Z
+  rw [hXcap, hYcap, hZcap]
+  calc rtEntropy G bd A P.subA + rtEntropy G bd B P.subB + rtEntropy G bd C P.subC
+          + rtEntropy G bd (A ∪ B ∪ C) P.subABC
+      ≤ cutCapacity G (atomA X Y Z) + cutCapacity G (atomB X Y Z)
+          + cutCapacity G (atomC X Y Z) + cutCapacity G (atomU X Y Z) := by
+        exact Nat.add_le_add (Nat.add_le_add (Nat.add_le_add hA hB) hC) hU
+    _ ≤ cutCapacity G X + cutCapacity G Y + cutCapacity G Z := hcert
+
+/-! ## Anti-vacuity witness: a strict monogamy violation
+
+The **star graph** on `Fin 5` has four boundary vertices `0,1,2,3` (regions `A,B,C,D`) each joined by
+a weight-`1` bond to a single central bulk vertex `4`.  Every entropy, and MMI itself, is `decide`-able.
+The tripartite information is strictly negative, `I₃ = 3 − 6 + 1 = −2 < 0`, with every min-cut
+positive — so the MMI theorem is not the vacuous `0 ≤ 0`. -/
+
+/-- The star bulk graph on `Fin 5`: boundary `0,1,2,3` each bonded (weight `1`) to central bulk
+vertex `4`. -/
+def starGraph : Graph (Fin 5) where
+  w := fun u v => if (u = 4 ∧ v.val < 4) ∨ (v = 4 ∧ u.val < 4) then 1 else 0
+  symm := by intro u v; by_cases h : u = 4 <;> by_cases h2 : v = 4 <;> simp_all
+
+/-- Boundary of the star graph: `{A,B,C,D} = {0,1,2,3}`. -/
+def starBd : Finset (Fin 5) := {0, 1, 2, 3}
+
+lemma sA  : ({0} : Finset (Fin 5)) ⊆ starBd := by decide
+lemma sB  : ({1} : Finset (Fin 5)) ⊆ starBd := by decide
+lemma sC  : ({2} : Finset (Fin 5)) ⊆ starBd := by decide
+lemma sAB : ({0, 1} : Finset (Fin 5)) ⊆ starBd := by decide
+lemma sAC : ({0, 2} : Finset (Fin 5)) ⊆ starBd := by decide
+lemma sBC : ({1, 2} : Finset (Fin 5)) ⊆ starBd := by decide
+lemma sABC : ({0, 1, 2} : Finset (Fin 5)) ⊆ starBd := by decide
+
+/-- Star-graph single-region entropies are `1`. -/
+theorem star_SA  : rtEntropy starGraph starBd {0} sA = 1 := by decide
+theorem star_SB  : rtEntropy starGraph starBd {1} sB = 1 := by decide
+theorem star_SC  : rtEntropy starGraph starBd {2} sC = 1 := by decide
+/-- Star-graph pair entropies are `2`. -/
+theorem star_SAB : rtEntropy starGraph starBd {0, 1} sAB = 2 := by decide
+theorem star_SAC : rtEntropy starGraph starBd {0, 2} sAC = 2 := by decide
+theorem star_SBC : rtEntropy starGraph starBd {1, 2} sBC = 2 := by decide
+/-- Star-graph triple entropy is `1`. -/
+theorem star_SABC : rtEntropy starGraph starBd {0, 1, 2} sABC = 1 := by decide
+
+/-- **Strict anti-vacuity witness:** on the star graph the tripartite information is strictly
+negative, `I₃ = S_A+S_B+S_C − S_{AB}−S_{AC}−S_{BC} + S_{ABC} = 3 − 6 + 1 = −2 < 0`
+(as the ℕ inequality `5 < 6` on the two sides of MMI), with every min-cut positive. -/
+theorem rtEntropy_MMI_strict_witness :
+    rtEntropy starGraph starBd {0} sA + rtEntropy starGraph starBd {1} sB
+        + rtEntropy starGraph starBd {2} sC + rtEntropy starGraph starBd {0, 1, 2} sABC
+    < rtEntropy starGraph starBd {0, 1} sAB + rtEntropy starGraph starBd {0, 2} sAC
+        + rtEntropy starGraph starBd {1, 2} sBC := by decide
+
+/-- All star-graph min-cuts in the strict witness are strictly positive (so the strict MMI witness is
+not vacuously about zero entropies). -/
+theorem mmi_witness_mincuts_pos :
+    0 < rtEntropy starGraph starBd {0} sA ∧ 0 < rtEntropy starGraph starBd {1} sB
+      ∧ 0 < rtEntropy starGraph starBd {2} sC ∧ 0 < rtEntropy starGraph starBd {0, 1} sAB
+      ∧ 0 < rtEntropy starGraph starBd {0, 2} sAC ∧ 0 < rtEntropy starGraph starBd {1, 2} sBC
+      ∧ 0 < rtEntropy starGraph starBd {0, 1, 2} sABC := by decide
+
+end Physlib.UndirectedMMICertificate
