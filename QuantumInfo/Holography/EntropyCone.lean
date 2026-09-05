@@ -251,11 +251,20 @@ the concrete 3-party min-cut model `mincut3S` (singletons=2, pairs=3, full=2)
 satisfies it (`mincut3_HolographicD`, §7), so the corrected C1 theorem
 `holographic_implies_MMIDisjoint` is anti-vacuous (BP 21). -/
 
-/-- Min-cut representability with the RT crossing property, DISJOINT form.
-Identical to `Holographic` except `edge_monogamy` is required ONLY for pairwise-
-disjoint region triples — the regime where RT geometry actually constrains cuts.
-This is the physically-correct representability structure; `Holographic` (with
-its all-triples monogamy) is a strictly stronger, vacuous predicate. -/
+/-- An edge/capacity representation of `S` together with an ASSUMED per-edge
+monogamy property, DISJOINT form.  Identical to `Holographic` except its
+`edge_monogamy` field is required ONLY for pairwise-disjoint region triples.
+
+Honest scope: `HolographicD` bundles (i) a nonnegative edge-capacity decomposition
+`represents` of `S`, and (ii) `edge_monogamy` as a *hypothesis field* — the per-edge
+disjoint monogamy inequality is POSITED here, then summed over edges to yield
+`MMIDisjoint` (`holographic_implies_MMIDisjoint`).  It is therefore an *abstract
+sufficient condition* for disjoint MMI, not a proof that MMI-satisfying entropies
+coincide with min-cuts of arbitrary weighted graphs.  In particular the concrete
+witness `mincut3_HolographicD` shows this hypothesis class is NON-EMPTY and
+NON-DEGENERATE (anti-vacuity); it does NOT establish that `HolographicD` is
+equivalent to (arbitrary-)graph min-cut representability, nor that every graph
+min-cut assignment satisfies the per-edge field for every disjoint triple. -/
 structure HolographicD {ι : Type*} [DecidableEq ι] (S : Finset ι → ℝ) where
   E : Type
   fintypeE : Fintype E
@@ -277,12 +286,14 @@ structure HolographicD {ι : Type*} [DecidableEq ι] (S : Finset ι → ℝ) whe
     + (haveI := decActive C e; if active C e then cap e else 0)
     + (haveI := decActive (A ∪ B ∪ C) e; if active (A ∪ B ∪ C) e then cap e else 0)
 
-/-- **C1 (holographic ⇒ MMI), CORRECTED non-vacuous form.** If `S` is min-cut
-representable with the disjoint-only per-edge RT monogamy property (`HolographicD`),
-then it satisfies `MMIDisjoint`. Proof: on any disjoint triple, MMI's entropy form
-is a sum over edges of nonnegative per-edge forms. Unlike `holographic_implies_MMI`
+/-- **C1 (holographic ⇒ MMI), CORRECTED non-vacuous form.** If `S` carries an
+edge-capacity representation together with the ASSUMED disjoint-only per-edge RT
+monogamy field (`HolographicD` — see its docstring for the honest scope), then it
+satisfies `MMIDisjoint`. Proof: on any disjoint triple, MMI's entropy form is a sum
+over edges of the (assumed) nonnegative per-edge forms. Unlike `holographic_implies_MMI`
 this is anti-vacuous — `mincut3_HolographicD` (§7) exhibits a NON-degenerate `S`
-(some `S X > 0`) satisfying the hypothesis. -/
+(some `S X > 0`) satisfying the hypothesis. (This is a sufficient-condition theorem;
+it does not assert that arbitrary graph min-cut entropies satisfy the per-edge field.) -/
 theorem holographic_implies_MMIDisjoint {ι : Type*} [DecidableEq ι] (S : Finset ι → ℝ)
     (h : HolographicD S) : MMIDisjoint S := by
   haveI := h.fintypeE
