@@ -10,15 +10,18 @@ public import Mathlib.Tactic.NormNum
 public import Mathlib.Tactic.Ring
 /-!
 
-# The 2D Ising CFT as the minimal model M(3,4)
+# Evaluating the minimal-model M(3,4) formulas for the 2D Ising conformal data
 
 The 2D critical Ising model is described in the continuum by the unitary minimal
-model `M(p, p')` with `(p, p') = (3, 4)`.  This file formalizes the exact
-conformal data of that CFT — the central charge, the Kac conformal weights of the
-three primary operators, and their scaling dimensions — and proves the values by
-rational arithmetic.
+model `M(p, p')` with `(p, p') = (3, 4)`.  This file **evaluates the standard
+minimal-model formulas** — the central-charge formula `c(p,p')` and the Kac
+conformal-weight formula `h(r,s;p,p')` — at the Ising values and **verifies the
+resulting numbers by rational arithmetic**.  It does NOT construct the Ising CFT
+(no Hilbert space, no Virasoro representation, no fusion/OPE); it computes and checks
+the known conformal-data numbers from their textbook expressions.
 
-These are the *exact* numbers a tensor-network numerical simulation measures:
+The verified values match the *exact* numbers a tensor-network numerical simulation
+measures:
 
 * central charge `c = 1/2`  (measured `c ≈ 0.5023`, and equal to the Virasoro
   `isingCentralCharge` formalized on a separate branch);
@@ -27,9 +30,8 @@ These are the *exact* numbers a tensor-network numerical simulation measures:
 * energy primary `ε`: scaling dimension `Δ_ε = 1`  (measured `Δε ≈ 1.009`).
 
 This module is deliberately self-contained over the rationals `ℚ`: it depends only
-on Mathlib (no Virasoro import).  It bridges the formal CFT data to
-the measured numbers and is a building block toward deriving
-emergent geometry from CFT axioms.
+on Mathlib (no Virasoro import).  It provides the formula-level bridge from the
+textbook conformal data to the measured numbers.
 
 ## Main definitions
 
