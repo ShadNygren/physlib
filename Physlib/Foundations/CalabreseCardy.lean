@@ -9,7 +9,7 @@ public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 public import Mathlib.Tactic
 /-!
 
-# The Calabrese–Cardy entanglement-entropy law
+# The Calabrese–Cardy entanglement-entropy law (formula-level)
 
 For a 1+1D conformal field theory (CFT) of central charge `c`, the entanglement entropy of an
 interval of length `ℓ` on the infinite line (with UV cutoff `a`) is the Calabrese–Cardy law
@@ -20,10 +20,15 @@ interval of length `ℓ` on the infinite line (with UV cutoff `a`) is the Calabr
 where `c₁` is a non-universal constant. Absorbing the cutoff `a` into `c₁` (equivalently `a = 1`)
 gives `ccEntropy c ℓ c₁ = (c/3) · log ℓ + c₁`.
 
+Scope (honest): this file takes the Calabrese–Cardy law as a *given formula* `ccEntropy` and proves
+its algebraic consequences.  It does NOT derive the entropy from a CFT state (no reduced density
+matrix, replica computation, or twist-field correlator); the `S(ℓ)` law itself is posited, and what
+is verified here is the *coefficient-extraction procedure*.
+
 The **universal** content is the *coefficient* `c/3` of the logarithm: the central charge is
-*extracted from entanglement* as `c = 3 · (log-slope of S)`. This is exactly the procedure that
-fits `S(ℓ)` to measure the central charge (e.g. `c = 1/2` for the 2D Ising CFT). The non-universal
-constant `c₁` cancels in any entropy *difference*, giving a cutoff-independent universal observable.
+recovered as `c = 3 · (log-slope of S)`. This is exactly the procedure that fits a measured `S(ℓ)`
+to read off the central charge (e.g. `c = 1/2` for the 2D Ising CFT). The non-universal constant
+`c₁` cancels in any entropy *difference*, giving a cutoff-independent universal observable.
 
 This file formalizes, over `ℝ`:
 * `ccEntropy` — the interval entropy (infinite line);
@@ -34,9 +39,9 @@ This file formalizes, over `ℝ`:
   (anti-vacuity);
 * `ccEntropyFinite` — the finite-size (periodic) form the numerics actually fit.
 
-The `(c/3) log ℓ` divergence is the Ryu–Takayanagi geodesic-length divergence near the AdS boundary:
-this law is the CFT-central-charge → entanglement → RT-geometry link, a building block toward
-CFT ⟹ emergent geometry.
+The `(c/3) log ℓ` divergence matches the Ryu–Takayanagi geodesic-length divergence near the AdS
+boundary at the formula level; this coincidence is the CFT-central-charge → entanglement →
+RT-geometry link at the level of matching coefficients (not a derivation of one from the other).
 
 -/
 
