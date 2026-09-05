@@ -14,43 +14,50 @@ public import Mathlib
 
 **What this encodes, honestly.** In the emergent-spacetime program (Faulkner–Guica–Hartman–Myers–
 Van Raamsdonk 2013; Lashkari–Van Raamsdonk 2016; Hollands–Wald canonical energy), the boundary
-*second-order relative entropy* `S_rel⁽²⁾` of a linearized perturbation of a holographic state EQUALS
-the *bulk gravitational canonical energy* `E_canonical[h]` of the corresponding metric perturbation `h`
-on the Ryu–Takayanagi wedge. Because `E_canonical[h]` is a manifestly POSITIVE-definite quadratic
-functional of `h`, boundary relative-entropy positivity (which we proved elsewhere equals the quantum
-Fisher information `≥ 0`) becomes a BULK statement: **the emergent geometry's canonical
-energy is non-negative** — a linearized positive-energy / stability condition on emergent spacetime.
-In one accessible sentence: *entanglement (relative-entropy positivity on the boundary) implies the
-emergent bulk geometry is stable / obeys a linearized positive-energy condition.*
+*second-order relative entropy* `S_rel⁽²⁾` of a linearized perturbation of a holographic state is
+posited to EQUAL the *bulk gravitational canonical energy* `E_canonical[h]` of the corresponding
+metric perturbation `h` on the Ryu–Takayanagi wedge, both being positive-definite quadratic
+functionals.
 
-This file formalizes the LEAN-TRACTABLE FUNCTIONAL CORE of that equivalence — the same honesty level
-as the companion linearized-Einstein development, which formalizes the Faulkner argument's
-logical/functional skeleton over `ℝ` rather than building general relativity. We do NOT build
-differential geometry or operator theory here.
+⚠️ Scope (honest): this file does NOT construct the bulk canonical energy from a bulk metric, nor
+prove the Faulkner–Li equivalence.  It models `E_canonical[h]` by a discrete POSITIVE QUADRATIC FORM
+`∑ wᵢ hᵢ²` and, under the *posited* dictionary kernel `w = 1/p`, `h = d`, verifies the algebraic
+identity that this form equals the boundary Fisher form `∑ dᵢ²/pᵢ` and is `≥ 0`.  The claim that this
+quadratic form IS the Hollands–Wald bulk energy — and hence that "the emergent geometry's canonical
+energy is non-negative / the emergent geometry is stable" — rests on the posited dictionary and the
+posited RT/JLMS geometry, which are NOT established here.  Read the results as verifying the
+functional/algebraic core under those posits, not as a bulk-geometry derivation.
+
+This file formalizes the LEAN-TRACTABLE FUNCTIONAL CORE at the same honesty level as the companion
+linearized-Einstein development (the Faulkner argument's logical/functional skeleton over `ℝ`, not
+general relativity).  We do NOT build differential geometry or operator theory here.
 
 ## ii. Representation used
 
 We use the **discrete positive quadratic form** `∑ i, w i * (h i)^2` over `Fin n` as the tractable
-core. A positive-weighted sum of squares is a fully honest model of the Hollands–Wald canonical energy
-(itself a positive-definite quadratic form in the perturbation and its flux); the discretization is the
-finite-dimensional version of the weighted radial integral `∫ z, w z * (h z)^2` over the RT wedge. The
-discrete representation makes STRICT positivity of the anti-vacuity witness clean to prove
-(`Finset.sum_pos`).
+core.  It is a *simplified stand-in* for the Hollands–Wald canonical energy (which is likewise a
+positive-definite quadratic form in the perturbation and its flux): the finite sum plays the role of
+the weighted radial integral `∫ z, w z * (h z)^2` over the RT wedge, but the actual bulk functional
+is not constructed here.  The discrete representation makes STRICT positivity of the anti-vacuity
+witness clean to prove (`Finset.sum_pos`).
 
 ## iii. Key results
 
-- `bulkCanonicalEnergy` : the bulk canonical energy `E_canonical[h] = ∑ i, w i * (h i)^2` (positive
-  weight `w`), the Hollands–Wald symplectic energy of the metric perturbation `h`.
+- `bulkCanonicalEnergy` : the model positive quadratic form `∑ i, w i * (h i)^2` (positive weight
+  `w`), standing in for the Hollands–Wald symplectic energy of the metric perturbation `h`.
 - `boundaryFisher` : the boundary second-order relative entropy / quantum Fisher information
   `∑ i, d i^2 / p i`.
 - `dictionary` : the emergent-gravity dictionary mapping boundary perturbation data `(p, d)` to the
   bulk field `h`, via the positive kernel `w i = 1 / p i`, `h i = d i`.
-- `bulk_canonical_energy_nonneg` : `(∀ i, 0 ≤ w i) → 0 ≤ bulkCanonicalEnergy w h` — the bulk
-  positive-energy statement.
-- `faulkner_li_bridge` : bulk `E_canonical` = boundary `S_rel⁽²⁾` (the Faulkner–Li dictionary), a full
-  general equality on the dictionary kernel (not merely witness-level).
-- `emergent_positive_energy` : boundary relative-entropy positivity ⟹ bulk canonical energy `≥ 0`
-  (the payoff: entanglement ⟹ emergent geometry is stable).
+- `bulk_canonical_energy_nonneg` : `(∀ i, 0 ≤ w i) → 0 ≤ bulkCanonicalEnergy w h` — non-negativity
+  of the model quadratic form (the positive-energy statement, within this model).
+- `faulkner_li_bridge` : the algebraic identity, under the *posited* kernel `w = 1/p`, `h = d`, that
+  the model form `∑ w h²` equals the boundary Fisher form `∑ d²/p` — a general equality on that
+  dictionary kernel (not merely witness-level).  This is the dictionary identity, not a proof of the
+  physical Faulkner–Li equivalence.
+- `emergent_positive_energy` : boundary Fisher/relative-entropy positivity ⟹ the model form `≥ 0`
+  (within the model and its posited dictionary: entanglement positivity ⟹ the modeled canonical
+  energy is non-negative).
 - Anti-vacuity: a concrete NONZERO perturbation with STRICTLY POSITIVE canonical energy, and the
   matching boundary witness giving the same value through the bridge.
 
@@ -75,8 +82,9 @@ coordinate of the Ryu–Takayanagi wedge, and a positive symplectic/metric weigh
 (in AdS a specific positive function; here abstracted as any `w ≥ 0`), the canonical energy is the
 positive-weighted sum of squares
   `E_canonical[h] = ∑ i, w i * (h i)^2`.
-This is the finite-dimensional discretization of the weighted radial integral
-`∫ z in Ioi 0, w z * (h z)^2`; a positive quadratic form is the essential Hollands–Wald content. -/
+This is a finite-dimensional stand-in for the weighted radial integral
+`∫ z in Ioi 0, w z * (h z)^2`; it captures the positive-quadratic-form *structure* of the
+Hollands–Wald energy, but is not that bulk functional (no metric is constructed here). -/
 noncomputable def bulkCanonicalEnergy {n : ℕ} (w h : Fin n → ℝ) : ℝ :=
   ∑ i, w i * (h i) ^ 2
 
@@ -111,14 +119,16 @@ theorem bulk_canonical_energy_nonneg {n : ℕ} (w h : Fin n → ℝ) (hw : ∀ i
   intro i _
   exact mul_nonneg (hw i) (sq_nonneg _)
 
-/-! ### B. The Faulkner–Li dictionary: bulk = boundary -/
+/-! ### B. The Faulkner–Li dictionary identity: model form = boundary Fisher -/
 
-/-- **The Faulkner–Li dictionary (bulk = boundary), full general equality.** Under the emergent-gravity
-dictionary — bulk weight `w = 1/p`, bulk field `h = d` — the bulk gravitational canonical energy
-`E_canonical[h]` EQUALS the boundary second-order relative entropy / quantum Fisher information
-`S_rel⁽²⁾[p, d]`, for ALL `p` and `d` (not merely on a witness):
+/-- **The dictionary identity (model form = boundary Fisher), full general equality.** Under the
+*posited* emergent-gravity dictionary — weight `w = 1/p`, field `h = d` — the model quadratic form
+equals the boundary second-order relative entropy / quantum Fisher information `S_rel⁽²⁾[p, d]`, for
+ALL `p` and `d` (not merely on a witness):
   `bulkCanonicalEnergy (1/p) d = boundaryFisher p d`.
-This is the Lashkari–Van Raamsdonk / Faulkner–Li dictionary in the discrete toy: canonical energy IS
+This is the algebraic content of the Lashkari–Van Raamsdonk / Faulkner–Li dictionary in the discrete
+toy — the model canonical-energy form equals quantum Fisher information under `w = 1/p`.  It is a
+dictionary identity, not a proof that the model form is the physical bulk energy: canonical energy IS
 quantum Fisher information. -/
 theorem faulkner_li_bridge {n : ℕ} (p d : Fin n → ℝ) :
     bulkCanonicalEnergy (dictionaryWeight p) (dictionaryField d) = boundaryFisher p d := by
@@ -141,13 +151,15 @@ theorem boundary_fisher_nonneg {n : ℕ} (p d : Fin n → ℝ) (hp : ∀ i, 0 < 
 
 /-! ### D. The payoff: entanglement ⟹ emergent geometry obeys the positive-energy condition -/
 
-/-- **Emergent positive energy (the payoff corollary).** Boundary relative-entropy positivity implies
-the bulk canonical energy is non-negative. Concretely: with a strictly positive reference distribution
-`p > 0`, the bulk canonical energy of the dictionary-image of `(p, d)` is `≥ 0`:
+/-- **Positive energy within the model (the payoff corollary).** Boundary Fisher/relative-entropy
+positivity implies the model canonical-energy form is non-negative. Concretely: with a strictly
+positive reference distribution `p > 0`, the model form on the dictionary-image of `(p, d)` is `≥ 0`:
   `(∀ i, 0 < p i) → 0 ≤ bulkCanonicalEnergy (dictionaryWeight p) (dictionaryField d)`.
-Reading: **entanglement (boundary `S_rel⁽²⁾ ≥ 0`) ⟹ the emergent bulk geometry satisfies the linearized
-positive-energy / stability condition.** Proof routes through the Faulkner–Li bridge (`= boundaryFisher`)
-and boundary Fisher positivity — equivalently directly through the nonneg dictionary weight `1/p ≥ 0`. -/
+Reading (within this model and its posited dictionary): entanglement (boundary `S_rel⁽²⁾ ≥ 0`) ⟹ the
+modeled canonical energy satisfies the linearized positive-energy / stability condition.  This is a
+statement about the model form under the posited `w = 1/p`, not about a constructed bulk geometry.
+Proof routes through the dictionary identity (`= boundaryFisher`) and boundary Fisher positivity —
+equivalently directly through the nonneg dictionary weight `1/p ≥ 0`. -/
 theorem emergent_positive_energy {n : ℕ} (p d : Fin n → ℝ) (hp : ∀ i, 0 < p i) :
     0 ≤ bulkCanonicalEnergy (dictionaryWeight p) (dictionaryField d) := by
   rw [faulkner_li_bridge]
