@@ -42,40 +42,48 @@ definitions, and proves:
   (the ingredient the naive pointwise route ignores).
 * `rtEntropy_SSA` — **strong subadditivity** `S_A + S_{ABC} ≤ S_{AB} + S_{AC}`, fully DERIVED from
   submodularity + minimality + the swapping lemmas. A real, sharp holographic inequality.
-* `rtEntropy_MMI_star` / `tripartite_information_star` — **MMI for the star (perfect-tensor / GHZ)
-  bulk graph**, and the **STRICT** witness `I₃ = −2 < 0` with all min-cuts positive (anti-vacuity),
-  computed by `decide`/explicit evaluation.
+* `rtEntropy_MMI_star` / `tripartite_information_star` — **MMI for the star bulk graph**, and the
+  **STRICT** witness `I₃ = −2 < 0` with all min-cuts positive (anti-vacuity), computed by
+  `decide`/explicit evaluation.  (The star min-cut graph gives the entropy assignment
+  `S_single = 1, S_pair = 2, S_ABC = 1`; this is a min-cut geometry, not a GHZ or perfect-tensor
+  state vector.)
 
-## iii. Why MMI does not follow from a pointwise cut inequality
+## iii. Why the *symmetric non-disjoint* pointwise cut inequality fails
 
-A natural but incorrect route proposes proving MMI from a single **pointwise**
-"triple cut" edge inequality
+One natural but incorrect route proposes proving MMI from a single **pointwise**
+"triple cut" edge inequality on the *symmetric, non-disjoint* candidate family
+`(X∩Y, X∩Z, Y∩Z, X∪Y∪Z)`:
 
   `cap(X∩Y) + cap(X∩Z) + cap(Y∩Z) + cap(X∪Y∪Z) ≤ cap(X) + cap(Y) + cap(Z)`.
 
-**This inequality is FALSE** — verified in Lean below as `edge_triple_false`: with an edge whose
-endpoints satisfy `u ∈ X∩Y∩Z`, `v ∉ X∪Y∪Z`, the left side is `4` and the right side is `3`
-(`4 ≤ 3` is false). Four cut indicators cannot be pointwise-dominated by three. The obstruction is
-sharp: **MMI does not follow from any fixed-set / pointwise cut inequality.** Sums of the
-strong-subadditivity inequalities also fail to give MMI (they give
-`S_A+S_B+S_C+3 S_{ABC} ≤ 2(S_{AB}+S_{AC}+S_{BC})`, not MMI).
+**This particular inequality is FALSE** — verified in Lean below as `edge_triple_false`: with an edge
+whose endpoints satisfy `u ∈ X∩Y∩Z`, `v ∉ X∪Y∪Z`, the left side is `4` and the right side is `3`
+(`4 ≤ 3` is false).  The triple-overlap cell `X∩Y∩Z` is charged by all three intersections but paid
+for by none of the removals.  This refutes the *symmetric* formula; it does **not** show MMI lacks a
+fixed cut certificate.  (Sums of the strong-subadditivity inequalities also fail to give MMI: they
+give `S_A+S_B+S_C+3 S_{ABC} ≤ 2(S_{AB}+S_{AC}+S_{BC})`, not MMI.)
 
-The genuine MMI proof (Cui–Hayden–He–Headrick–Stoica–Walter 2018, *Bit Threads and Holographic
-Monogamy*; Hayden–Headrick–Maloney 2011) is the **multiflow / LP-duality (bit-threads)** argument:
-it asserts the *existence of a simultaneous flow* saturating three cuts at once — a global
-optimization existence statement, NOT a finite pointwise fact, hence not reducible to `decide`.
-Formalizing that requires an LP-duality / max-flow-min-cut layer in Mathlib
-(`Mathlib` currently has no packaged multi-commodity flow duality), and is recorded below as the
-precise remaining gap. We therefore deliver MMI **as a proven theorem on the canonical strict
-witness**, plus the fully general submodularity, minimality, swapping, and strong-subadditivity
-machinery — all `sorry`-free.
+Scope caveat: for the *undirected* min-cut model, MMI **does** admit a universal fixed cut
+certificate — the *disjoint* atoms `A' = (X∩Y)\Z`, `B' = (X∩Z)\Y`, `C' = (Y∩Z)\X`, `U' = X∪Y∪Z`,
+which excise the triple-overlap cell that breaks the symmetric family — with no planarity or
+multicommodity-flow hypothesis.  So the `edge_triple_false` obstruction is specific to the symmetric
+non-disjoint formula, not a general impossibility.
+
+The standard MMI references (Cui–Hayden–He–Headrick–Stoica–Walter 2018, *Bit Threads and Holographic
+Monogamy*; Hayden–Headrick–Maloney 2011) give a **multiflow / LP-duality (bit-threads)** argument,
+asserting the *existence of a simultaneous flow* saturating three cuts at once; a Mathlib
+formalization along those lines would need an LP-duality / max-flow-min-cut layer (Mathlib currently
+has no packaged multi-commodity flow duality).  Here we instead deliver MMI **as a proven theorem on
+the canonical strict star witness**, plus the fully general submodularity, minimality, swapping, and
+strong-subadditivity machinery — all `sorry`-free.
 
 DERIVED vs POSITED: the min-cut *geometry* facts (submodularity, SSA, MMI-on-the-witness) are
 DERIVED from finite combinatorics; that the bulk graph models AdS is the POSIT.
 
-This file DERIVES the SSA half and the witness half of the holographic MMI property, sharpens the
-observation that the pointwise route fails (the specific triple inequality is provably false), and
-reduces the general-graph MMI to the named Mathlib multiflow-duality gap.
+This file DERIVES the SSA half and a strict witness of the holographic MMI property, and shows that
+the *symmetric non-disjoint* pointwise triple inequality is provably false (`edge_triple_false`).  It
+does not claim general-graph MMI reduces to a multiflow gap: the disjoint-atom certificate already
+handles the undirected model; the multiflow route is only one alternative proof strategy.
 
 -/
 
@@ -99,10 +107,11 @@ structure Graph (V : Type*) [Fintype V] [DecidableEq V] where
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
 /-- The capacity of a cut `S`: the total weight of undirected edges with exactly one endpoint in `S`.
-We sum the directed indicator `[u ∈ S ∧ v ∉ S]·w u v` over ALL ordered pairs; by symmetry each
-undirected boundary edge is counted once from each side, so this is (twice) the standard cut — a
-fixed positive multiple, irrelevant to every inequality below (both sides scale equally).
-Valued in `ℕ` (nonnegativity is automatic; the model is fully computable / `decide`-able). -/
+We sum the directed indicator `[u ∈ S ∧ v ∉ S]·w u v` over ALL ordered pairs.  For a boundary edge
+`{u,v}` with `u ∈ S`, `v ∉ S`, only the ordered pair `(u,v)` satisfies the condition — the reverse
+`(v,u)` fails `u ∈ S` — so each undirected crossing edge is counted exactly **once**.  Hence this
+equals the standard undirected cut value.  Valued in `ℕ` (nonnegativity is automatic; the model is
+fully computable / `decide`-able). -/
 def cutCapacity (G : Graph V) (S : Finset V) : ℕ :=
   ∑ u, ∑ v, (if u ∈ S ∧ v ∉ S then G.w u v else 0)
 
@@ -208,11 +217,12 @@ theorem cutCapacity_submodular (G : Graph V) (S T : Finset V) :
 
 /-! ## The false "triple cut" inequality -/
 
-/-- The pointwise `edge` inequality behind the `cutCapacity_triple` route,
+/-- The pointwise `edge` inequality behind the *symmetric non-disjoint* `cutCapacity_triple` route,
 specialized to the membership pattern `u ∈ X∩Y∩Z`, `v ∉ X∪Y∪Z`, with all weights `1`:
-its left side is `4` and its right side is `3`, so it is **FALSE**.  This is the obstruction
-made concrete: four cut indicators cannot be pointwise-dominated by three.  (We prove the negation of
-the numeric instance, i.e. `¬ (4 ≤ 3)`, which is exactly what breaks the naive route.) -/
+its left side is `4` and its right side is `3`, so it is **FALSE**.  This refutes the *symmetric*
+family specifically — the triple-overlap cell `X∩Y∩Z` is triple-charged — and is exactly what breaks
+that naive route; the *disjoint*-atom certificate (see §iii) is unaffected.  (We prove the negation
+of the numeric instance, i.e. `¬ (4 ≤ 3)`.) -/
 theorem edge_triple_false :
     ¬ ((1:ℕ) + 1 + 1 + 1 ≤ 1 + 1 + 1) := by decide
 
@@ -342,15 +352,19 @@ theorem rtEntropy_SSA (G : Graph V) {bd A B C D : Finset V}
         exact add_le_add hA hABC
     _ ≤ cutCapacity G X + cutCapacity G Y := hsub
 
-/-! ## MMI and the STRICT witness: the star (perfect-tensor / GHZ) bulk graph
+/-! ## MMI and the STRICT witness: the star bulk graph
 
 The star graph has four boundary vertices `0,1,2,3` (regions `A,B,C,D`) each joined by a weight-`1`
-bond to a single central bulk vertex `4`.  This is the canonical perfect-tensor / GHZ example.
-Every single-region and pair-region RT entropy, and MMI itself, is computed by `decide`
-(the model is fully `ℕ`-valued and finite).  The strict value `I₃ = −2 < 0` with all min-cuts
-positive is the **anti-vacuity witness**. -/
+bond to a single central bulk vertex `4`.  Every single-region and pair-region RT entropy, and MMI
+itself, is computed by `decide` (the model is fully `ℕ`-valued and finite).  The strict value
+`I₃ = −2 < 0` with all min-cuts positive is the **anti-vacuity witness**.
 
-/-- The star / perfect-tensor bulk graph on `Fin 5`: boundary `0,1,2,3` each bonded (weight `1`)
+(Interpretation note: this is a min-cut *graph* entropy assignment — `S_A = 1`, `S_{AB} = 2`,
+`S_{ABC} = 1` — which strictly violates MMI-saturation.  It is *not* the entropy vector of a GHZ
+state (`S_single = S_pair = 1`) nor of a 4-party perfect tensor; do not read the star graph as
+either.  The point is only that this concrete min-cut geometry gives a strict `I₃ < 0` witness.) -/
+
+/-- The star bulk graph on `Fin 5`: boundary `0,1,2,3` each bonded (weight `1`)
 to the central bulk vertex `4`. -/
 def starGraph : Graph (Fin 5) where
   w := fun u v => if (u = 4 ∧ v.val < 4) ∨ (v = 4 ∧ u.val < 4) then 1 else 0
@@ -376,7 +390,7 @@ theorem star_SC  : rtEntropy starGraph starBd {2} sC = 1 := by decide
 theorem star_SAB : rtEntropy starGraph starBd {0, 1} sAB = 2 := by decide
 theorem star_SAC : rtEntropy starGraph starBd {0, 2} sAC = 2 := by decide
 theorem star_SBC : rtEntropy starGraph starBd {1, 2} sBC = 2 := by decide
-/-- Star-graph triple entropy is `1` (equals `S_D`, the purifier — perfect-tensor structure). -/
+/-- Star-graph triple entropy is `1` (equals `S_D`, the purifying fourth region). -/
 theorem star_SABC : rtEntropy starGraph starBd {0, 1, 2} sABC = 1 := by decide
 
 /-- **MMI on the star graph** (the sharp holographic inequality):
