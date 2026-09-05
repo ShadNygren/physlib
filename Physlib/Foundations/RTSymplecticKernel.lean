@@ -9,7 +9,7 @@ public import Mathlib
 
 /-!
 
-# Deriving the Kubo–Mori / canonical-energy weight kernel from the modular Hamiltonian
+# The Kubo–Mori / canonical-energy weight kernel as the divided-difference of `K = −log p`
 
 ## i. Overview (forest level)
 
@@ -21,10 +21,12 @@ boundary object whose spectrum *is* the emergent bulk geometry (an area, up to `
 The second-order (non-linear) first law / canonical-energy program weights fluctuations of the
 density matrix eigenvalues by the **Kubo–Mori (KM) / Fisher weight**
 `L(a,b) = (log a − log b)/(a − b)` off the diagonal, and by the **Fisher weight** `1/a` on the
-diagonal. The Faulkner–Li bulk bridge *posits* the bulk↔boundary
-dictionary kernel `w = 1/p`. This file **derives** that kernel — and the full off-diagonal KM
-weight — directly from the modular Hamiltonian spectrum, turning a posited identification into a
-derived one.
+diagonal. The Faulkner–Li bulk bridge *posits* the bulk↔boundary dictionary kernel `w = 1/p`.
+This file **verifies the mathematical identity** that this kernel — diagonal `1/p` and the full
+off-diagonal KM weight `L` — is exactly the derivative / divided-difference of the modular-Hamiltonian
+spectrum `K(p) = −log p`.  That reduces the posited weight `w = 1/p` to a property of `K = −log ρ`;
+the further step to *geometry* is via the RT/JLMS dictionary, which is itself a physics posit (see
+the honest-boundary note), so the geometric reading is not established here beyond that posit.
 
 ## ii. The key insight (this is the whole point)
 
@@ -37,22 +39,26 @@ of the modular-Hamiltonian spectrum `K(p) = −log p`:
 * **Diagonal:** `1/a = −K'(a)` where `K(p) = −log p`, `K'(p) = −1/p`. The posited weight
   `w = 1/p` is exactly `−(d/dp)` of the modular Hamiltonian.
 
-Since RT/JLMS identifies the boundary modular Hamiltonian with the bulk area operator, deriving the
-weight from `K` derives it from the emergent *geometry* — closing the posited-vs-derived gap at the
-spectral level.
+*If* one accepts the RT/JLMS posit identifying the boundary modular Hamiltonian with the bulk area
+operator, then expressing the weight as a property of `K` connects it to the emergent *geometry* at
+the spectral level.  That identification is a physics posit, not proved here.
 
 ## iii. Honest boundary
 
-This derives the **spectral kernel** (diagonal weight `1/p` and off-diagonal weight `L`) from the
-modular Hamiltonian `K = −log ρ`. The full Hollands–Wald symplectic 2-form assembled from the bulk
-metric (canonical energy as a spacetime integral) remains a deeper, documented frontier:
-this result closes the *spectral-kernel* gap, not the full symplectic-form derivation.
+This establishes the **spectral kernel identity** (diagonal weight `1/p` and off-diagonal weight `L`
+= the derivative / divided-difference of `K = −log ρ`) — a mathematical fact about `−log`.  It does
+NOT construct a spacetime symplectic form: the full Hollands–Wald symplectic 2-form assembled from
+the bulk metric (canonical energy as a spacetime integral) remains a deeper, documented frontier.
+This result is the spectral-kernel identity only, not the full symplectic-form derivation, and not a
+proof of the RT/JLMS geometric identification.
 
 ## iv. Building blocks
 
 * The KM/Fisher weight `L(a,b)` and its diagonal `1/a` (restated here as `kmWeight`).
-* The *posited* dictionary weight `w = 1/p` (Faulkner–Li bulk bridge) — DERIVED here.
-* The honest gap between a posited and a derived kernel — closed at the spectral level.
+* The *posited* dictionary weight `w = 1/p` (Faulkner–Li bulk bridge) — shown here to equal
+  `−(d/dp)(−log p)`, i.e. reduced to a spectral property of `K = −log ρ`.
+* The honest gap between a posited and a spectrally-characterized kernel — settled at the spectral
+  (divided-difference) level; the geometric and symplectic-form steps remain posited/open.
 
 -/@[expose] public section
 
