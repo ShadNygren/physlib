@@ -12,9 +12,10 @@ public import Mathlib
 
 ## i. Overview
 
-This module formalizes the tractable thermodynamic core of the flagship
-"spacetime from entanglement" statement: the eternal AdS₃ (BTZ) black hole
-emerging from the **thermal entanglement** of a boundary conformal field theory.
+This module formalizes the parameter-level thermodynamic identities of the eternal
+AdS₃ (BTZ) black hole and their match to the boundary thermofield-double thermal
+entanglement entropy.  It verifies the standard relations among the BTZ parameters;
+it does not construct the BTZ ↔ thermofield-double duality (see the scope note).
 
 The eternal AdS₃/BTZ black hole is dual to two copies of a boundary CFT prepared
 in the **thermofield-double** state (Maldacena, *Eternal black holes in AdS*).
@@ -41,9 +42,11 @@ We formalize the standard BTZ relations as real-valued functions of the AdS radi
 
 ## ii. Key results
 
-- `thermal_entropy_eq_bekenstein_hawking` : boundary thermal (thermofield-double)
-  entropy = black-hole horizon area / 4G — **the black hole IS the thermal
-  entanglement** (headline).
+- `thermal_entropy_eq_bekenstein_hawking` : the parameter identity boundary thermal
+  (thermofield-double) entropy = black-hole horizon area / 4G — i.e. the two standard
+  expressions, as functions of `r₊`, coincide.  (This *matches* the "black hole = thermal
+  entanglement" picture at the level of the entropy formula; it does not construct the
+  duality — see the scope note below.)
 - `btz_first_law` : `dM/dr₊ = T · dS/dr₊` — thermodynamic consistency `dM = T dS`.
 - `btz_smarr` : `M = ½ T S` — the 2+1D Smarr relation.
 - positivity/monotonicity lemmas + a strictly-positive concrete BTZ witness.
@@ -112,7 +115,7 @@ noncomputable def thermalEntropy (L G T : ℝ) : ℝ := Real.pi ^ 2 * L ^ 2 * T 
 
 /-!
 
-## B. The entanglement = horizon identity (headline)
+## B. The entanglement = horizon parameter identity
 
 -/
 
@@ -121,12 +124,14 @@ by `4G`. This is definitional but records the central fact "entropy = area / 4G"
 theorem btz_entropy_eq_horizon (G rp : ℝ) :
     bekensteinHawkingEntropy G rp = horizonLength rp / (4 * G) := rfl
 
-/-- **The black hole IS the thermal entanglement.** The boundary thermal
+/-- **Parameter identity: thermal entropy = Bekenstein–Hawking entropy.** The boundary thermal
 (thermofield-double) entropy, evaluated at the Hawking temperature, equals the
-black-hole horizon area divided by `4G` (the Bekenstein–Hawking entropy).
+black-hole horizon area divided by `4G` (the Bekenstein–Hawking entropy):
+`S_thermal(T_Hawking) = Area(horizon)/(4G)`.
 
-This is the tractable formalization of "spacetime (a BTZ horizon) emerging from
-thermal entanglement": `S_thermal(T_Hawking) = Area(horizon)/(4G)`. -/
+This verifies that the two standard formulas coincide as functions of the BTZ parameters — the
+formula-level match underlying the "BTZ horizon = thermal entanglement" picture.  It is an equality
+of posited expressions, not a construction of the duality or of the geometry. -/
 theorem thermal_entropy_eq_bekenstein_hawking
     (L G rp : ℝ) (hL : L ≠ 0) :
     thermalEntropy L G (hawkingTemp L rp) = bekensteinHawkingEntropy G rp := by
