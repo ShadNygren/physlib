@@ -8,25 +8,31 @@ module
 public import Mathlib
 
 /-!
-# Cut submodularity ⟹ holographic entropy inequalities (SSA), with strong subadditivity
+# Cut submodularity ⟹ strong subadditivity (SSA) of RT min-cut entropy
 
 ## Forest-level picture (what this file proves and why it matters)
 
 In the holographic / tensor-network picture of emergent spacetime, the entanglement entropy
 `S(A)` of a boundary region `A` is computed by the **Ryu–Takayanagi (RT) prescription**: it is
 the capacity of the *minimum cut* separating `A` from a distinguished complementary "sink" region
-in a finite weighted bulk graph. The geometry of these min-cuts is the source of the *holographic
-entropy inequalities* — sharp constraints on entanglement that hold for geometric (min-cut) states
-but **fail for general quantum states**. This file derives those inequalities from pure finite
-combinatorics — no differential geometry, no operator theory.
+in a finite weighted bulk graph.  This file derives, from pure finite combinatorics (no differential
+geometry, no operator theory), that the RT/geometric entropy satisfies **strong subadditivity (SSA)**.
+
+Important framing note: SSA is **not** a holography-specific inequality.  SSA
+`S(A∪B) + S(B∪C) ≥ S(A∪B∪C) + S(B)` is a *general* quantum entropy inequality (Lieb–Ruskai),
+satisfied by *every* quantum state; it does **not** distinguish geometric (min-cut) states from
+generic ones.  What this file shows is that the min-cut/geometric entropy *also* satisfies SSA, via a
+purely combinatorial submodularity argument.  The inequality that is genuinely *sharp* for holography
+— true for min-cut entropies but violated by generic quantum states — is monogamy of mutual
+information (MMI); see the MMI note below.  SSA is the general branch; MMI is the holographic
+fingerprint.
 
 The engine is **submodularity of the cut-capacity function**:
   `cap(S ∪ T) + cap(S ∩ T) ≤ cap(S) + cap(T)`,
 a standard edge-by-edge fact for nonnegative symmetric weights. From it we derive the RT/geometric
 form of **strong subadditivity (SSA)**:
   `S(A∪B) + S(B∪C) ≥ S(A∪B∪C) + S(B)`,
-a headline holographic entropy inequality, by taking the min-cuts of the two pairs and combining
-their union and intersection.
+by taking the min-cuts of the two pairs and combining their union and intersection.
 
 ## Results
 
@@ -62,19 +68,23 @@ for why full MMI does *not* reduce to a single pointwise edge inequality and is 
 MMI, `I₃(A:B:C) = S_A+S_B+S_C − S_{AB}−S_{AC}−S_{BC}+S_{ABC} ≤ 0`, is the *sharp* holographic
 inequality: true for min-cut/geometric entropies, false for general quantum states.
 
-Unlike SSA, **MMI does not follow from a single pointwise (edge-by-edge) submodularity-style
+Unlike SSA, **MMI does not follow from the *symmetric* pointwise (edge-by-edge) submodularity-style
 inequality** applied to the three pairwise RT surfaces. Concretely: with `X, Y, Z` the min-cuts of
 `AB, AC, BC`, the containments `A ⊆ X∩Y`, `B ⊆ X∩Z`, `C ⊆ Y∩Z`, `A∪B∪C ⊆ X∪Y∪Z` hold, but the
-per-edge inequality
+per-edge inequality on the *symmetric non-disjoint* family
   `ind(X∩Y) + ind(X∩Z) + ind(Y∩Z) + ind(X∪Y∪Z) ≤ ind(X) + ind(Y) + ind(Z)`
 is **FALSE** (e.g. an edge `(u,v)` with `u ∈ X∩Y∩Z`, `v ∈ X∩Y`, `v ∉ Z` gives LHS `= 2 > 1 =`
-RHS). An exhaustive search over all boolean set-expressions in `X, Y, Z` respecting the containment
-constraints confirms *no* fixed pointwise combination yields MMI. MMI genuinely requires the
-*minimality* (optimality) of the pairwise cuts in a nested/contraction argument
-(Hayden–Headrick–Maloney), not just the lattice combination that suffices for SSA. Formalizing that
-nested-optimality argument is the remaining step for the full MMI result — it uses the *same* submodularity engine
-(`cutCapacity_submodular`) proved here, applied inside a min-cut swapping argument. It is left as the
-documented open step (no `sorry`): this file delivers the engine + SSA + a strict witness.
+RHS): the triple-overlap cell `X∩Y∩Z` is triple-charged by the symmetric family.
+
+Scope note: this refutes the *symmetric* combination, not every fixed combination.  In the
+*undirected* min-cut model MMI *does* follow from a fixed cut certificate — the *disjoint* atoms
+`(X∩Y)\Z, (X∩Z)\Y, (Y∩Z)\X, X∪Y∪Z` (which excise the triple-overlap cell).  The anchored-sink
+construction used here for admissibility is a *directed* variant, in which the disjoint-atom bound is
+not automatic; realizing MMI in that variant uses the *minimality* (optimality) of the pairwise cuts
+in a nested/swapping argument (Hayden–Headrick–Maloney), which employs the *same* submodularity
+engine (`cutCapacity_submodular`) proved here. That nested-optimality step is the documented
+remaining step for MMI in this construction (no `sorry`): this file delivers the engine + SSA + a
+strict witness.
 -/
 
 @[expose] public section
@@ -264,7 +274,10 @@ theorem admissible_mono {A A' sink S : Finset V} (hAA : A ⊆ A')
   rw [mem_admissibleCuts] at hS ⊢
   exact ⟨hAA.trans hS.1, hS.2⟩
 
-/-! ### Strong subadditivity (the headline holographic inequality)
+/-! ### Strong subadditivity (SSA) of the RT min-cut entropy
+
+(Recall SSA is a *general* quantum entropy inequality; the point here is that the min-cut/geometric
+entropy satisfies it via a combinatorial submodularity argument.)
 
 Take the RT surfaces `S_AB ⊇ A∪B` and `S_BC ⊇ B∪C`. Their union covers `A∪B∪C` (admissible for the
 triple) and their intersection covers `B` (admissible for `B`). Submodularity of the cut capacity on
@@ -274,8 +287,8 @@ i.e. `S(A∪B) + S(B∪C) ≥ S(A∪B∪C) + S(B)`. -/
 
 /-- **Strong subadditivity of the RT min-cut entropy** (RT/geometric form):
   `S(A∪B) + S(B∪C) ≥ S(A∪B∪C) + S(B)`.
-Derived from `cutCapacity_submodular` applied to the two pairwise RT surfaces. This is a headline
-holographic entropy inequality. -/
+Derived from `cutCapacity_submodular` applied to the two pairwise RT surfaces. (SSA itself is a
+general quantum entropy inequality; this establishes it for the min-cut/geometric entropy.) -/
 theorem rtEntropy_strong_subadditive (w : V → V → ℝ) (hw : ∀ u v, 0 ≤ w u v)
     {A B C sink : Finset V}
     (hAB : Disjoint (A ∪ B) sink) (hBC : Disjoint (B ∪ C) sink)
@@ -306,8 +319,8 @@ theorem rtEntropy_strong_subadditive (w : V → V → ℝ) (hw : ∀ u v, 0 ≤ 
 /-! ## Anti-vacuity witness
 
 A concrete 4-vertex weighted graph on which strong subadditivity is *strict*, with all four RT
-min-cuts *positive* — certifying that the inequality carries genuine holographic content (not a
-degenerate `0 ≤ 0`).
+min-cuts *positive* — certifying that the derived inequality carries genuine (non-degenerate)
+content, not a trivial `0 ≤ 0`. (SSA holds generally; here it is strict for this min-cut geometry.)
 
 Vertices `Fin 4`: `sink = {0}`, `A = {1}`, `B = {2}`, `C = {3}`. Symmetric nonnegative weights:
 `w(0,1)=2, w(0,2)=1, w(0,3)=2, w(1,3)=2` (all other pairs `0`). The min-cuts are
