@@ -590,4 +590,242 @@ theorem mmi_witness_mincuts_pos :
       ∧ 0 < rtEntropy starGraph starBd {0, 2} sAC ∧ 0 < rtEntropy starGraph starBd {1, 2} sBC
       ∧ 0 < rtEntropy starGraph starBd {0, 1, 2} sABC := by decide
 
+/-! ## Nonnegative real edge weights
+
+The entire development above is stated over `ℕ`-valued weights, which makes nonnegativity automatic.
+The same certificate holds verbatim for **nonnegative real** edge weights: the combinatorial engine
+`edge_atoms_nonexpansive`, the admissibility of the recombination atoms, and the boundary-partition
+bookkeeping are all scalar-free and are reused unchanged.  Only the capacity scalar changes from `ℕ`
+to `ℝ`; the pointwise boolean inequality is lifted by multiplying against the (nonnegative) real
+weight, and the doubling identity is divided by two over `ℝ` rather than by `omega`.
+
+The `ℕ` model embeds into this one (`castGraph`, `rtEntropyR_castGraph`), so the real result subsumes
+the `ℕ` result and its strict anti-vacuity witness. -/
+
+/-- A finite undirected weighted bulk graph with **nonnegative real** edge weights: a symmetric
+`ℝ`-valued edge weight on a finite vertex type together with an explicit nonnegativity field. -/
+structure GraphR (V : Type*) [Fintype V] [DecidableEq V] where
+  /-- edge weight between two vertices -/
+  w : V → V → ℝ
+  /-- weights are nonnegative -/
+  w_nonneg : ∀ u v, 0 ≤ w u v
+  /-- weights are symmetric (the graph is undirected) -/
+  symm : ∀ u v, w u v = w v u
+
+/-- The real cut capacity of `S`: the total weight of undirected edges with exactly one endpoint in
+`S` (directed-indicator form, counting each crossing edge once). -/
+def cutCapacityR (G : GraphR V) (S : Finset V) : ℝ :=
+  ∑ u, ∑ v, (if u ∈ S ∧ v ∉ S then G.w u v else 0)
+
+/-- Real cut capacity is nonnegative. -/
+lemma cutCapacityR_nonneg (G : GraphR V) (S : Finset V) : 0 ≤ cutCapacityR G S := by
+  unfold cutCapacityR
+  refine Finset.sum_nonneg (fun u _ => Finset.sum_nonneg (fun v _ => ?_))
+  by_cases h : u ∈ S ∧ v ∉ S <;> simp [h, G.w_nonneg]
+
+/-- The symmetric-separation capacity over `ℝ`: sum over ordered pairs of `[u,v separated by S]·w u v`. -/
+def symCapR (G : GraphR V) (S : Finset V) : ℝ :=
+  ∑ u, ∑ v, (if (u ∈ S) ≠ (v ∈ S) then G.w u v else 0)
+
+/-- **Doubling identity over `ℝ`:** for symmetric weights, `symCapR G S = 2 * cutCapacityR G S`. -/
+lemma symCapR_eq_two_cutCapacityR (G : GraphR V) (S : Finset V) :
+    symCapR G S = 2 * cutCapacityR G S := by
+  have hsplit : symCapR G S
+      = (∑ u, ∑ v, (if u ∈ S ∧ v ∉ S then G.w u v else 0))
+        + ∑ u, ∑ v, (if u ∉ S ∧ v ∈ S then G.w u v else 0) := by
+    unfold symCapR
+    rw [← Finset.sum_add_distrib]
+    refine Finset.sum_congr rfl (fun u _ => ?_)
+    rw [← Finset.sum_add_distrib]
+    refine Finset.sum_congr rfl (fun v _ => ?_)
+    by_cases hu : u ∈ S <;> by_cases hv : v ∈ S <;> simp [hu, hv]
+  have hswap : (∑ u, ∑ v, (if u ∉ S ∧ v ∈ S then G.w u v else 0))
+      = ∑ u, ∑ v, (if u ∈ S ∧ v ∉ S then G.w u v else 0) := by
+    rw [Finset.sum_comm]
+    refine Finset.sum_congr rfl (fun u _ => ?_)
+    refine Finset.sum_congr rfl (fun v _ => ?_)
+    rw [G.symm v u]
+    by_cases hu : u ∈ S <;> by_cases hv : v ∈ S <;> simp [hu, hv, and_comm]
+  rw [hsplit, hswap]
+  unfold cutCapacityR
+  ring
+
+/-- The symmetric-separation indicator of `S` at ordered pair `(u,v)`, real form. -/
+lemma sep_indicatorR (G : GraphR V) (S : Finset V) (u v : V) :
+    (if (u ∈ S) ≠ (v ∈ S) then G.w u v else 0)
+      = (bdiff (mem S u) (mem S v) : ℝ) * G.w u v := by
+  unfold bdiff mem
+  by_cases hu : u ∈ S <;> by_cases hv : v ∈ S <;> simp [hu, hv]
+
+/-- `symCapR` rewritten with the `bdiff`/`mem` indicator form of each ordered pair. -/
+lemma symCapR_eq_bdiff_sum (G : GraphR V) (S : Finset V) :
+    symCapR G S = ∑ u, ∑ v, (bdiff (mem S u) (mem S v) : ℝ) * G.w u v := by
+  unfold symCapR
+  exact Finset.sum_congr rfl
+    (fun u _ => Finset.sum_congr rfl (fun v _ => sep_indicatorR G S u v))
+
+/-- **Pointwise real capacity inequality**: at each ordered pair the atoms' separation weight is at
+most that of `X, Y, Z`, after multiplying the boolean engine by the nonnegative weight. -/
+lemma edge_capacity_leR (G : GraphR V) (X Y Z : Finset V) (u v : V) :
+    (bdiff (mem (atomA X Y Z) u) (mem (atomA X Y Z) v) : ℝ) * G.w u v
+      + (bdiff (mem (atomB X Y Z) u) (mem (atomB X Y Z) v) : ℝ) * G.w u v
+      + (bdiff (mem (atomC X Y Z) u) (mem (atomC X Y Z) v) : ℝ) * G.w u v
+      + (bdiff (mem (atomU X Y Z) u) (mem (atomU X Y Z) v) : ℝ) * G.w u v
+    ≤ (bdiff (mem X u) (mem X v) : ℝ) * G.w u v
+      + (bdiff (mem Y u) (mem Y v) : ℝ) * G.w u v
+      + (bdiff (mem Z u) (mem Z v) : ℝ) * G.w u v := by
+  have hcore := edge_atoms_nonexpansive (mem X u) (mem Y u) (mem Z u) (mem X v) (mem Y v) (mem Z v)
+  have hcastle : ((bdiff (aA (mem X u) (mem Y u) (mem Z u)) (aA (mem X v) (mem Y v) (mem Z v))
+        + bdiff (aB (mem X u) (mem Y u) (mem Z u)) (aB (mem X v) (mem Y v) (mem Z v))
+        + bdiff (aC (mem X u) (mem Y u) (mem Z u)) (aC (mem X v) (mem Y v) (mem Z v))
+        + bdiff (aU (mem X u) (mem Y u) (mem Z u)) (aU (mem X v) (mem Y v) (mem Z v)) : ℕ) : ℝ)
+      ≤ ((bdiff (mem X u) (mem X v) + bdiff (mem Y u) (mem Y v) + bdiff (mem Z u) (mem Z v) : ℕ) : ℝ) :=
+    Nat.cast_le.2 hcore
+  rw [mem_atomA, mem_atomA, mem_atomB, mem_atomB, mem_atomC, mem_atomC, mem_atomU, mem_atomU]
+  push_cast at hcastle ⊢
+  nlinarith [hcastle, G.w_nonneg u v,
+    mul_le_mul_of_nonneg_right hcastle (G.w_nonneg u v)]
+
+/-- **The real capacity certificate.** For every undirected nonnegative-real-weighted graph,
+  `cap A' + cap B' + cap C' + cap U' ≤ cap X + cap Y + cap Z`. -/
+theorem recombination_capacity_leR (G : GraphR V) (X Y Z : Finset V) :
+    cutCapacityR G (atomA X Y Z) + cutCapacityR G (atomB X Y Z)
+        + cutCapacityR G (atomC X Y Z) + cutCapacityR G (atomU X Y Z)
+      ≤ cutCapacityR G X + cutCapacityR G Y + cutCapacityR G Z := by
+  have hsum : symCapR G (atomA X Y Z) + symCapR G (atomB X Y Z)
+        + symCapR G (atomC X Y Z) + symCapR G (atomU X Y Z)
+      ≤ symCapR G X + symCapR G Y + symCapR G Z := by
+    rw [symCapR_eq_bdiff_sum, symCapR_eq_bdiff_sum, symCapR_eq_bdiff_sum, symCapR_eq_bdiff_sum,
+        symCapR_eq_bdiff_sum, symCapR_eq_bdiff_sum, symCapR_eq_bdiff_sum]
+    rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib,
+        ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+    refine Finset.sum_le_sum (fun u _ => ?_)
+    rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib,
+        ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+    refine Finset.sum_le_sum (fun v _ => ?_)
+    exact edge_capacity_leR G X Y Z u v
+  have hA := symCapR_eq_two_cutCapacityR G (atomA X Y Z)
+  have hB := symCapR_eq_two_cutCapacityR G (atomB X Y Z)
+  have hC := symCapR_eq_two_cutCapacityR G (atomC X Y Z)
+  have hU := symCapR_eq_two_cutCapacityR G (atomU X Y Z)
+  have hX := symCapR_eq_two_cutCapacityR G X
+  have hY := symCapR_eq_two_cutCapacityR G Y
+  have hZ := symCapR_eq_two_cutCapacityR G Z
+  rw [hA, hB, hC, hU, hX, hY, hZ] at hsum
+  linarith
+
+/-- **Min-cut entropy over `ℝ`** of region `R`: the minimum real cut capacity over admissible cuts.
+Uses the *same* cut sets `rtCuts bd R` as the `ℕ` model — only the capacity scalar differs. -/
+noncomputable def rtEntropyR (G : GraphR V) (bd R : Finset V) (h : R ⊆ bd) : ℝ :=
+  ((rtCuts bd R).image (cutCapacityR G)).min' ((rtCuts_nonempty h).image (cutCapacityR G))
+
+/-- **Minimality (real):** the real min-cut entropy is at most the capacity of any admissible cut. -/
+lemma rtEntropyR_le_cap (G : GraphR V) {bd R : Finset V} (h : R ⊆ bd)
+    {S : Finset V} (hS : IsRTCut bd R S) : rtEntropyR G bd R h ≤ cutCapacityR G S := by
+  unfold rtEntropyR
+  apply Finset.min'_le
+  rw [Finset.mem_image]
+  exact ⟨S, (mem_rtCuts).2 hS, rfl⟩
+
+/-- The real min-cut entropy is achieved by some admissible cut. -/
+lemma rtEntropyR_eq_cap (G : GraphR V) {bd R : Finset V} (h : R ⊆ bd) :
+    ∃ S, IsRTCut bd R S ∧ rtEntropyR G bd R h = cutCapacityR G S := by
+  unfold rtEntropyR
+  have hmem := Finset.min'_mem ((rtCuts bd R).image (cutCapacityR G))
+    ((rtCuts_nonempty h).image (cutCapacityR G))
+  rw [Finset.mem_image] at hmem
+  obtain ⟨S, hS, hcap⟩ := hmem
+  exact ⟨S, (mem_rtCuts).1 hS, hcap.symm⟩
+
+/-- **Monogamy of mutual information for the real-weighted undirected min-cut entropy.**
+For pairwise-disjoint boundary regions `A, B, C` (with purifier `D`) in any finite undirected
+nonnegative-real-weighted graph,
+  `S_A + S_B + S_C + S_{ABC} ≤ S_{AB} + S_{AC} + S_{BC}`
+(equivalently `I₃(A:B:C) ≤ 0`).  No planarity, no multicommodity flow. -/
+theorem rtEntropyR_MMI (G : GraphR V) {bd A B C D : Finset V} (P : BoundaryPartition bd A B C D) :
+    rtEntropyR G bd A P.subA + rtEntropyR G bd B P.subB + rtEntropyR G bd C P.subC
+        + rtEntropyR G bd (A ∪ B ∪ C) P.subABC
+      ≤ rtEntropyR G bd (A ∪ B) P.subAB + rtEntropyR G bd (A ∪ C) P.subAC
+        + rtEntropyR G bd (B ∪ C) P.subBC := by
+  obtain ⟨X, hX, hXcap⟩ := rtEntropyR_eq_cap G P.subAB
+  obtain ⟨Y, hY, hYcap⟩ := rtEntropyR_eq_cap G P.subAC
+  obtain ⟨Z, hZ, hZcap⟩ := rtEntropyR_eq_cap G P.subBC
+  have hA := rtEntropyR_le_cap G P.subA (admissible_A' P hX hY hZ)
+  have hB := rtEntropyR_le_cap G P.subB (admissible_B' P hX hY hZ)
+  have hC := rtEntropyR_le_cap G P.subC (admissible_C' P hX hY hZ)
+  have hU := rtEntropyR_le_cap G P.subABC (admissible_U' P hX hY hZ)
+  have hcert := recombination_capacity_leR G X Y Z
+  rw [hXcap, hYcap, hZcap]
+  linarith [hA, hB, hC, hU, hcert]
+
+/-! ### Subsumption of the `ℕ` model and its strict witness
+
+The `ℕ` graph embeds into a nonnegative-real graph by casting weights.  The real min-cut entropy of
+the cast graph is the `Nat.cast` of the `ℕ` min-cut entropy (`min'` commutes with the strictly
+monotone `Nat.cast`), so the reviewed `ℕ` strict anti-vacuity witness transports to a strict real
+witness that genuinely instantiates `rtEntropyR_MMI`. -/
+
+/-- Embed a `ℕ`-weighted graph into a nonnegative-real-weighted graph by casting weights. -/
+def castGraph (G : Graph V) : GraphR V where
+  w := fun u v => (G.w u v : ℝ)
+  w_nonneg := fun u v => Nat.cast_nonneg _
+  symm := fun u v => by rw [G.symm]
+
+/-- Casting weights casts the cut capacity. -/
+lemma cutCapacityR_castGraph (G : Graph V) (S : Finset V) :
+    cutCapacityR (castGraph G) S = ((cutCapacity G S : ℕ) : ℝ) := by
+  unfold cutCapacityR cutCapacity castGraph
+  push_cast
+  refine Finset.sum_congr rfl (fun u _ => Finset.sum_congr rfl (fun v _ => ?_))
+  by_cases h : u ∈ S ∧ v ∉ S <;> simp [h]
+
+/-- The real min-cut entropy of a cast graph is the `Nat.cast` of the `ℕ` min-cut entropy. -/
+lemma rtEntropyR_castGraph (G : Graph V) {bd R : Finset V} (h : R ⊆ bd) :
+    rtEntropyR (castGraph G) bd R h = ((rtEntropy G bd R h : ℕ) : ℝ) := by
+  unfold rtEntropyR rtEntropy
+  -- both sides are a `min'` over the *same* index set `rtCuts bd R`; the real capacity is the
+  -- cast of the ℕ capacity, and `Nat.cast : ℕ → ℝ` is a monotone map, so `min'` commutes with it.
+  have hmono : Monotone (fun n : ℕ => (n : ℝ)) := fun a b hab => by
+    simp only; exact_mod_cast hab
+  have himg : (rtCuts bd R).image (cutCapacityR (castGraph G))
+      = ((rtCuts bd R).image (cutCapacity G)).image (fun n : ℕ => (n : ℝ)) := by
+    rw [Finset.image_image]
+    refine Finset.image_congr (fun S _ => ?_)
+    exact cutCapacityR_castGraph G S
+  -- rewrite the LHS `min'` over the identical image, then commute `Nat.cast` past `min'`
+  rw [Monotone.map_finset_min' hmono ((rtCuts_nonempty h).image (cutCapacity G))]
+  congr 1
+
+/-- **Strict real anti-vacuity witness.** On the cast star graph the tripartite information is
+strictly negative over `ℝ`, `I₃ = S_A+S_B+S_C − S_{AB}−S_{AC}−S_{BC} + S_{ABC} = 3 − 6 + 1 = −2 < 0`,
+transported from the `ℕ` witness through `rtEntropyR_castGraph`.  This genuinely instantiates
+`rtEntropyR_MMI` and confirms the real theorem is not the vacuous `0 ≤ 0`. -/
+theorem rtEntropyR_MMI_strict_witness :
+    rtEntropyR (castGraph starGraph) starBd {0} sA
+        + rtEntropyR (castGraph starGraph) starBd {1} sB
+        + rtEntropyR (castGraph starGraph) starBd {2} sC
+        + rtEntropyR (castGraph starGraph) starBd {0, 1, 2} sABC
+    < rtEntropyR (castGraph starGraph) starBd {0, 1} sAB
+        + rtEntropyR (castGraph starGraph) starBd {0, 2} sAC
+        + rtEntropyR (castGraph starGraph) starBd {1, 2} sBC := by
+  rw [rtEntropyR_castGraph, rtEntropyR_castGraph, rtEntropyR_castGraph, rtEntropyR_castGraph,
+      rtEntropyR_castGraph, rtEntropyR_castGraph, rtEntropyR_castGraph,
+      star_SA, star_SB, star_SC, star_SAB, star_SAC, star_SBC, star_SABC]
+  norm_num
+
+/-- All real min-cuts in the strict witness are strictly positive (so the strict real MMI witness is
+not vacuously about zero entropies). -/
+theorem rtEntropyR_mmi_witness_mincuts_pos :
+    0 < rtEntropyR (castGraph starGraph) starBd {0} sA
+      ∧ 0 < rtEntropyR (castGraph starGraph) starBd {1} sB
+      ∧ 0 < rtEntropyR (castGraph starGraph) starBd {2} sC
+      ∧ 0 < rtEntropyR (castGraph starGraph) starBd {0, 1} sAB
+      ∧ 0 < rtEntropyR (castGraph starGraph) starBd {0, 2} sAC
+      ∧ 0 < rtEntropyR (castGraph starGraph) starBd {1, 2} sBC
+      ∧ 0 < rtEntropyR (castGraph starGraph) starBd {0, 1, 2} sABC := by
+  rw [rtEntropyR_castGraph, rtEntropyR_castGraph, rtEntropyR_castGraph, rtEntropyR_castGraph,
+      rtEntropyR_castGraph, rtEntropyR_castGraph, rtEntropyR_castGraph,
+      star_SA, star_SB, star_SC, star_SAB, star_SAC, star_SBC, star_SABC]
+  norm_num
+
 end Physlib.UndirectedMMICertificate
