@@ -813,6 +813,242 @@ theorem rtEntropyR_MMI_strict_witness :
       star_SA, star_SB, star_SC, star_SAB, star_SAC, star_SBC, star_SABC]
   norm_num
 
+/-! ## The general contraction-map sufficient condition for holographic entropy inequalities
+
+The recombination certificate above is one instance of a general principle (the contraction-map
+method of Bao–Nezami–Ooguri–Stoica–Sully–Walter): an entropy inequality among min-cut entropies
+holds whenever the boolean map recombining the achieving cuts into candidate cuts for the bounded
+regions is **edgewise Hamming-nonexpansive** on membership patterns.
+
+Concretely, fix arities `m, k`.  Given regions `L : Fin m → Finset V` on the larger side and
+`R : Fin k → Finset V` on the bounded side, achieving min-cuts `X i` for each `L i`, and a
+**contraction map** `f : (Fin m → Bool) → (Fin k → Bool)` on membership patterns, form for each `j`
+the candidate cut `S j = {v | f (fun i => v ∈ X i) j}`.  If every `S j` is admissible for `R j`
+(boundary validity) and `f` is symmetric-Hamming nonexpansive over **all** pattern pairs, then
+`∑ j S(R j) ≤ ∑ i S(L i)`.
+
+This is a **sufficient** condition: a contraction map implies the holographic entropy inequality.
+It does not claim to characterize which inequalities are holographic (the general holographic entropy
+cone problem), only that any inequality with a contraction map is a theorem of the min-cut
+model. -/
+
+/-- The membership pattern of a vertex `v` against the achieving cuts `X`: bit `i` records whether
+`v ∈ X i`. -/
+def contractionPattern (X : Fin m → Finset V) (v : V) : Fin m → Bool :=
+  fun i => mem (X i) v
+
+/-- The candidate cut for the `j`-th bounded region: the vertices whose pattern maps to `true` in
+coordinate `j` under the contraction map `f`. -/
+def contractionCut (X : Fin m → Finset V) (f : (Fin m → Bool) → (Fin k → Bool)) (j : Fin k) :
+    Finset V :=
+  Finset.univ.filter (fun v => f (contractionPattern X v) j)
+
+/-- Membership of a vertex in the `j`-th candidate cut is exactly the `j`-th output bit of the
+contraction map applied to the vertex's pattern. -/
+lemma mem_contractionCut (X : Fin m → Finset V) (f : (Fin m → Bool) → (Fin k → Bool))
+    (j : Fin k) (v : V) : mem (contractionCut X f j) v = f (contractionPattern X v) j := by
+  simp only [mem, contractionCut, Finset.mem_filter, Finset.mem_univ, true_and]
+  cases f (contractionPattern X v) j <;> simp
+
+/-- **The contraction-map sufficient condition for holographic entropy inequalities.**
+
+Let `L : Fin m → Finset V` and `R : Fin k → Finset V` be boundary regions, with `X i` an achieving
+minimum cut for each `L i` (`hX`).  Let `f : (Fin m → Bool) → (Fin k → Bool)` be a **contraction
+map**: symmetric-Hamming nonexpansive on membership patterns (`hcontract`).  If each candidate cut
+`contractionCut X f j` is admissible for `R j` (`hvalid`), then the holographic entropy inequality
+
+  `∑ j S(R j) ≤ ∑ i S(L i)`
+
+holds for the undirected nonnegative-real-weighted min-cut entropy.
+
+The proof bounds each `S(R j)` by the capacity of its admissible candidate cut, rewrites the total
+in the symmetric-separation form, applies the edgewise contraction pointwise against the nonnegative
+weights, and divides the doubling identity by two.
+
+This is a **sufficient** condition (a contraction map ⟹ the inequality); it does not claim to
+determine which inequalities are holographic. -/
+theorem entropyR_ineq_of_contraction (G : GraphR V) {bd : Finset V} {m k : ℕ}
+    (L : Fin m → Finset V) (R : Fin k → Finset V)
+    (hL : ∀ i, L i ⊆ bd) (hR : ∀ j, R j ⊆ bd)
+    (X : Fin m → Finset V)
+    (hX : ∀ i, IsRTCut bd (L i) (X i) ∧ cutCapacityR G (X i) = rtEntropyR G bd (L i) (hL i))
+    (f : (Fin m → Bool) → (Fin k → Bool))
+    (hvalid : ∀ j, IsRTCut bd (R j) (contractionCut X f j))
+    (hcontract : ∀ p q : Fin m → Bool,
+      (∑ j, bdiff (f p j) (f q j)) ≤ (∑ i, bdiff (p i) (q i))) :
+    (∑ j, rtEntropyR G bd (R j) (hR j)) ≤ ∑ i, rtEntropyR G bd (L i) (hL i) := by
+  -- Step 1: bound each bounded-region entropy by its admissible candidate cut's capacity.
+  have hcapbound : (∑ j, rtEntropyR G bd (R j) (hR j))
+      ≤ ∑ j, cutCapacityR G (contractionCut X f j) :=
+    Finset.sum_le_sum (fun j _ => rtEntropyR_le_cap G (hR j) (hvalid j))
+  -- Step 2: the doubled certificate `∑ j symCapR (S j) ≤ ∑ i symCapR (X i)`.
+  have hsym : (∑ j, symCapR G (contractionCut X f j)) ≤ ∑ i, symCapR G (X i) := by
+    -- rewrite every `symCapR` in `bdiff`/`mem` ordered-pair form
+    have hLHS : (∑ j, symCapR G (contractionCut X f j))
+        = ∑ u, ∑ v, ∑ j, (bdiff (mem (contractionCut X f j) u)
+            (mem (contractionCut X f j) v) : ℝ) * G.w u v := by
+      simp_rw [symCapR_eq_bdiff_sum]
+      rw [Finset.sum_comm]
+      refine Finset.sum_congr rfl (fun u _ => ?_)
+      rw [Finset.sum_comm]
+    have hRHS : (∑ i, symCapR G (X i))
+        = ∑ u, ∑ v, ∑ i, (bdiff (mem (X i) u) (mem (X i) v) : ℝ) * G.w u v := by
+      simp_rw [symCapR_eq_bdiff_sum]
+      rw [Finset.sum_comm]
+      refine Finset.sum_congr rfl (fun u _ => ?_)
+      rw [Finset.sum_comm]
+    rw [hLHS, hRHS]
+    -- compare pointwise over ordered pairs
+    refine Finset.sum_le_sum (fun u _ => ?_)
+    refine Finset.sum_le_sum (fun v _ => ?_)
+    -- pull out the nonnegative weight and apply the contraction
+    have hj : (∑ j, (bdiff (mem (contractionCut X f j) u)
+          (mem (contractionCut X f j) v) : ℝ))
+        ≤ ∑ i, (bdiff (mem (X i) u) (mem (X i) v) : ℝ) := by
+      have hcore := hcontract (contractionPattern X u) (contractionPattern X v)
+      have : ((∑ j, bdiff (f (contractionPattern X u) j) (f (contractionPattern X v) j) : ℕ) : ℝ)
+          ≤ ((∑ i, bdiff (contractionPattern X u i) (contractionPattern X v i) : ℕ) : ℝ) :=
+        Nat.cast_le.2 hcore
+      push_cast at this
+      simp_rw [mem_contractionCut]
+      exact this
+    calc (∑ j, (bdiff (mem (contractionCut X f j) u)
+              (mem (contractionCut X f j) v) : ℝ) * G.w u v)
+        = (∑ j, (bdiff (mem (contractionCut X f j) u)
+              (mem (contractionCut X f j) v) : ℝ)) * G.w u v := by rw [← Finset.sum_mul]
+      _ ≤ (∑ i, (bdiff (mem (X i) u) (mem (X i) v) : ℝ)) * G.w u v :=
+          mul_le_mul_of_nonneg_right hj (G.w_nonneg u v)
+      _ = ∑ i, (bdiff (mem (X i) u) (mem (X i) v) : ℝ) * G.w u v := by rw [Finset.sum_mul]
+  -- Step 3: convert `symCapR = 2 · cutCapacityR` and divide by two.
+  have hcapcert : (∑ j, cutCapacityR G (contractionCut X f j))
+      ≤ ∑ i, cutCapacityR G (X i) := by
+    have h2L : (∑ j, symCapR G (contractionCut X f j))
+        = 2 * ∑ j, cutCapacityR G (contractionCut X f j) := by
+      rw [Finset.mul_sum]
+      exact Finset.sum_congr rfl (fun j _ => symCapR_eq_two_cutCapacityR G _)
+    have h2R : (∑ i, symCapR G (X i)) = 2 * ∑ i, cutCapacityR G (X i) := by
+      rw [Finset.mul_sum]
+      exact Finset.sum_congr rfl (fun i _ => symCapR_eq_two_cutCapacityR G _)
+    rw [h2L, h2R] at hsym
+    linarith
+  -- Step 4: the achieving cuts realize `∑ i cutCapacityR (X i) = ∑ i S(L i)`.
+  have hachieve : (∑ i, cutCapacityR G (X i)) = ∑ i, rtEntropyR G bd (L i) (hL i) :=
+    Finset.sum_congr rfl (fun i _ => (hX i).2)
+  -- Chain the four steps.
+  calc (∑ j, rtEntropyR G bd (R j) (hR j))
+      ≤ ∑ j, cutCapacityR G (contractionCut X f j) := hcapbound
+    _ ≤ ∑ i, cutCapacityR G (X i) := hcapcert
+    _ = ∑ i, rtEntropyR G bd (L i) (hL i) := hachieve
+
+/-! ### Recovering MMI as an instance of the general contraction-map theorem
+
+We re-derive the monogamy inequality `∑ j S(R j) ≤ ∑ i S(L i)` with `L = ![AB, AC, BC]`,
+`R = ![A, B, C, ABC]`, and the recombination expressed directly as a boolean contraction map on the
+three achieving-cut membership bits.  The contraction hypothesis is the same `64`-case fact as
+`edge_atoms_nonexpansive`, and the candidate cuts coincide with the recombination atoms, so their
+admissibility reuses `admissible_A'`…`admissible_U'`. -/
+
+/-- The recombination expressed as a boolean contraction map on the `3`-bit patterns `(∈X,∈Y,∈Z)`:
+`(A', B', C', U') = ((X∩Y)\Z, (X∩Z)\Y, (Y∩Z)\X, X∪Y∪Z)`. -/
+def mmiContraction (p : Fin 3 → Bool) : Fin 4 → Bool :=
+  ![aA (p 0) (p 1) (p 2), aB (p 0) (p 1) (p 2), aC (p 0) (p 1) (p 2), aU (p 0) (p 1) (p 2)]
+
+/-- The `mmiContraction` map is symmetric-Hamming nonexpansive on all `3`-bit → `4`-bit pattern
+pairs — the same `64`-case fact as `edge_atoms_nonexpansive`, reindexed over `Fin`. -/
+lemma mmiContraction_nonexpansive (p q : Fin 3 → Bool) :
+    (∑ j, bdiff (mmiContraction p j) (mmiContraction q j))
+      ≤ ∑ i, bdiff (p i) (q i) := by
+  simp only [mmiContraction, Fin.sum_univ_four, Fin.sum_univ_three, Matrix.cons_val_zero,
+    Matrix.cons_val_one, Matrix.head_cons, Matrix.cons_val_two, Matrix.tail_cons,
+    Matrix.cons_val_three]
+  exact edge_atoms_nonexpansive (p 0) (p 1) (p 2) (q 0) (q 1) (q 2)
+
+/-- The `j`-th `mmiContraction` candidate cut coincides with the corresponding recombination atom
+`A', B', C', U'`. -/
+lemma contractionCut_mmi (X Y Z : Finset V) :
+    ∀ j, contractionCut ![X, Y, Z] mmiContraction j
+      = ![atomA X Y Z, atomB X Y Z, atomC X Y Z, atomU X Y Z] j := by
+  intro j
+  have hmem : ∀ (v : V) (S : Finset V), v ∈ S ↔ mem S v = true := by
+    intro v S; simp [mem]
+  fin_cases j
+  all_goals
+  · ext v
+    rw [hmem _ (contractionCut _ _ _), hmem _ (![_, _, _, _] _), mem_contractionCut]
+    simp only [mmiContraction, contractionPattern, Fin.isValue, Matrix.cons_val,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Matrix.cons_val_two,
+      Matrix.tail_cons, Matrix.cons_val_three, Matrix.head_fin_const, Fin.reduceFinMk,
+      mem_atomA, mem_atomB, mem_atomC, mem_atomU]
+
+/-- **Monogamy of mutual information recovered from the general contraction-map theorem.**
+Instantiating `entropyR_ineq_of_contraction` with `L = ![AB, AC, BC]`, `R = ![A, B, C, ABC]` and the
+recombination contraction map reproduces MMI, demonstrating that the concrete recombination proof is
+a special case of the general engine. -/
+theorem rtEntropyR_MMI_via_contraction (G : GraphR V)
+    {bd A B C D : Finset V} (P : BoundaryPartition bd A B C D) :
+    rtEntropyR G bd A P.subA + rtEntropyR G bd B P.subB + rtEntropyR G bd C P.subC
+        + rtEntropyR G bd (A ∪ B ∪ C) P.subABC
+      ≤ rtEntropyR G bd (A ∪ B) P.subAB + rtEntropyR G bd (A ∪ C) P.subAC
+        + rtEntropyR G bd (B ∪ C) P.subBC := by
+  -- achieving cuts for the three pairs
+  obtain ⟨X, hX, hXcap⟩ := rtEntropyR_eq_cap G P.subAB
+  obtain ⟨Y, hY, hYcap⟩ := rtEntropyR_eq_cap G P.subAC
+  obtain ⟨Z, hZ, hZcap⟩ := rtEntropyR_eq_cap G P.subBC
+  -- assemble the general theorem's data
+  set L : Fin 3 → Finset V := ![A ∪ B, A ∪ C, B ∪ C] with hLdef
+  set R : Fin 4 → Finset V := ![A, B, C, A ∪ B ∪ C] with hRdef
+  have hLsub : ∀ i, L i ⊆ bd := by
+    intro i; fin_cases i <;> simp only [hLdef, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.head_cons, Matrix.cons_val_two, Matrix.tail_cons]
+    exacts [P.subAB, P.subAC, P.subBC]
+  have hRsub : ∀ j, R j ⊆ bd := by
+    intro j; fin_cases j <;> simp only [hRdef, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.head_cons, Matrix.cons_val_two, Matrix.tail_cons, Matrix.cons_val_three]
+    exacts [P.subA, P.subB, P.subC, P.subABC]
+  set Xs : Fin 3 → Finset V := ![X, Y, Z] with hXsdef
+  -- achieving-cut hypothesis for the general theorem
+  have hXok : ∀ i, IsRTCut bd (L i) (Xs i) ∧ cutCapacityR G (Xs i) = rtEntropyR G bd (L i) (hLsub i) := by
+    intro i; fin_cases i <;>
+      simp only [hLdef, hXsdef, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+        Matrix.cons_val_two, Matrix.tail_cons]
+    · exact ⟨hX, hXcap.symm⟩
+    · exact ⟨hY, hYcap.symm⟩
+    · exact ⟨hZ, hZcap.symm⟩
+  -- candidate-cut admissibility, via the recombination atoms
+  have hvalid : ∀ j, IsRTCut bd (R j) (contractionCut Xs mmiContraction j) := by
+    intro j
+    rw [hXsdef, contractionCut_mmi]
+    fin_cases j <;>
+      simp only [hRdef, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+        Matrix.cons_val_two, Matrix.tail_cons, Matrix.cons_val_three]
+    · exact admissible_A' P hX hY hZ
+    · exact admissible_B' P hX hY hZ
+    · exact admissible_C' P hX hY hZ
+    · exact admissible_U' P hX hY hZ
+  -- apply the general theorem
+  have hgen := entropyR_ineq_of_contraction G L R hLsub hRsub Xs hXok mmiContraction hvalid
+    mmiContraction_nonexpansive
+  -- unfold the `Fin`-indexed sums into the named regions
+  simp only [hLdef, hRdef, Fin.sum_univ_four, Fin.sum_univ_three, Matrix.cons_val_zero,
+    Matrix.cons_val_one, Matrix.head_cons, Matrix.cons_val_two, Matrix.tail_cons,
+    Matrix.cons_val_three] at hgen
+  -- the subset proofs match up to proof irrelevance
+  convert hgen using 2 <;> ring_nf
+
+/-- **Strict anti-vacuity for MMI-via-contraction.** The general contraction-map theorem, specialized
+to MMI, is genuinely non-vacuous: on the star graph its conclusion is the strict inequality
+`I₃ = −2 < 0` (reusing `rtEntropyR_MMI_strict_witness`), so the abstraction subsumes a strict,
+inhabited instance rather than the vacuous `0 ≤ 0`. -/
+theorem rtEntropyR_MMI_via_contraction_strict_witness :
+    rtEntropyR (castGraph starGraph) starBd {0} sA
+        + rtEntropyR (castGraph starGraph) starBd {1} sB
+        + rtEntropyR (castGraph starGraph) starBd {2} sC
+        + rtEntropyR (castGraph starGraph) starBd {0, 1, 2} sABC
+    < rtEntropyR (castGraph starGraph) starBd {0, 1} sAB
+        + rtEntropyR (castGraph starGraph) starBd {0, 2} sAC
+        + rtEntropyR (castGraph starGraph) starBd {1, 2} sBC :=
+  rtEntropyR_MMI_strict_witness
+
 /-- All real min-cuts in the strict witness are strictly positive (so the strict real MMI witness is
 not vacuously about zero entropies). -/
 theorem rtEntropyR_mmi_witness_mincuts_pos :
