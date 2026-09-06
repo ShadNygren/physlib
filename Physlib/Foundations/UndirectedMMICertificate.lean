@@ -1064,4 +1064,333 @@ theorem rtEntropyR_mmi_witness_mincuts_pos :
       star_SA, star_SB, star_SC, star_SAB, star_SAC, star_SBC, star_SABC]
   norm_num
 
+/-! ## A certified five-party cyclic holographic entropy inequality
+
+As a second instance of the general contraction-map engine (`entropyR_ineq_of_contraction`), we
+certify a genuine `n = 5` holographic entropy inequality.  Five elementary boundary regions
+`A₀,…,A₄` (with a purifier = the rest of the boundary) satisfy the cyclic
+adjacent-triples-dominate-adjacent-pairs inequality
+
+  `S(A₀A₁A₂) + S(A₁A₂A₃) + S(A₂A₃A₄) + S(A₀A₃A₄) + S(A₀A₁A₄)`
+    `≥ S(A₀A₁) + S(A₁A₂) + S(A₂A₃) + S(A₃A₄) + S(A₀A₄)`,
+
+with the five cyclically adjacent triples on the larger side and the five cyclically adjacent pairs
+on the bounded side.
+
+This is a **valid** holographic inequality — it is **implied by the SA + SSA + MMI entropy cone**, so
+it is **not a new facet** of the holographic entropy cone; it is nonetheless a genuine `n = 5`
+statement, and its machine-checked proof exhibits the contraction-map engine at an arity beyond the
+tripartite MMI instance.  The `32`-case boolean contraction map below recombines the five
+achieving-cut membership bits (one per triple) into the five pair-cut membership bits; boundary
+validity of the recombined cuts is a finite check on the six membership patterns that boundary
+vertices can carry (the five elementary colors plus the purifier).  The general holographic entropy
+cone for `n ≥ 5` remains open. -/
+
+/-- The five cyclically adjacent triples of colors (larger side), as index sets in `Fin 5`:
+`{0,1,2}, {1,2,3}, {2,3,4}, {0,3,4}, {0,1,4}`. -/
+def cyc5Triple : Fin 5 → Finset (Fin 5) :=
+  ![{0, 1, 2}, {1, 2, 3}, {2, 3, 4}, {0, 3, 4}, {0, 1, 4}]
+
+/-- The five cyclically adjacent pairs of colors (bounded side), as index sets in `Fin 5`:
+`{0,1}, {1,2}, {2,3}, {3,4}, {0,4}`. -/
+def cyc5Pair : Fin 5 → Finset (Fin 5) :=
+  ![{0, 1}, {1, 2}, {2, 3}, {3, 4}, {0, 4}]
+
+variable {A : Fin 5 → Finset V}
+
+/-- The `i`-th larger-side region: the union of the three elementary regions in the `i`-th triple. -/
+def cyc5L (A : Fin 5 → Finset V) (i : Fin 5) : Finset V := (cyc5Triple i).biUnion A
+
+/-- The `j`-th bounded-side region: the union of the two elementary regions in the `j`-th pair. -/
+def cyc5R (A : Fin 5 → Finset V) (j : Fin 5) : Finset V := (cyc5Pair j).biUnion A
+
+/-- The `32`-entry boolean contraction map recombining the five triple-cut membership bits into the
+five pair-cut membership bits.  Input bit `i` = "the vertex's color lies in the `i`-th triple";
+output bit `j` = "its color lies in the `j`-th pair".  Defined by an explicit match on the five input
+bits so that `decide` evaluates it. -/
+def cyc5f (p : Fin 5 → Bool) : Fin 5 → Bool :=
+  match p 0, p 1, p 2, p 3, p 4 with
+  | false, false, false, false, false => ![false, false, false, false, false]
+  | false, false, false, false, true => ![false, false, false, false, false]
+  | false, false, false, true, false => ![false, false, false, false, false]
+  | false, false, false, true, true => ![false, false, false, false, true]
+  | false, false, true, false, false => ![false, false, false, false, false]
+  | false, false, true, false, true => ![false, false, false, false, true]
+  | false, false, true, true, false => ![false, false, false, true, false]
+  | false, false, true, true, true => ![false, false, false, true, true]
+  | false, true, false, false, false => ![false, false, false, false, false]
+  | false, true, false, false, true => ![false, true, false, false, false]
+  | false, true, false, true, false => ![false, false, false, true, false]
+  | false, true, false, true, true => ![false, false, false, false, false]
+  | false, true, true, false, false => ![false, false, true, false, false]
+  | false, true, true, false, true => ![false, false, false, false, false]
+  | false, true, true, true, false => ![false, false, true, true, false]
+  | false, true, true, true, true => ![false, false, false, true, false]
+  | true, false, false, false, false => ![false, false, false, false, false]
+  | true, false, false, false, true => ![true, false, false, false, false]
+  | true, false, false, true, false => ![false, false, false, false, true]
+  | true, false, false, true, true => ![true, false, false, false, true]
+  | true, false, true, false, false => ![false, false, true, false, false]
+  | true, false, true, false, true => ![false, false, false, false, false]
+  | true, false, true, true, false => ![false, false, false, false, false]
+  | true, false, true, true, true => ![false, false, false, false, true]
+  | true, true, false, false, false => ![false, true, false, false, false]
+  | true, true, false, false, true => ![true, true, false, false, false]
+  | true, true, false, true, false => ![false, false, false, false, false]
+  | true, true, false, true, true => ![true, false, false, false, false]
+  | true, true, true, false, false => ![false, true, true, false, false]
+  | true, true, true, false, true => ![false, true, false, false, false]
+  | true, true, true, true, false => ![false, false, true, false, false]
+  | true, true, true, true, true => ![false, false, false, false, false]
+
+/-- **Contraction (Hamming-nonexpansiveness) of `cyc5f`.** For any two five-bit input patterns, the
+five output bits separate them at most as often as the five input bits.  A finite `1024`-pair fact,
+checked by `decide`. -/
+lemma cyc5f_nonexpansive (p q : Fin 5 → Bool) :
+    (∑ j, bdiff (cyc5f p j) (cyc5f q j)) ≤ ∑ i, bdiff (p i) (q i) := by
+  have key : ∀ p q : Fin 5 → Bool,
+      (∑ j, bdiff (cyc5f p j) (cyc5f q j)) ≤ ∑ i, bdiff (p i) (q i) := by decide
+  exact key p q
+
+/-- The six input patterns carried by boundary vertices — one per elementary color and the all-`false`
+purifier pattern — map through `cyc5f` exactly to the corresponding pair-membership pattern.
+`cyc5f (fun i => color ∈ triple i) j = (color ∈ pair j)`, and the purifier maps `false ↦ false`.  A
+finite `decide` over the six colors (`Fin 5` plus purifier handled by the all-`false` case). -/
+lemma cyc5f_boundary (c : Fin 5) :
+    cyc5f (fun i => decide (c ∈ cyc5Triple i)) = fun j => decide (c ∈ cyc5Pair j) := by
+  fin_cases c <;> · funext j; fin_cases j <;> rfl
+
+/-- The purifier pattern (all `false`) maps to all `false` under `cyc5f`. -/
+lemma cyc5f_zero : cyc5f (fun _ => false) = fun _ => false := by
+  funext j; fin_cases j <;> rfl
+
+namespace Cyc5
+
+variable {bd : Finset V}
+
+/-- Pairwise disjointness and boundary-containment of the five elementary regions. -/
+structure Regions (bd : Finset V) (A : Fin 5 → Finset V) : Prop where
+  /-- each elementary region lies in the boundary -/
+  sub : ∀ c, A c ⊆ bd
+  /-- distinct elementary regions are disjoint -/
+  disj : ∀ c c', c ≠ c' → Disjoint (A c) (A c')
+
+/-- Membership of `v ∈ A c` in a triple-region: `v ∈ cyc5L A i ↔ c ∈ cyc5Triple i` (for `v` in the
+elementary region of a fixed color `c`, using disjointness). -/
+lemma mem_cyc5L_of_color (hR : Regions bd A) {v : V} {c : Fin 5} (hv : v ∈ A c) (i : Fin 5) :
+    v ∈ cyc5L A i ↔ c ∈ cyc5Triple i := by
+  unfold cyc5L
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- `cyc5R A j ⊆ bd`. -/
+lemma cyc5R_sub (hR : Regions bd A) (j : Fin 5) : cyc5R A j ⊆ bd := by
+  unfold cyc5R
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- `cyc5L A i ⊆ bd`. -/
+lemma cyc5L_sub (hR : Regions bd A) (i : Fin 5) : cyc5L A i ⊆ bd := by
+  unfold cyc5L
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- Membership of `v ∈ A c` in a pair-region: `v ∈ cyc5R A j ↔ c ∈ cyc5Pair j`. -/
+lemma mem_cyc5R_of_color (hR : Regions bd A) {v : V} {c : Fin 5} (hv : v ∈ A c) (j : Fin 5) :
+    v ∈ cyc5R A j ↔ c ∈ cyc5Pair j := by
+  unfold cyc5R
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- For a boundary vertex of color `c`, the achieving cuts realize the triple-pattern:
+`contractionPattern X v = fun i => decide (c ∈ cyc5Triple i)`. -/
+lemma contractionPattern_of_color (hR : Regions bd A)
+    (X : Fin 5 → Finset V) (hX : ∀ i, IsRTCut bd (cyc5L A i) (X i))
+    {v : V} {c : Fin 5} (hv : v ∈ A c) :
+    contractionPattern X v = fun i => decide (c ∈ cyc5Triple i) := by
+  funext i
+  simp only [contractionPattern, mem]
+  by_cases hc : c ∈ cyc5Triple i
+  · -- v ∈ cyc5L A i ⊆ X i
+    have : v ∈ X i := (hX i).1 ((mem_cyc5L_of_color hR hv i).2 hc)
+    simp [this, hc]
+  · -- v ∈ bd, v ∉ cyc5L A i ⟹ v ∉ X i
+    have hvL : v ∉ cyc5L A i := fun h => hc ((mem_cyc5L_of_color hR hv i).1 h)
+    have : v ∉ X i := (hX i).2 v (hR.sub c hv) hvL
+    simp [this, hc]
+
+/-- For a purifier vertex (in `bd`, outside every elementary region), the achieving cuts realize the
+all-`false` pattern. -/
+lemma contractionPattern_of_purifier
+    (X : Fin 5 → Finset V) (hX : ∀ i, IsRTCut bd (cyc5L A i) (X i))
+    {v : V} (hvbd : v ∈ bd) (hvout : ∀ c, v ∉ A c) :
+    contractionPattern X v = fun _ => false := by
+  funext i
+  simp only [contractionPattern, mem]
+  have hvL : v ∉ cyc5L A i := by
+    unfold cyc5L
+    rw [Finset.mem_biUnion]
+    rintro ⟨c, _, hvc⟩
+    exact hvout c hvc
+  have : v ∉ X i := (hX i).2 v hvbd hvL
+  simp [this]
+
+/-- **Validity of the recombined candidate cuts.** Each `contractionCut X cyc5f j` is an admissible RT
+cut for the pair-region `cyc5R A j`.  For every boundary vertex, its `cyc5f`-image membership matches
+its pair-region membership: colors via `cyc5f_boundary`, the purifier via `cyc5f_zero`; bulk vertices
+are free. -/
+lemma cyc5_hvalid (hR : Regions bd A)
+    (X : Fin 5 → Finset V) (hX : ∀ i, IsRTCut bd (cyc5L A i) (X i)) (j : Fin 5) :
+    IsRTCut bd (cyc5R A j) (contractionCut X cyc5f j) := by
+  -- boundary vertices carry one of the six patterns; on each, `cyc5f` reproduces pair membership.
+  have hkey : ∀ v ∈ bd, mem (contractionCut X cyc5f j) v = mem (cyc5R A j) v := by
+    intro v hvbd
+    rw [mem_contractionCut]
+    by_cases hcolor : ∃ c, v ∈ A c
+    · obtain ⟨c, hvc⟩ := hcolor
+      rw [contractionPattern_of_color hR X hX hvc, cyc5f_boundary c]
+      simp only [mem]
+      rw [decide_eq_decide]
+      exact (mem_cyc5R_of_color hR hvc j).symm
+    · simp only [not_exists] at hcolor
+      rw [contractionPattern_of_purifier X hX hvbd hcolor, cyc5f_zero]
+      have : v ∉ cyc5R A j := by
+        unfold cyc5R
+        rw [Finset.mem_biUnion]
+        rintro ⟨c, _, hvc⟩
+        exact hcolor c hvc
+      simp [mem, this]
+  refine ⟨fun x hx => ?_, fun x hxbd hxout => ?_⟩
+  · -- cyc5R A j ⊆ contractionCut …: x ∈ cyc5R A j ⟹ x ∈ bd ⟹ memberships agree
+    have hxbd : x ∈ bd := cyc5R_sub hR j hx
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact this.2 hx
+  · -- boundary x ∉ cyc5R A j ⟹ x ∉ contractionCut …
+    intro hxin
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact hxout (this.1 hxin)
+
+end Cyc5
+
+open Cyc5
+
+/-- **The certified five-party cyclic holographic entropy inequality.**
+For five pairwise-disjoint boundary regions `A₀,…,A₄` (with the rest of `bd` a purifier) in any finite
+undirected nonnegative-real-weighted graph, the cyclic adjacent-triples side dominates the cyclic
+adjacent-pairs side:
+
+  `∑ⱼ S(pairⱼ) ≤ ∑ᵢ S(tripleᵢ)`,
+
+i.e.
+
+  `S(A₀A₁) + S(A₁A₂) + S(A₂A₃) + S(A₃A₄) + S(A₀A₄)`
+    `≤ S(A₀A₁A₂) + S(A₁A₂A₃) + S(A₂A₃A₄) + S(A₀A₃A₄) + S(A₀A₁A₄)`.
+
+A valid holographic inequality **implied by the SA + SSA + MMI cone** (hence not a new facet), proved
+as an instance of the general contraction-map engine `entropyR_ineq_of_contraction` via the `32`-case
+map `cyc5f`.  The general holographic entropy cone for `n ≥ 5` remains open. -/
+theorem rtEntropyR_cyclic5 (G : GraphR V) {bd : Finset V} {A : Fin 5 → Finset V}
+    (hR : Regions bd A) :
+    (∑ j, rtEntropyR G bd (cyc5R A j) (cyc5R_sub hR j))
+      ≤ ∑ i, rtEntropyR G bd (cyc5L A i) (cyc5L_sub hR i) := by
+  -- pick achieving cuts for the five triple-regions
+  have hXex : ∀ i, ∃ S, IsRTCut bd (cyc5L A i) S
+      ∧ rtEntropyR G bd (cyc5L A i) (cyc5L_sub hR i) = cutCapacityR G S :=
+    fun i => rtEntropyR_eq_cap G (cyc5L_sub hR i)
+  choose X hXcut hXcap using hXex
+  -- assemble the general theorem's achieving-cut hypothesis
+  have hXok : ∀ i, IsRTCut bd (cyc5L A i) (X i)
+      ∧ cutCapacityR G (X i) = rtEntropyR G bd (cyc5L A i) (cyc5L_sub hR i) :=
+    fun i => ⟨hXcut i, (hXcap i).symm⟩
+  -- validity of the recombined candidate cuts
+  have hvalid : ∀ j, IsRTCut bd (cyc5R A j) (contractionCut X cyc5f j) :=
+    fun j => cyc5_hvalid hR X hXcut j
+  -- apply the general contraction-map engine
+  exact entropyR_ineq_of_contraction G (cyc5L A) (cyc5R A)
+    (cyc5L_sub hR) (cyc5R_sub hR) X hXok cyc5f hvalid cyc5f_nonexpansive
+
+/-! ### Anti-vacuity witness: a strict five-party instance
+
+The five-party **star** on `Fin 7` has five colored boundary vertices `0,…,4` (regions `A₀,…,A₄`),
+one purifier boundary vertex `5`, and one central bulk vertex `6`, with every boundary vertex joined
+to the center by a weight-`1` bond.  A region of `k` colored vertices has min-cut entropy
+`min(k, 6 − k)` (cut the `k` bonds, or cut the other `6 − k`), so every adjacent pair (`k = 2`) has
+entropy `2` and every adjacent triple (`k = 3`) has entropy `3`.  The larger side sums to `15`, the
+bounded side to `10`, a strict slack of `5`, with all ten entropies positive. -/
+
+/-- The five-party star bulk graph on `Fin 7`: boundary `0,…,5` each bonded (weight `1`) to central
+bulk vertex `6`. -/
+def star5Graph : Graph (Fin 7) where
+  w := fun u v => if (u = 6 ∧ v.val < 6) ∨ (v = 6 ∧ u.val < 6) then 1 else 0
+  symm := by intro u v; by_cases h : u = 6 <;> by_cases h2 : v = 6 <;> simp_all
+
+/-- Boundary of the five-party star: `{0,1,2,3,4,5}` (five colors plus a purifier). -/
+def star5Bd : Finset (Fin 7) := {0, 1, 2, 3, 4, 5}
+
+/-- The five elementary regions of the star witness: `A c = {c}` for `c ∈ Fin 5`. -/
+def star5A : Fin 5 → Finset (Fin 7) := ![{0}, {1}, {2}, {3}, {4}]
+
+lemma star5A_regions : Cyc5.Regions star5Bd star5A where
+  sub := by decide
+  disj := by decide
+
+lemma star5_cyc5R_sub (j : Fin 5) : cyc5R star5A j ⊆ star5Bd :=
+  Cyc5.cyc5R_sub star5A_regions j
+lemma star5_cyc5L_sub (i : Fin 5) : cyc5L star5A i ⊆ star5Bd :=
+  Cyc5.cyc5L_sub star5A_regions i
+
+/-- Each cyclic pair entropy of the star witness is `2`. -/
+lemma star5_pairR (j : Fin 5) :
+    rtEntropy star5Graph star5Bd (cyc5R star5A j) (star5_cyc5R_sub j) = 2 := by
+  fin_cases j <;> · unfold cyc5R cyc5Pair star5A; decide
+
+/-- Each cyclic triple entropy of the star witness is `3`. -/
+lemma star5_tripleL (i : Fin 5) :
+    rtEntropy star5Graph star5Bd (cyc5L star5A i) (star5_cyc5L_sub i) = 3 := by
+  fin_cases i <;> · unfold cyc5L cyc5Triple star5A; decide
+
+/-- **Strict five-party anti-vacuity witness (real).** On the cast star graph the cyclic inequality is
+strict: the bounded side sums to `10` and the larger side to `15` (slack `5`), and every one of the
+ten min-cut entropies is positive — so `rtEntropyR_cyclic5` is not the vacuous `0 ≤ 0`. -/
+theorem rtEntropyR_cyclic5_strict_witness :
+    (∑ j, rtEntropyR (castGraph star5Graph) star5Bd (cyc5R star5A j)
+        (Cyc5.cyc5R_sub (A := star5A) star5A_regions j))
+      < ∑ i, rtEntropyR (castGraph star5Graph) star5Bd (cyc5L star5A i)
+        (Cyc5.cyc5L_sub (A := star5A) star5A_regions i) := by
+  have hpair : ∀ j, rtEntropyR (castGraph star5Graph) star5Bd (cyc5R star5A j)
+      (Cyc5.cyc5R_sub (A := star5A) star5A_regions j) = 2 := by
+    intro j
+    rw [rtEntropyR_castGraph, star5_pairR j]; norm_num
+  have htriple : ∀ i, rtEntropyR (castGraph star5Graph) star5Bd (cyc5L star5A i)
+      (Cyc5.cyc5L_sub (A := star5A) star5A_regions i) = 3 := by
+    intro i
+    rw [rtEntropyR_castGraph, star5_tripleL i]; norm_num
+  rw [Finset.sum_congr rfl (fun j _ => hpair j), Finset.sum_congr rfl (fun i _ => htriple i)]
+  simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin]
+  norm_num
+
+/-- All ten min-cut entropies in the five-party strict witness are strictly positive. -/
+theorem rtEntropyR_cyclic5_witness_mincuts_pos :
+    (∀ j, 0 < rtEntropyR (castGraph star5Graph) star5Bd (cyc5R star5A j)
+        (Cyc5.cyc5R_sub (A := star5A) star5A_regions j))
+      ∧ ∀ i, 0 < rtEntropyR (castGraph star5Graph) star5Bd (cyc5L star5A i)
+        (Cyc5.cyc5L_sub (A := star5A) star5A_regions i) := by
+  refine ⟨fun j => ?_, fun i => ?_⟩
+  · rw [rtEntropyR_castGraph, star5_pairR j]; norm_num
+  · rw [rtEntropyR_castGraph, star5_tripleL i]; norm_num
+
+
+
 end Physlib.UndirectedMMICertificate
