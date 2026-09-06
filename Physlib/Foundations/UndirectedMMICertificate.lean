@@ -2232,4 +2232,1299 @@ theorem rtEntropyR_newFacet8_witness_mincuts_pos :
   · rw [rtEntropyR_castGraph, star5_facet8L i]; fin_cases i <;> norm_num
 
 
+
+/-! ### A genuinely-new five-party holographic entropy cone facet (bounded side 9 terms)
+
+A further instance of the general contraction-map engine (`entropyR_ineq_of_contraction`): a
+five-party holographic entropy inequality that is a **genuine facet** of the five-party holographic
+entropy cone — **not** implied by subadditivity, strong subadditivity and monogamy of mutual
+information (the `SA + SSA + MMI` cone).  With five elementary boundary regions `A₀,…,A₄` (colors
+`A,B,C,D,E`, plus a purifier = the rest of the boundary), the 8 larger-side regions dominate the
+9 bounded-side regions.  Being outside the `SA + SSA + MMI` cone it is a new facet of the
+five-party holographic entropy cone (source: the five-region holographic entropy cone literature);
+its validity for the undirected min-cut model is established here by exhibiting an explicit
+contraction map, not by cone membership.
+
+The `256`-entry boolean contraction map below recombines the 8 larger-side cut membership bits
+into the 9 bounded-region membership bits.  Its Hamming-nonexpansiveness is discharged through the
+single-flip edge-case reduction (`nonexpansive_of_singleFlip`): only the `2048` hypercube-edge
+checks are evaluated, rather than the `256²` input pairs.  Boundary validity of the recombined
+cuts is a finite check on the membership patterns that boundary vertices can carry (the five
+elementary colors plus the purifier).  The general holographic entropy cone for `n ≥ 5` remains
+open. -/
+
+/-- The 8 larger-side regions of colors, as index sets in `Fin 5`. -/
+def facet7L_reg : Fin 8 → Finset (Fin 5) :=
+  ![{0, 1, 2}, {0, 1, 2}, {0, 1, 3}, {0, 1, 4}, {0, 2, 3}, {0, 3, 4}, {1, 2, 4}, {1, 3, 4}]
+
+/-- The 9 bounded-side regions of colors, as index sets in `Fin 5`. -/
+def facet7R_reg : Fin 9 → Finset (Fin 5) :=
+  ![{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 4}, {3, 4}, {0, 1, 2, 3}, {0, 1, 2, 4}, {0, 1, 3, 4}]
+
+variable {A : Fin 5 → Finset V}
+
+/-- The `i`-th larger-side region: the union of the elementary regions in the `i`-th larger set. -/
+def facet7L (A : Fin 5 → Finset V) (i : Fin 8) : Finset V := (facet7L_reg i).biUnion A
+
+/-- The `j`-th bounded-side region: the union of the elementary regions in the `j`-th region set. -/
+def facet7R (A : Fin 5 → Finset V) (j : Fin 9) : Finset V := (facet7R_reg j).biUnion A
+
+/-- The `256`-entry boolean contraction map recombining the 8 larger-side cut membership bits
+into the 9 bounded-region membership bits.  Input bit `i` = "the vertex's color lies in the `i`-th
+larger-side region"; output bit `j` = "its color lies in the `j`-th bounded region".  Defined by an
+explicit match on the 8 input bits so that `decide` evaluates it. -/
+def facet7f (p : Fin 8 → Bool) : Fin 9 → Bool :=
+  match p 0, p 1, p 2, p 3, p 4, p 5, p 6, p 7 with
+  | false, false, false, false, false, false, false, false => ![false, false, false, false, false, false, false, false, false]
+  | true, false, false, false, false, false, false, false => ![false, false, false, false, false, false, false, true, false]
+  | false, true, false, false, false, false, false, false => ![false, false, false, false, false, false, false, true, false]
+  | true, true, false, false, false, false, false, false => ![false, false, false, false, false, false, true, true, false]
+  | false, false, true, false, false, false, false, false => ![false, false, false, false, false, false, false, false, true]
+  | true, false, true, false, false, false, false, false => ![false, false, false, false, false, false, false, true, true]
+  | false, true, true, false, false, false, false, false => ![false, false, false, false, false, false, false, true, true]
+  | true, true, true, false, false, false, false, false => ![false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, false, false, false, false => ![false, false, false, false, false, false, false, true, false]
+  | true, false, false, true, false, false, false, false => ![false, false, false, false, false, false, false, true, true]
+  | false, true, false, true, false, false, false, false => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, true, false, false, false, false => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, false, false, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, true, true, false, false, false, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, false, false, false, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, false, false, false, false => ![true, false, false, false, false, false, true, true, true]
+  | false, false, false, false, true, false, false, false => ![false, false, false, false, false, false, true, false, false]
+  | true, false, false, false, true, false, false, false => ![false, false, false, false, false, false, true, true, false]
+  | false, true, false, false, true, false, false, false => ![false, false, false, false, false, false, true, true, false]
+  | true, true, false, false, true, false, false, false => ![false, true, false, false, false, false, true, true, false]
+  | false, false, true, false, true, false, false, false => ![false, false, false, false, false, false, true, false, true]
+  | true, false, true, false, true, false, false, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, true, false, false, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, false, false, false => ![false, true, false, false, false, false, true, true, true]
+  | false, false, false, true, true, false, false, false => ![false, false, false, false, false, false, true, true, false]
+  | true, false, false, true, true, false, false, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, true, true, false, false, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, false, true, true, false, false, false => ![false, true, false, false, false, false, true, true, true]
+  | false, false, true, true, true, false, false, false => ![false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, false, false => ![true, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, false, false, false => ![false, true, false, false, false, false, true, true, true]
+  | true, true, true, true, true, false, false, false => ![true, true, false, false, false, false, true, true, true]
+  | false, false, false, false, false, true, false, false => ![false, false, false, false, false, false, false, false, true]
+  | true, false, false, false, false, true, false, false => ![false, false, false, false, false, false, false, true, true]
+  | false, true, false, false, false, true, false, false => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, false, false, true, false, false => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, false, true, false, false => ![false, false, false, false, false, false, true, false, true]
+  | true, false, true, false, false, true, false, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, false, true, false, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, false, true, false, false => ![false, false, true, false, false, false, true, true, true]
+  | false, false, false, true, false, true, false, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, true, false, true, false, false => ![false, false, true, false, false, false, false, true, true]
+  | false, true, false, true, false, true, false, false => ![false, false, true, false, false, false, false, true, true]
+  | true, true, false, true, false, true, false, false => ![false, false, true, false, false, false, true, true, true]
+  | false, false, true, true, false, true, false, false => ![false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, true, false, false => ![false, false, true, false, false, false, true, true, true]
+  | false, true, true, true, false, true, false, false => ![false, false, true, false, false, false, true, true, true]
+  | true, true, true, true, false, true, false, false => ![true, false, true, false, false, false, true, true, true]
+  | false, false, false, false, true, true, false, false => ![false, false, false, false, false, false, true, false, true]
+  | true, false, false, false, true, true, false, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, true, true, false, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, true, true, false, false => ![false, true, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, false, false => ![false, false, true, false, false, false, true, false, true]
+  | true, false, true, false, true, true, false, false => ![false, false, true, false, false, false, true, true, true]
+  | false, true, true, false, true, true, false, false => ![false, false, true, false, false, false, true, true, true]
+  | true, true, true, false, true, true, false, false => ![false, true, true, false, false, false, true, true, true]
+  | false, false, false, true, true, true, false, false => ![false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, true, true, false, false => ![false, false, true, false, false, false, true, true, true]
+  | false, true, false, true, true, true, false, false => ![false, false, true, false, false, false, true, true, true]
+  | true, true, false, true, true, true, false, false => ![false, true, true, false, false, false, true, true, true]
+  | false, false, true, true, true, true, false, false => ![false, false, true, false, false, false, true, true, true]
+  | true, false, true, true, true, true, false, false => ![true, false, true, false, false, false, true, true, true]
+  | false, true, true, true, true, true, false, false => ![false, true, true, false, false, false, true, true, true]
+  | true, true, true, true, true, true, false, false => ![true, true, true, false, false, false, true, true, true]
+  | false, false, false, false, false, false, true, false => ![false, false, false, false, false, false, false, true, false]
+  | true, false, false, false, false, false, true, false => ![false, false, false, false, false, false, true, true, false]
+  | false, true, false, false, false, false, true, false => ![false, false, false, false, false, false, true, true, false]
+  | true, true, false, false, false, false, true, false => ![false, false, false, true, false, false, true, true, false]
+  | false, false, true, false, false, false, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, true, false, false, false, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, false, false, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, false, false, true, false => ![false, false, false, true, false, false, true, true, true]
+  | false, false, false, true, false, false, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, true, false, false, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, true, false, false, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, false, true, false, false, true, false => ![false, false, false, true, false, false, true, true, true]
+  | false, false, true, true, false, false, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, false, true, false => ![true, false, false, false, false, false, true, true, true]
+  | false, true, true, true, false, false, true, false => ![true, false, false, false, false, false, true, true, true]
+  | true, true, true, true, false, false, true, false => ![true, false, false, true, false, false, true, true, true]
+  | false, false, false, false, true, false, true, false => ![false, false, false, false, false, false, true, true, false]
+  | true, false, false, false, true, false, true, false => ![false, true, false, false, false, false, true, true, false]
+  | false, true, false, false, true, false, true, false => ![false, true, false, false, false, false, true, true, false]
+  | true, true, false, false, true, false, true, false => ![false, true, false, true, false, false, true, true, false]
+  | false, false, true, false, true, false, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, false, true, false => ![false, true, false, false, false, false, true, true, true]
+  | false, true, true, false, true, false, true, false => ![false, true, false, false, false, false, true, true, true]
+  | true, true, true, false, true, false, true, false => ![false, true, false, true, false, false, true, true, true]
+  | false, false, false, true, true, false, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, true, false, true, false => ![false, true, false, false, false, false, true, true, true]
+  | false, true, false, true, true, false, true, false => ![false, true, false, false, false, false, true, true, true]
+  | true, true, false, true, true, false, true, false => ![false, true, false, true, false, false, true, true, true]
+  | false, false, true, true, true, false, true, false => ![true, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, true, false => ![true, true, false, false, false, false, true, true, true]
+  | false, true, true, true, true, false, true, false => ![true, true, false, false, false, false, true, true, true]
+  | true, true, true, true, true, false, true, false => ![true, true, false, true, false, false, true, true, true]
+  | false, false, false, false, false, true, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, false, false, true, true, false => ![false, false, false, false, false, false, false, true, false]
+  | false, true, false, false, false, true, true, false => ![false, false, false, false, false, false, false, true, false]
+  | true, true, false, false, false, true, true, false => ![false, false, false, false, false, false, true, true, false]
+  | false, false, true, false, false, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, true, true, false => ![false, false, false, false, false, false, false, true, true]
+  | false, true, true, false, false, true, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, true, true, false, false, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, false, true, true, false => ![false, false, false, false, false, true, false, true, true]
+  | true, false, false, true, false, true, true, false => ![false, false, false, false, false, false, false, true, true]
+  | false, true, false, true, false, true, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, true, false, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, true, true, false => ![false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, false, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, false, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, false, true, true, false => ![true, false, false, false, false, false, true, true, true]
+  | false, false, false, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, true, true, true, false => ![false, false, false, false, false, false, true, true, false]
+  | false, true, false, false, true, true, true, false => ![false, false, false, false, false, false, true, true, false]
+  | true, true, false, false, true, true, true, false => ![false, true, false, false, false, false, true, true, false]
+  | false, false, true, false, true, true, true, false => ![false, false, false, false, false, false, true, false, true]
+  | true, false, true, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, true, true, false => ![false, true, false, false, false, false, true, true, true]
+  | false, false, false, true, true, true, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, true, true, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, true, true, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, false, true, true, true, true, false => ![false, true, false, false, false, false, true, true, true]
+  | false, false, true, true, true, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, true, true, false => ![true, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, true, true, false => ![false, true, false, false, false, false, true, true, true]
+  | true, true, true, true, true, true, true, false => ![true, true, false, false, false, false, true, true, true]
+  | false, false, false, false, false, false, false, true => ![false, false, false, false, false, false, false, false, true]
+  | true, false, false, false, false, false, false, true => ![false, false, false, false, false, false, false, true, true]
+  | false, true, false, false, false, false, false, true => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, false, false, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, false, false, false, true => ![false, false, false, false, false, false, true, false, true]
+  | true, false, true, false, false, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, false, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, false, false, false, true => ![false, false, false, false, true, false, true, true, true]
+  | false, false, false, true, false, false, false, true => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, true, false, false, false, true => ![false, false, false, false, true, false, false, true, true]
+  | false, true, false, true, false, false, false, true => ![false, false, false, false, true, false, false, true, true]
+  | true, true, false, true, false, false, false, true => ![false, false, false, false, true, false, true, true, true]
+  | false, false, true, true, false, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, false, false, true => ![false, false, false, false, true, false, true, true, true]
+  | false, true, true, true, false, false, false, true => ![false, false, false, false, true, false, true, true, true]
+  | true, true, true, true, false, false, false, true => ![true, false, false, false, true, false, true, true, true]
+  | false, false, false, false, true, false, false, true => ![false, false, false, false, false, false, true, false, true]
+  | true, false, false, false, true, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, true, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, true, false, false, true => ![false, true, false, false, false, false, true, true, true]
+  | false, false, true, false, true, false, false, true => ![false, false, false, false, false, true, true, false, true]
+  | true, false, true, false, true, false, false, true => ![false, false, false, false, false, false, true, false, true]
+  | false, true, true, false, true, false, false, true => ![false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, true, false, false, true => ![false, false, false, false, true, false, true, true, true]
+  | false, true, false, true, true, false, false, true => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, true, true, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, false, false, true => ![false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, true, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, true, false, false, true => ![true, false, false, false, false, false, true, true, true]
+  | false, false, false, false, false, true, false, true => ![false, false, false, false, false, true, false, false, true]
+  | true, false, false, false, false, true, false, true => ![false, false, false, false, false, false, false, false, true]
+  | false, true, false, false, false, true, false, true => ![false, false, false, false, false, true, false, true, true]
+  | true, true, false, false, false, true, false, true => ![false, false, false, false, false, false, false, true, true]
+  | false, false, true, false, false, true, false, true => ![false, false, false, false, false, true, true, false, true]
+  | true, false, true, false, false, true, false, true => ![false, false, false, false, false, false, true, false, true]
+  | false, true, true, false, false, true, false, true => ![false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, true, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, false, true, false, true => ![false, false, false, false, false, true, false, true, true]
+  | true, false, false, true, false, true, false, true => ![false, false, false, false, false, false, false, true, true]
+  | false, true, false, true, false, true, false, true => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, true, false, true, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, true, false, true => ![false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, false, true, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, false, true, false, true => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, false, true, false, true => ![true, false, false, false, false, false, true, true, true]
+  | false, false, false, false, true, true, false, true => ![false, false, false, false, false, true, true, false, true]
+  | true, false, false, false, true, true, false, true => ![false, false, false, false, false, false, true, false, true]
+  | false, true, false, false, true, true, false, true => ![false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, true, true, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, false, true => ![false, false, true, false, false, true, true, false, true]
+  | true, false, true, false, true, true, false, true => ![false, false, true, false, false, false, true, false, true]
+  | false, true, true, false, true, true, false, true => ![false, false, true, false, false, true, true, true, true]
+  | true, true, true, false, true, true, false, true => ![false, false, true, false, false, false, true, true, true]
+  | false, false, false, true, true, true, false, true => ![false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, true, true, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, true, true, true, false, true => ![false, false, false, false, false, false, true, true, true]
+  | true, true, false, true, true, true, false, true => ![false, false, true, false, false, false, true, true, true]
+  | false, false, true, true, true, true, false, true => ![false, false, true, false, false, true, true, true, true]
+  | true, false, true, true, true, true, false, true => ![false, false, true, false, false, false, true, true, true]
+  | false, true, true, true, true, true, false, true => ![false, false, true, false, false, false, true, true, true]
+  | true, true, true, true, true, true, false, true => ![true, false, true, false, false, false, true, true, true]
+  | false, false, false, false, false, false, true, true => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, false, false, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, false, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, false, false, true, true => ![false, false, false, true, false, false, true, true, true]
+  | false, false, true, false, false, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, false, true, true => ![false, false, false, false, true, false, true, true, true]
+  | false, true, true, false, false, false, true, true => ![false, false, false, false, true, false, true, true, true]
+  | true, true, true, false, false, false, true, true => ![false, false, false, true, true, false, true, true, true]
+  | false, false, false, true, false, false, true, true => ![false, false, false, false, true, false, false, true, true]
+  | true, false, false, true, false, false, true, true => ![false, false, false, false, true, false, true, true, true]
+  | false, true, false, true, false, false, true, true => ![false, false, false, false, true, false, true, true, true]
+  | true, true, false, true, false, false, true, true => ![false, false, false, true, true, false, true, true, true]
+  | false, false, true, true, false, false, true, true => ![false, false, false, false, true, false, true, true, true]
+  | true, false, true, true, false, false, true, true => ![true, false, false, false, true, false, true, true, true]
+  | false, true, true, true, false, false, true, true => ![true, false, false, false, true, false, true, true, true]
+  | true, true, true, true, false, false, true, true => ![true, false, false, true, true, false, true, true, true]
+  | false, false, false, false, true, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, true, false, true, true => ![false, true, false, false, false, false, true, true, true]
+  | false, true, false, false, true, false, true, true => ![false, true, false, false, false, false, true, true, true]
+  | true, true, false, false, true, false, true, true => ![false, true, false, true, false, false, true, true, true]
+  | false, false, true, false, true, false, true, true => ![false, false, false, false, false, true, true, true, true]
+  | true, false, true, false, true, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, true, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, false, true, true => ![false, false, false, true, false, false, true, true, true]
+  | false, false, false, true, true, false, true, true => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, true, true, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, true, true, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | true, true, false, true, true, false, true, true => ![false, false, false, true, false, false, true, true, true]
+  | false, false, true, true, true, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, true, true => ![true, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, false, true, true => ![true, false, false, false, false, false, true, true, true]
+  | true, true, true, true, true, false, true, true => ![true, false, false, true, false, false, true, true, true]
+  | false, false, false, false, false, true, true, true => ![false, false, false, false, false, true, false, true, true]
+  | true, false, false, false, false, true, true, true => ![false, false, false, false, false, false, false, true, true]
+  | false, true, false, false, false, true, true, true => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, false, false, true, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, false, true, true, true => ![false, false, false, false, false, true, true, true, true]
+  | true, false, true, false, false, true, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, false, true, true, true => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, false, true, true, true => ![false, false, false, false, true, false, true, true, true]
+  | false, false, false, true, false, true, true, true => ![false, false, false, false, true, true, false, true, true]
+  | true, false, false, true, false, true, true, true => ![false, false, false, false, true, false, false, true, true]
+  | false, true, false, true, false, true, true, true => ![false, false, false, false, true, false, false, true, true]
+  | true, true, false, true, false, true, true, true => ![false, false, false, false, true, false, true, true, true]
+  | false, false, true, true, false, true, true, true => ![false, false, false, false, true, true, true, true, true]
+  | true, false, true, true, false, true, true, true => ![false, false, false, false, true, false, true, true, true]
+  | false, true, true, true, false, true, true, true => ![false, false, false, false, true, false, true, true, true]
+  | true, true, true, true, false, true, true, true => ![true, false, false, false, true, false, true, true, true]
+  | false, false, false, false, true, true, true, true => ![false, false, false, false, false, true, true, true, true]
+  | true, false, false, false, true, true, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, true, true, true, true => ![false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, true, true, true, true => ![false, true, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, true, true => ![false, false, false, false, false, true, true, false, true]
+  | true, false, true, false, true, true, true, true => ![false, false, false, false, false, false, true, false, true]
+  | false, true, true, false, true, true, true, true => ![false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, true, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, true, true, true => ![false, false, false, false, false, true, false, true, true]
+  | true, false, false, true, true, true, true, true => ![false, false, false, false, false, false, false, true, true]
+  | false, true, false, true, true, true, true, true => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, true, true, true, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, true, true, true => ![false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, true, true, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, true, true, true => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, true, true, true, true => ![true, false, false, false, false, false, true, true, true]
+
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 4000 in
+/-- **Single-flip (edge) nonexpansiveness of `facet7f`.** Flipping any one of the 8 input
+coordinates changes the 9-bit output by at most one Hamming unit — the `2048` edge cases,
+checked by the kernel evaluator (`decide +kernel`, with recursion depth and heartbeat budget raised
+to accommodate the case tree). -/
+theorem facet7f_singleFlip :
+    ∀ (p : Fin 8 → Bool) (i : Fin 8),
+      (∑ j, bdiff (facet7f p j) (facet7f (Function.update p i (!(p i))) j)) ≤ 1 := by
+  decide +kernel
+
+/-- **Global nonexpansiveness of `facet7f`, derived from the single-flip reduction.** Obtained from
+`nonexpansive_of_singleFlip` by discharging only the `2048` single-flip edge cases (via
+`facet7f_singleFlip`) rather than the `256²` input pairs. -/
+theorem facet7f_nonexpansive (p q : Fin 8 → Bool) :
+    (∑ j, bdiff (facet7f p j) (facet7f q j)) ≤ ∑ i, bdiff (p i) (q i) :=
+  nonexpansive_of_singleFlip facet7f facet7f_singleFlip p q
+
+/-- The five color input patterns map through the contraction to the corresponding bounded-region
+membership pattern.  A finite `decide` over the five colors. -/
+lemma facet7f_boundary (c : Fin 5) :
+    facet7f (fun i => decide (c ∈ facet7L_reg i)) = fun j => decide (c ∈ facet7R_reg j) := by
+  fin_cases c <;> · funext j; fin_cases j <;> rfl
+
+/-- The purifier pattern (all `false`) maps to all `false` under `facet7f`. -/
+lemma facet7f_zero : facet7f (fun _ => false) = fun _ => false := by
+  funext j; fin_cases j <;> rfl
+
+namespace Facet7
+
+variable {bd : Finset V}
+
+/-- Membership of `v ∈ A c` in a larger-side region: `v ∈ facet7L A i ↔ c ∈ facet7L_reg i`. -/
+lemma mem_facet7L_of_color (hR : Cyc5.Regions bd A) {v : V} {c : Fin 5} (hv : v ∈ A c) (i : Fin 8) :
+    v ∈ facet7L A i ↔ c ∈ facet7L_reg i := by
+  unfold facet7L
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- `facet7R A j ⊆ bd`. -/
+lemma facet7R_sub (hR : Cyc5.Regions bd A) (j : Fin 9) : facet7R A j ⊆ bd := by
+  unfold facet7R
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- `facet7L A i ⊆ bd`. -/
+lemma facet7L_sub (hR : Cyc5.Regions bd A) (i : Fin 8) : facet7L A i ⊆ bd := by
+  unfold facet7L
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- Membership of `v ∈ A c` in a bounded region: `v ∈ facet7R A j ↔ c ∈ facet7R_reg j`. -/
+lemma mem_facet7R_of_color (hR : Cyc5.Regions bd A) {v : V} {c : Fin 5} (hv : v ∈ A c) (j : Fin 9) :
+    v ∈ facet7R A j ↔ c ∈ facet7R_reg j := by
+  unfold facet7R
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- For a boundary vertex of color `c`, the achieving cuts realize the larger-side pattern. -/
+lemma contractionPattern_of_color (hR : Cyc5.Regions bd A)
+    (X : Fin 8 → Finset V) (hX : ∀ i, IsRTCut bd (facet7L A i) (X i))
+    {v : V} {c : Fin 5} (hv : v ∈ A c) :
+    contractionPattern X v = fun i => decide (c ∈ facet7L_reg i) := by
+  funext i
+  simp only [contractionPattern, mem]
+  by_cases hc : c ∈ facet7L_reg i
+  · have : v ∈ X i := (hX i).1 ((mem_facet7L_of_color hR hv i).2 hc)
+    simp [this, hc]
+  · have hvL : v ∉ facet7L A i := fun h => hc ((mem_facet7L_of_color hR hv i).1 h)
+    have : v ∉ X i := (hX i).2 v (hR.sub c hv) hvL
+    simp [this, hc]
+
+/-- For a purifier vertex, the achieving cuts realize the all-`false` pattern. -/
+lemma contractionPattern_of_purifier
+    (X : Fin 8 → Finset V) (hX : ∀ i, IsRTCut bd (facet7L A i) (X i))
+    {v : V} (hvbd : v ∈ bd) (hvout : ∀ c, v ∉ A c) :
+    contractionPattern X v = fun _ => false := by
+  funext i
+  simp only [contractionPattern, mem]
+  have hvL : v ∉ facet7L A i := by
+    unfold facet7L
+    rw [Finset.mem_biUnion]
+    rintro ⟨c, _, hvc⟩
+    exact hvout c hvc
+  have : v ∉ X i := (hX i).2 v hvbd hvL
+  simp [this]
+
+/-- **Validity of the recombined candidate cuts.** Each `contractionCut X facet7f j` is an admissible
+RT cut for the bounded region `facet7R A j`. -/
+lemma facet7_hvalid (hR : Cyc5.Regions bd A)
+    (X : Fin 8 → Finset V) (hX : ∀ i, IsRTCut bd (facet7L A i) (X i)) (j : Fin 9) :
+    IsRTCut bd (facet7R A j) (contractionCut X facet7f j) := by
+  have hkey : ∀ v ∈ bd, mem (contractionCut X facet7f j) v = mem (facet7R A j) v := by
+    intro v hvbd
+    rw [mem_contractionCut]
+    by_cases hcolor : ∃ c, v ∈ A c
+    · obtain ⟨c, hvc⟩ := hcolor
+      rw [contractionPattern_of_color hR X hX hvc, facet7f_boundary c]
+      simp only [mem]
+      rw [decide_eq_decide]
+      exact (mem_facet7R_of_color hR hvc j).symm
+    · simp only [not_exists] at hcolor
+      rw [contractionPattern_of_purifier X hX hvbd hcolor, facet7f_zero]
+      have : v ∉ facet7R A j := by
+        unfold facet7R
+        rw [Finset.mem_biUnion]
+        rintro ⟨c, _, hvc⟩
+        exact hcolor c hvc
+      simp [mem, this]
+  refine ⟨fun x hx => ?_, fun x hxbd hxout => ?_⟩
+  · have hxbd : x ∈ bd := facet7R_sub hR j hx
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact this.2 hx
+  · intro hxin
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact hxout (this.1 hxin)
+
+end Facet7
+
+open Facet7
+
+/-- **A genuinely new five-party holographic entropy cone facet (9-term bounded side).**
+For five pairwise-disjoint boundary regions `A₀,…,A₄` (with the rest of `bd` a purifier) in any
+finite undirected nonnegative-real-weighted graph, the 8 larger-side regions dominate the 9
+bounded-side regions:
+
+  `∑ⱼ S(regionⱼ) ≤ ∑ᵢ S(largerᵢ)`.
+
+This inequality is **not implied by the `SA + SSA + MMI` cone**: it is a genuine facet of the
+five-party holographic entropy cone (source: the five-region holographic entropy cone literature).
+It is proved as an instance of the general contraction-map engine `entropyR_ineq_of_contraction`
+via the `256`-case map `facet7f`, whose nonexpansiveness comes through the single-flip edge-case
+reduction.  The general holographic entropy cone for `n ≥ 5` remains open. -/
+theorem rtEntropyR_newFacet7 (G : GraphR V) {bd : Finset V} {A : Fin 5 → Finset V}
+    (hR : Cyc5.Regions bd A) :
+    (∑ j, rtEntropyR G bd (facet7R A j) (Facet7.facet7R_sub hR j))
+      ≤ ∑ i, rtEntropyR G bd (facet7L A i) (Facet7.facet7L_sub hR i) := by
+  have hXex : ∀ i, ∃ S, IsRTCut bd (facet7L A i) S
+      ∧ rtEntropyR G bd (facet7L A i) (Facet7.facet7L_sub hR i) = cutCapacityR G S :=
+    fun i => rtEntropyR_eq_cap G (Facet7.facet7L_sub hR i)
+  choose X hXcut hXcap using hXex
+  have hXok : ∀ i, IsRTCut bd (facet7L A i) (X i)
+      ∧ cutCapacityR G (X i) = rtEntropyR G bd (facet7L A i) (Facet7.facet7L_sub hR i) :=
+    fun i => ⟨hXcut i, (hXcap i).symm⟩
+  have hvalid : ∀ j, IsRTCut bd (facet7R A j) (contractionCut X facet7f j) :=
+    fun j => Facet7.facet7_hvalid hR X hXcut j
+  exact entropyR_ineq_of_contraction G (facet7L A) (facet7R A)
+    (Facet7.facet7L_sub hR) (Facet7.facet7R_sub hR) X hXok facet7f hvalid facet7f_nonexpansive
+
+/-! #### Anti-vacuity witness: a strict five-party instance
+
+The five-party **star** on `Fin 7` (regions `A₀,…,A₄ = {0},…,{4}`, purifier vertex `5`, central
+bulk vertex `6`, unit bonds) witnesses strictness.  A region of `k` colored vertices has min-cut
+entropy `min(k, 6 − k)`: the larger-side regions have entropies `![3, 3, 3, 3, 3, 3, 3, 3]` (sum `24`); the
+bounded-side regions have entropies `![2, 2, 2, 2, 2, 2, 2, 2, 2]` (sum `18`), a strict slack of `6`, all
+entropies positive. -/
+
+/-- `facet7R star5A j ⊆ star5Bd`. -/
+lemma star5_facet7R_sub (j : Fin 9) : facet7R star5A j ⊆ star5Bd :=
+  Facet7.facet7R_sub star5A_regions j
+/-- `facet7L star5A i ⊆ star5Bd`. -/
+lemma star5_facet7L_sub (i : Fin 8) : facet7L star5A i ⊆ star5Bd :=
+  Facet7.facet7L_sub star5A_regions i
+
+/-- Each bounded-region entropy of the star witness, as `![2, 2, 2, 2, 2, 2, 2, 2, 2]`. -/
+lemma star5_facet7R (j : Fin 9) :
+    rtEntropy star5Graph star5Bd (facet7R star5A j) (star5_facet7R_sub j)
+      = (![2, 2, 2, 2, 2, 2, 2, 2, 2] : Fin 9 → ℕ) j := by
+  fin_cases j <;> · unfold facet7R facet7R_reg star5A; decide
+
+/-- Each larger-side entropy of the star witness, as `![3, 3, 3, 3, 3, 3, 3, 3]`. -/
+lemma star5_facet7L (i : Fin 8) :
+    rtEntropy star5Graph star5Bd (facet7L star5A i) (star5_facet7L_sub i)
+      = (![3, 3, 3, 3, 3, 3, 3, 3] : Fin 8 → ℕ) i := by
+  fin_cases i <;> · unfold facet7L facet7L_reg star5A; decide
+
+/-- **Strict five-party anti-vacuity witness (real).** On the cast star graph this new-facet
+inequality is strict: the bounded side sums to `18` and the larger side to `24` (slack
+`6`), so `rtEntropyR_newFacet7` is not the vacuous `0 ≤ 0`. -/
+theorem rtEntropyR_newFacet7_strict_witness :
+    (∑ j, rtEntropyR (castGraph star5Graph) star5Bd (facet7R star5A j)
+        (Facet7.facet7R_sub (A := star5A) star5A_regions j))
+      < ∑ i, rtEntropyR (castGraph star5Graph) star5Bd (facet7L star5A i)
+        (Facet7.facet7L_sub (A := star5A) star5A_regions i) := by
+  have hreg : ∀ j, rtEntropyR (castGraph star5Graph) star5Bd (facet7R star5A j)
+      (Facet7.facet7R_sub (A := star5A) star5A_regions j)
+        = ((![2, 2, 2, 2, 2, 2, 2, 2, 2] : Fin 9 → ℕ) j : ℝ) := by
+    intro j
+    rw [rtEntropyR_castGraph, star5_facet7R j]
+  have hlar : ∀ i, rtEntropyR (castGraph star5Graph) star5Bd (facet7L star5A i)
+      (Facet7.facet7L_sub (A := star5A) star5A_regions i)
+        = ((![3, 3, 3, 3, 3, 3, 3, 3] : Fin 8 → ℕ) i : ℝ) := by
+    intro i
+    rw [rtEntropyR_castGraph, star5_facet7L i]
+  rw [Finset.sum_congr rfl (fun j _ => hreg j), Finset.sum_congr rfl (fun i _ => hlar i)]
+  simp [Fin.sum_univ_succ]
+  norm_num
+
+/-- All min-cut entropies in this five-party strict new-facet witness are strictly positive. -/
+theorem rtEntropyR_newFacet7_witness_mincuts_pos :
+    (∀ j, 0 < rtEntropyR (castGraph star5Graph) star5Bd (facet7R star5A j)
+        (Facet7.facet7R_sub (A := star5A) star5A_regions j))
+      ∧ ∀ i, 0 < rtEntropyR (castGraph star5Graph) star5Bd (facet7L star5A i)
+        (Facet7.facet7L_sub (A := star5A) star5A_regions i) := by
+  refine ⟨fun j => ?_, fun i => ?_⟩
+  · rw [rtEntropyR_castGraph, star5_facet7R j]; fin_cases j <;> norm_num
+  · rw [rtEntropyR_castGraph, star5_facet7L i]; fin_cases i <;> norm_num
+
+/-! ### A genuinely-new five-party holographic entropy cone facet (bounded side 10 terms)
+
+A further instance of the general contraction-map engine (`entropyR_ineq_of_contraction`): a
+five-party holographic entropy inequality that is a **genuine facet** of the five-party holographic
+entropy cone — **not** implied by subadditivity, strong subadditivity and monogamy of mutual
+information (the `SA + SSA + MMI` cone).  With five elementary boundary regions `A₀,…,A₄` (colors
+`A,B,C,D,E`, plus a purifier = the rest of the boundary), the 9 larger-side regions dominate the
+10 bounded-side regions.  Being outside the `SA + SSA + MMI` cone it is a new facet of the
+five-party holographic entropy cone (source: the five-region holographic entropy cone literature);
+its validity for the undirected min-cut model is established here by exhibiting an explicit
+contraction map, not by cone membership.
+
+The `512`-entry boolean contraction map below recombines the 9 larger-side cut membership bits
+into the 10 bounded-region membership bits.  Its Hamming-nonexpansiveness is discharged through the
+single-flip edge-case reduction (`nonexpansive_of_singleFlip`): only the `4608` hypercube-edge
+checks are evaluated, rather than the `512²` input pairs.  Boundary validity of the recombined
+cuts is a finite check on the membership patterns that boundary vertices can carry (the five
+elementary colors plus the purifier).  The general holographic entropy cone for `n ≥ 5` remains
+open. -/
+
+/-- The 9 larger-side regions of colors, as index sets in `Fin 5`. -/
+def facet5bL_reg : Fin 9 → Finset (Fin 5) :=
+  ![{0, 1, 2}, {0, 1, 3}, {0, 1, 4}, {0, 2, 3}, {0, 2, 4}, {0, 3, 4}, {1, 2, 4}, {1, 3, 4}, {2, 3, 4}]
+
+/-- The 10 bounded-side regions of colors, as index sets in `Fin 5`. -/
+def facet5bR_reg : Fin 10 → Finset (Fin 5) :=
+  ![{0, 1}, {0, 2}, {0, 3}, {1, 4}, {2, 4}, {3, 4}, {1, 2, 3}, {0, 1, 2, 4}, {0, 1, 3, 4}, {0, 2, 3, 4}]
+
+variable {A : Fin 5 → Finset V}
+
+/-- The `i`-th larger-side region: the union of the elementary regions in the `i`-th larger set. -/
+def facet5bL (A : Fin 5 → Finset V) (i : Fin 9) : Finset V := (facet5bL_reg i).biUnion A
+
+/-- The `j`-th bounded-side region: the union of the elementary regions in the `j`-th region set. -/
+def facet5bR (A : Fin 5 → Finset V) (j : Fin 10) : Finset V := (facet5bR_reg j).biUnion A
+
+/-- The `512`-entry boolean contraction map recombining the 9 larger-side cut membership bits
+into the 10 bounded-region membership bits.  Input bit `i` = "the vertex's color lies in the `i`-th
+larger-side region"; output bit `j` = "its color lies in the `j`-th bounded region".  Defined by an
+explicit match on the 9 input bits so that `decide` evaluates it. -/
+def facet5bf (p : Fin 9 → Bool) : Fin 10 → Bool :=
+  match p 0, p 1, p 2, p 3, p 4, p 5, p 6, p 7, p 8 with
+  | false, false, false, false, false, false, false, false, false => ![false, false, false, false, false, false, false, false, false, false]
+  | true, false, false, false, false, false, false, false, false => ![false, false, false, false, false, false, false, true, false, false]
+  | false, true, false, false, false, false, false, false, false => ![false, false, false, false, false, false, false, false, true, false]
+  | true, true, false, false, false, false, false, false, false => ![false, false, false, false, false, false, false, true, true, false]
+  | false, false, true, false, false, false, false, false, false => ![false, false, false, false, false, false, false, true, false, false]
+  | true, false, true, false, false, false, false, false, false => ![false, false, false, false, false, false, false, true, true, false]
+  | false, true, true, false, false, false, false, false, false => ![false, false, false, false, false, false, false, true, true, false]
+  | true, true, true, false, false, false, false, false, false => ![true, false, false, false, false, false, false, true, true, false]
+  | false, false, false, true, false, false, false, false, false => ![false, false, false, false, false, false, false, false, false, true]
+  | true, false, false, true, false, false, false, false, false => ![false, false, false, false, false, false, false, true, false, true]
+  | false, true, false, true, false, false, false, false, false => ![false, false, false, false, false, false, false, false, true, true]
+  | true, true, false, true, false, false, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, false, false, false, false => ![false, false, false, false, false, false, false, true, false, true]
+  | true, false, true, true, false, false, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, false, false, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, false, false, false, false, false => ![true, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, true, false, false, false, false => ![false, false, false, false, false, false, false, true, false, false]
+  | true, false, false, false, true, false, false, false, false => ![false, false, false, false, false, false, false, true, false, true]
+  | false, true, false, false, true, false, false, false, false => ![false, false, false, false, false, false, false, true, true, false]
+  | true, true, false, false, true, false, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, false, false, false, false => ![false, false, false, false, false, false, false, true, false, true]
+  | true, false, true, false, true, false, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, true, false, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, false, false, false, false => ![true, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, false, false, false, false => ![false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, true, true, false, false, false, false => ![false, true, false, false, false, false, false, true, false, true]
+  | false, true, false, true, true, false, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, true, true, false, false, false, false => ![false, true, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, false, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, false, false, false => ![false, true, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, false, false, false, false => ![true, false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, true, false, false, false, false => ![true, true, false, false, false, false, false, true, true, true]
+  | false, false, false, false, false, true, false, false, false => ![false, false, false, false, false, false, false, false, true, false]
+  | true, false, false, false, false, true, false, false, false => ![false, false, false, false, false, false, false, true, true, false]
+  | false, true, false, false, false, true, false, false, false => ![false, false, false, false, false, false, false, false, true, true]
+  | true, true, false, false, false, true, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, false, true, false, false, false => ![false, false, false, false, false, false, false, true, true, false]
+  | true, false, true, false, false, true, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, false, true, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, false, true, false, false, false => ![true, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, false, true, false, false, false => ![false, false, false, false, false, false, false, false, true, true]
+  | true, false, false, true, false, true, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, false, true, false, true, false, false, false => ![false, false, true, false, false, false, false, false, true, true]
+  | true, true, false, true, false, true, false, false, false => ![false, false, true, false, false, false, false, true, true, true]
+  | false, false, true, true, false, true, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, true, false, false, false => ![true, false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, false, true, false, false, false => ![false, false, true, false, false, false, false, true, true, true]
+  | true, true, true, true, false, true, false, false, false => ![true, false, true, false, false, false, false, true, true, true]
+  | false, false, false, false, true, true, false, false, false => ![false, false, false, false, false, false, false, true, true, false]
+  | true, false, false, false, true, true, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, true, true, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, true, true, false, false, false => ![false, false, true, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, true, false, false, false => ![true, false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, true, true, false, false, false => ![true, false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, true, false, false, false => ![true, false, true, false, false, false, false, true, true, true]
+  | false, false, false, true, true, true, false, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, true, true, false, false, false => ![false, true, false, false, false, false, false, true, true, true]
+  | false, true, false, true, true, true, false, false, false => ![false, false, true, false, false, false, false, true, true, true]
+  | true, true, false, true, true, true, false, false, false => ![false, true, true, false, false, false, false, true, true, true]
+  | false, false, true, true, true, true, false, false, false => ![true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, true, false, false, false => ![true, true, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, true, false, false, false => ![true, false, true, false, false, false, false, true, true, true]
+  | true, true, true, true, true, true, false, false, false => ![true, true, true, false, false, false, false, true, true, true]
+  | false, false, false, false, false, false, true, false, false => ![false, false, false, false, false, false, false, true, false, false]
+  | true, false, false, false, false, false, true, false, false => ![false, false, false, false, false, false, true, true, false, false]
+  | false, true, false, false, false, false, true, false, false => ![false, false, false, false, false, false, false, true, true, false]
+  | true, true, false, false, false, false, true, false, false => ![false, false, false, false, false, false, true, true, true, false]
+  | false, false, true, false, false, false, true, false, false => ![false, false, false, false, false, false, false, true, true, false]
+  | true, false, true, false, false, false, true, false, false => ![false, false, false, false, false, false, true, true, true, false]
+  | false, true, true, false, false, false, true, false, false => ![false, false, false, false, false, false, true, true, true, false]
+  | true, true, true, false, false, false, true, false, false => ![true, false, false, false, false, false, true, true, true, false]
+  | false, false, false, true, false, false, true, false, false => ![false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, true, false, false, true, false, false => ![false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, true, false, false, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, true, false, false, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, true, false, false, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, false, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, false, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, false, true, false, false => ![true, false, false, false, false, false, true, true, true, true]
+  | false, false, false, false, true, false, true, false, false => ![false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, false, true, false, true, false, false => ![false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, false, true, false, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, true, false, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, true, false, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, false, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, false, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, false, true, false, false => ![true, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, true, false, true, false, false => ![false, false, false, false, false, false, true, true, false, true]
+  | true, false, false, true, true, false, true, false, false => ![false, true, false, false, false, false, true, true, false, true]
+  | false, true, false, true, true, false, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, false, true, false, false => ![false, true, false, false, false, false, true, true, true, true]
+  | false, false, true, true, true, false, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, true, false, true, false, false => ![false, true, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, false, true, false, false => ![true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, false, true, false, false => ![true, true, false, false, false, false, true, true, true, true]
+  | false, false, false, false, false, true, true, false, false => ![false, false, false, false, false, false, false, true, true, false]
+  | true, false, false, false, false, true, true, false, false => ![false, false, false, false, false, false, true, true, true, false]
+  | false, true, false, false, false, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, false, true, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, false, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, true, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, false, true, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, true, true, false, false => ![true, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, false, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, false, true, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, true, true, false, false => ![false, false, false, false, false, false, false, false, true, true]
+  | true, true, false, true, false, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, false, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, false, true, true, false, false => ![true, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, true, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, true, true, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, true, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, true, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, true, false, false => ![false, false, false, false, false, true, false, true, true, true]
+  | true, false, true, false, true, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, true, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, true, true, false, false => ![true, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, true, true, false, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, true, true, true, false, false => ![false, true, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, true, true, true, true, false, false => ![false, true, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, true, true, false, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, true, true, false, false => ![false, true, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, true, true, false, false => ![true, false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, true, true, true, false, false => ![true, true, false, false, false, false, false, true, true, true]
+  | false, false, false, false, false, false, false, true, false => ![false, false, false, false, false, false, false, false, true, false]
+  | true, false, false, false, false, false, false, true, false => ![false, false, false, false, false, false, false, true, true, false]
+  | false, true, false, false, false, false, false, true, false => ![false, false, false, false, false, false, true, false, true, false]
+  | true, true, false, false, false, false, false, true, false => ![false, false, false, false, false, false, true, true, true, false]
+  | false, false, true, false, false, false, false, true, false => ![false, false, false, false, false, false, false, true, true, false]
+  | true, false, true, false, false, false, false, true, false => ![false, false, false, false, false, false, true, true, true, false]
+  | false, true, true, false, false, false, false, true, false => ![false, false, false, false, false, false, true, true, true, false]
+  | true, true, true, false, false, false, false, true, false => ![true, false, false, false, false, false, true, true, true, false]
+  | false, false, false, true, false, false, false, true, false => ![false, false, false, false, false, false, false, false, true, true]
+  | true, false, false, true, false, false, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, false, true, false, false, false, true, false => ![false, false, false, false, false, false, true, false, true, true]
+  | true, true, false, true, false, false, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, true, false, false, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, false, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, false, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, false, false, true, false => ![true, false, false, false, false, false, true, true, true, true]
+  | false, false, false, false, true, false, false, true, false => ![false, false, false, false, false, false, false, true, true, false]
+  | true, false, false, false, true, false, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, true, false, false, true, false => ![false, false, false, false, false, false, true, true, true, false]
+  | true, true, false, false, true, false, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, true, false, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, false, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, false, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, false, false, true, false => ![true, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, true, false, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, true, false, false, true, false => ![false, false, false, false, false, false, false, true, false, true]
+  | false, true, false, true, true, false, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, false, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, false, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, false, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, true, false, false, true, false => ![true, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, false, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true]
+  | true, false, false, false, false, true, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, false, true, false, true, false => ![false, false, false, false, false, false, true, false, true, true]
+  | true, true, false, false, false, true, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, false, true, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, true, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, false, true, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, true, false, true, false => ![true, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, false, true, false, true, false => ![false, false, false, false, false, false, true, false, true, true]
+  | true, false, false, true, false, true, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, true, false, true, false => ![false, false, true, false, false, false, true, false, true, true]
+  | true, true, false, true, false, true, false, true, false => ![false, false, true, false, false, false, true, true, true, true]
+  | false, false, true, true, false, true, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, false, true, false, true, false => ![true, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, true, false, true, false => ![false, false, true, false, false, false, true, true, true, true]
+  | true, true, true, true, false, true, false, true, false => ![true, false, true, false, false, false, true, true, true, true]
+  | false, false, false, false, true, true, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, true, true, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, true, true, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, true, true, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, false, true, false => ![false, false, false, false, false, true, false, true, true, true]
+  | true, false, true, false, true, true, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, true, true, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, true, false, true, false => ![true, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, true, false, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, true, true, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, false, true, true, true, false, true, false => ![false, false, true, false, false, false, true, true, true, true]
+  | true, true, false, true, true, true, false, true, false => ![false, false, true, false, false, false, false, true, true, true]
+  | false, false, true, true, true, true, false, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, true, false, true, false => ![true, false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, true, false, true, false => ![false, false, true, false, false, false, false, true, true, true]
+  | true, true, true, true, true, true, false, true, false => ![true, false, true, false, false, false, false, true, true, true]
+  | false, false, false, false, false, false, true, true, false => ![false, false, false, false, false, false, false, true, true, false]
+  | true, false, false, false, false, false, true, true, false => ![false, false, false, false, false, false, true, true, true, false]
+  | false, true, false, false, false, false, true, true, false => ![false, false, false, false, false, false, true, true, true, false]
+  | true, true, false, false, false, false, true, true, false => ![false, false, false, true, false, false, true, true, true, false]
+  | false, false, true, false, false, false, true, true, false => ![false, false, false, true, false, false, false, true, true, false]
+  | true, false, true, false, false, false, true, true, false => ![false, false, false, true, false, false, true, true, true, false]
+  | false, true, true, false, false, false, true, true, false => ![false, false, false, true, false, false, true, true, true, false]
+  | true, true, true, false, false, false, true, true, false => ![true, false, false, true, false, false, true, true, true, false]
+  | false, false, false, true, false, false, true, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, false, false, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, false, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, false, false, true, true, false => ![false, false, false, false, false, false, true, true, true, false]
+  | false, false, true, true, false, false, true, true, false => ![false, false, false, false, false, false, false, true, true, false]
+  | true, false, true, true, false, false, true, true, false => ![false, false, false, false, false, false, true, true, true, false]
+  | false, true, true, true, false, false, true, true, false => ![false, false, false, false, false, false, true, true, true, false]
+  | true, true, true, true, false, false, true, true, false => ![true, false, false, false, false, false, true, true, true, false]
+  | false, false, false, false, true, false, true, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, true, false, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, true, false, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, true, false, true, true, false => ![false, false, false, true, false, false, true, true, true, true]
+  | false, false, true, false, true, false, true, true, false => ![false, false, false, true, false, false, false, true, true, true]
+  | true, false, true, false, true, false, true, true, false => ![false, false, false, true, false, false, true, true, true, true]
+  | false, true, true, false, true, false, true, true, false => ![false, false, false, true, false, false, true, true, true, true]
+  | true, true, true, false, true, false, true, true, false => ![true, false, false, true, false, false, true, true, true, true]
+  | false, false, false, true, true, false, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, true, false, true, true, false => ![false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, true, true, false, true, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, true, true, false, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, true, true, false, true, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, false, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, false, true, true, false => ![true, false, false, false, false, false, true, true, true, true]
+  | false, false, false, false, false, true, true, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, false, true, true, true, false => ![false, false, false, true, false, false, true, true, true, true]
+  | false, false, true, false, false, true, true, true, false => ![false, false, false, true, false, false, false, true, true, true]
+  | true, false, true, false, false, true, true, true, false => ![false, false, false, true, false, false, true, true, true, true]
+  | false, true, true, false, false, true, true, true, false => ![false, false, false, true, false, false, true, true, true, true]
+  | true, true, true, false, false, true, true, true, false => ![true, false, false, true, false, false, true, true, true, true]
+  | false, false, false, true, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, true, true, true, false => ![false, false, false, false, false, false, true, false, true, true]
+  | true, true, false, true, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, true, false, true, true, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, true, true, true, false => ![true, false, false, false, false, false, true, true, true, true]
+  | false, false, false, false, true, true, true, true, false => ![false, false, false, false, false, true, false, true, true, true]
+  | true, false, false, false, true, true, true, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, true, true, true, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, true, true, true, true, false => ![false, false, false, true, false, false, false, true, true, true]
+  | false, false, true, false, true, true, true, true, false => ![false, false, false, true, false, true, false, true, true, true]
+  | true, false, true, false, true, true, true, true, false => ![false, false, false, true, false, false, false, true, true, true]
+  | false, true, true, false, true, true, true, true, false => ![false, false, false, true, false, false, false, true, true, true]
+  | true, true, true, false, true, true, true, true, false => ![true, false, false, true, false, false, false, true, true, true]
+  | false, false, false, true, true, true, true, true, false => ![false, false, false, false, false, true, true, true, true, true]
+  | true, false, false, true, true, true, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, true, true, true, false => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, true, true, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, true, true, true, false => ![false, false, false, false, false, true, false, true, true, true]
+  | true, false, true, true, true, true, true, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, true, true, true, false => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, true, true, true, true, false => ![true, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, false, false, false, false, true => ![false, false, false, false, false, false, false, false, false, true]
+  | true, false, false, false, false, false, false, false, true => ![false, false, false, false, false, false, false, true, false, true]
+  | false, true, false, false, false, false, false, false, true => ![false, false, false, false, false, false, false, false, true, true]
+  | true, true, false, false, false, false, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, false, false, false, false, true => ![false, false, false, false, false, false, false, true, false, true]
+  | true, false, true, false, false, false, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, false, false, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, false, false, false, false, true => ![false, false, false, false, false, false, false, true, true, false]
+  | false, false, false, true, false, false, false, false, true => ![false, false, false, false, false, false, true, false, false, true]
+  | true, false, false, true, false, false, false, false, true => ![false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, true, false, false, false, false, true => ![false, false, false, false, false, false, true, false, true, true]
+  | true, true, false, true, false, false, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, true, false, false, false, false, true => ![false, false, false, false, false, false, true, true, false, true]
+  | true, false, true, true, false, false, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, false, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, false, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, true, false, false, false, true => ![false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, false, true, false, false, false, true => ![false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, false, true, false, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, true, false, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, true, false, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, false, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, false, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, false, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, false, false, false, true => ![false, false, false, false, false, false, true, true, false, true]
+  | true, false, false, true, true, false, false, false, true => ![false, true, false, false, false, false, true, true, false, true]
+  | false, true, false, true, true, false, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, false, false, false, true => ![false, true, false, false, false, false, true, true, true, true]
+  | false, false, true, true, true, false, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, true, false, false, false, true => ![false, true, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, false, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, true, false, false, false, true => ![false, true, false, false, false, false, false, true, true, true]
+  | false, false, false, false, false, true, false, false, true => ![false, false, false, false, false, false, false, false, true, true]
+  | true, false, false, false, false, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, false, true, false, false, true => ![false, false, false, false, false, false, true, false, true, true]
+  | true, true, false, false, false, true, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, false, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, true, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, false, true, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, false, true, false, false, true => ![false, false, false, false, false, false, true, false, true, true]
+  | true, false, false, true, false, true, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, true, false, false, true => ![false, false, true, false, false, false, true, false, true, true]
+  | true, true, false, true, false, true, false, false, true => ![false, false, true, false, false, false, true, true, true, true]
+  | false, false, true, true, false, true, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, false, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, false, true, false, false, true => ![false, false, true, false, false, false, true, true, true, true]
+  | true, true, true, true, false, true, false, false, true => ![false, false, true, false, false, false, false, true, true, true]
+  | false, false, false, false, true, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, true, true, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, true, true, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, true, true, false, false, true => ![false, false, true, false, false, false, true, true, true, true]
+  | false, false, true, false, true, true, false, false, true => ![false, false, false, false, false, true, false, true, true, true]
+  | true, false, true, false, true, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, true, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, true, false, false, true => ![false, false, true, false, false, false, false, true, true, true]
+  | false, false, false, true, true, true, false, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, true, true, false, false, true => ![false, true, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, true, false, false, true => ![false, false, true, false, false, false, true, true, true, true]
+  | true, true, false, true, true, true, false, false, true => ![false, true, true, false, false, false, true, true, true, true]
+  | false, false, true, true, true, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, true, false, false, true => ![false, true, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, true, false, false, true => ![false, false, true, false, false, false, false, true, true, true]
+  | true, true, true, true, true, true, false, false, true => ![false, true, true, false, false, false, false, true, true, true]
+  | false, false, false, false, false, false, true, false, true => ![false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, false, false, false, true, false, true => ![false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, false, false, false, true, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, false, false, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, false, false, true, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, false, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, false, false, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, false, true, false, true => ![false, false, false, false, false, false, true, true, true, false]
+  | false, false, false, true, false, false, true, false, true => ![false, false, false, false, false, false, true, true, false, true]
+  | true, false, false, true, false, false, true, false, true => ![false, true, false, false, false, false, true, true, false, true]
+  | false, true, false, true, false, false, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, false, false, true, false, true => ![false, true, false, false, false, false, true, true, true, true]
+  | false, false, true, true, false, false, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, false, false, true, false, true => ![false, true, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, false, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, false, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, false, true, false, true, false, true => ![false, false, false, false, true, false, false, true, false, true]
+  | true, false, false, false, true, false, true, false, true => ![false, false, false, false, true, false, true, true, false, true]
+  | false, true, false, false, true, false, true, false, true => ![false, false, false, false, false, false, false, true, false, true]
+  | true, true, false, false, true, false, true, false, true => ![false, false, false, false, false, false, true, true, false, true]
+  | false, false, true, false, true, false, true, false, true => ![false, false, false, false, true, false, false, true, true, true]
+  | true, false, true, false, true, false, true, false, true => ![false, false, false, false, true, false, true, true, true, true]
+  | false, true, true, false, true, false, true, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, false, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, true, false, true, false, true => ![false, false, false, false, true, false, true, true, false, true]
+  | true, false, false, true, true, false, true, false, true => ![false, true, false, false, true, false, true, true, false, true]
+  | false, true, false, true, true, false, true, false, true => ![false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, true, false, true, false, true => ![false, true, false, false, false, false, true, true, false, true]
+  | false, false, true, true, true, false, true, false, true => ![false, false, false, false, true, false, true, true, true, true]
+  | true, false, true, true, true, false, true, false, true => ![false, true, false, false, true, false, true, true, true, true]
+  | false, true, true, true, true, false, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, false, true, false, true => ![false, true, false, false, false, false, true, true, true, true]
+  | false, false, false, false, false, true, true, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, false, true, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, false, true, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, false, true, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, false, true, true, false, true => ![false, false, false, false, false, true, false, true, true, true]
+  | true, false, true, false, false, true, true, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, false, true, true, false, true => ![false, false, false, false, false, true, true, true, true, true]
+  | true, true, true, false, false, true, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, false, true, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, false, true, true, false, true => ![false, true, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, true, true, false, true => ![false, false, false, false, false, false, true, false, true, true]
+  | true, true, false, true, false, true, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, true, false, true, true, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, true, true, false, true => ![false, true, false, false, false, false, false, true, true, true]
+  | false, true, true, true, false, true, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, true, true, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, true, true, true, false, true => ![false, false, false, false, true, false, false, true, true, true]
+  | true, false, false, false, true, true, true, false, true => ![false, false, false, false, true, false, true, true, true, true]
+  | false, true, false, false, true, true, true, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, true, true, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, true, true, true, false, true => ![false, false, false, false, true, true, false, true, true, true]
+  | true, false, true, false, true, true, true, false, true => ![false, false, false, false, true, false, false, true, true, true]
+  | false, true, true, false, true, true, true, false, true => ![false, false, false, false, false, true, false, true, true, true]
+  | true, true, true, false, true, true, true, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, true, true, false, true => ![false, false, false, false, true, false, true, true, true, true]
+  | true, false, false, true, true, true, true, false, true => ![false, true, false, false, true, false, true, true, true, true]
+  | false, true, false, true, true, true, true, false, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, true, true, false, true => ![false, true, false, false, false, false, true, true, true, true]
+  | false, false, true, true, true, true, true, false, true => ![false, false, false, false, true, false, false, true, true, true]
+  | true, false, true, true, true, true, true, false, true => ![false, true, false, false, true, false, false, true, true, true]
+  | false, true, true, true, true, true, true, false, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, true, true, true, false, true => ![false, true, false, false, false, false, false, true, true, true]
+  | false, false, false, false, false, false, false, true, true => ![false, false, false, false, false, false, false, false, true, true]
+  | true, false, false, false, false, false, false, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, false, false, false, true, true => ![false, false, false, false, false, false, true, false, true, true]
+  | true, true, false, false, false, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, false, false, false, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, false, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, false, false, true, true => ![false, false, false, false, false, false, true, true, true, false]
+  | false, false, false, true, false, false, false, true, true => ![false, false, false, false, false, false, true, false, true, true]
+  | true, false, false, true, false, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, false, false, true, true => ![false, false, false, false, false, true, true, false, true, true]
+  | true, true, false, true, false, false, false, true, true => ![false, false, false, false, false, false, true, false, true, true]
+  | false, false, true, true, false, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, false, false, false, true, true => ![false, false, false, false, true, false, true, true, true, true]
+  | false, true, true, true, false, false, false, true, true => ![false, false, false, false, false, true, true, true, true, true]
+  | true, true, true, true, false, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, false, true, false, false, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, true, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, true, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, true, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, true, false, false, true, true => ![false, false, false, false, true, false, false, true, true, true]
+  | true, false, true, false, true, false, false, true, true => ![false, false, false, false, true, false, true, true, true, true]
+  | false, true, true, false, true, false, false, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, true, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, true, false, false, true, true => ![false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, true, true, false, false, true, true => ![false, false, false, false, false, true, true, true, true, true]
+  | true, true, false, true, true, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, true, true, false, false, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, false, false, true, true => ![false, false, false, false, false, true, false, true, true, true]
+  | true, true, true, true, true, false, false, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, false, true, false, true, true => ![false, false, false, false, false, true, false, false, true, true]
+  | true, false, false, false, false, true, false, true, true => ![false, false, false, false, false, false, false, false, true, true]
+  | false, true, false, false, false, true, false, true, true => ![false, false, false, false, false, true, true, false, true, true]
+  | true, true, false, false, false, true, false, true, true => ![false, false, false, false, false, false, true, false, true, true]
+  | false, false, true, false, false, true, false, true, true => ![false, false, false, false, false, true, false, true, true, true]
+  | true, false, true, false, false, true, false, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, false, true, false, true, true => ![false, false, false, false, false, true, true, true, true, true]
+  | true, true, true, false, false, true, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, false, true, false, true, true => ![false, false, false, false, false, true, true, false, true, true]
+  | true, false, false, true, false, true, false, true, true => ![false, false, false, false, false, false, true, false, true, true]
+  | false, true, false, true, false, true, false, true, true => ![false, false, true, false, false, true, true, false, true, true]
+  | true, true, false, true, false, true, false, true, true => ![false, false, true, false, false, false, true, false, true, true]
+  | false, false, true, true, false, true, false, true, true => ![false, false, false, false, false, true, true, true, true, true]
+  | true, false, true, true, false, true, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, true, false, true, true => ![false, false, true, false, false, true, true, true, true, true]
+  | true, true, true, true, false, true, false, true, true => ![false, false, true, false, false, false, true, true, true, true]
+  | false, false, false, false, true, true, false, true, true => ![false, false, false, false, false, true, false, true, true, true]
+  | true, false, false, false, true, true, false, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, true, true, false, true, true => ![false, false, false, false, false, true, true, true, true, true]
+  | true, true, false, false, true, true, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, true, true, false, true, true => ![false, false, false, false, true, true, false, true, true, true]
+  | true, false, true, false, true, true, false, true, true => ![false, false, false, false, true, false, false, true, true, true]
+  | false, true, true, false, true, true, false, true, true => ![false, false, false, false, false, true, false, true, true, true]
+  | true, true, true, false, true, true, false, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, true, false, true, true => ![false, false, false, false, false, true, true, true, true, true]
+  | true, false, false, true, true, true, false, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, true, false, true, true => ![false, false, true, false, false, true, true, true, true, true]
+  | true, true, false, true, true, true, false, true, true => ![false, false, true, false, false, false, true, true, true, true]
+  | false, false, true, true, true, true, false, true, true => ![false, false, false, false, false, true, false, true, true, true]
+  | true, false, true, true, true, true, false, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, true, false, true, true => ![false, false, true, false, false, true, false, true, true, true]
+  | true, true, true, true, true, true, false, true, true => ![false, false, true, false, false, false, false, true, true, true]
+  | false, false, false, false, false, false, true, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, false, false, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, false, false, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, false, false, true, true, true => ![false, false, false, true, false, false, true, true, true, true]
+  | false, false, true, false, false, false, true, true, true => ![false, false, false, true, false, false, false, true, true, true]
+  | true, false, true, false, false, false, true, true, true => ![false, false, false, true, false, false, true, true, true, true]
+  | false, true, true, false, false, false, true, true, true => ![false, false, false, true, false, false, true, true, true, true]
+  | true, true, true, false, false, false, true, true, true => ![false, false, false, true, false, false, true, true, true, false]
+  | false, false, false, true, false, false, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, false, false, true, true, true => ![false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, true, false, false, true, true, true => ![false, false, false, false, false, false, true, false, true, true]
+  | true, true, false, true, false, false, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, true, false, false, true, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, false, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, false, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, false, true, true, true => ![false, false, false, false, false, false, true, true, true, false]
+  | false, false, false, false, true, false, true, true, true => ![false, false, false, false, true, false, false, true, true, true]
+  | true, false, false, false, true, false, true, true, true => ![false, false, false, false, true, false, true, true, true, true]
+  | false, true, false, false, true, false, true, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, false, false, true, false, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, true, false, true, true, true => ![false, false, false, true, true, false, false, true, true, true]
+  | true, false, true, false, true, false, true, true, true => ![false, false, false, true, true, false, true, true, true, true]
+  | false, true, true, false, true, false, true, true, true => ![false, false, false, true, false, false, false, true, true, true]
+  | true, true, true, false, true, false, true, true, true => ![false, false, false, true, false, false, true, true, true, true]
+  | false, false, false, true, true, false, true, true, true => ![false, false, false, false, true, false, true, true, true, true]
+  | true, false, false, true, true, false, true, true, true => ![false, false, false, false, true, false, true, true, false, true]
+  | false, true, false, true, true, false, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, false, true, true, true => ![false, false, false, false, false, false, true, true, false, true]
+  | false, false, true, true, true, false, true, true, true => ![false, false, false, false, true, false, false, true, true, true]
+  | true, false, true, true, true, false, true, true, true => ![false, false, false, false, true, false, true, true, true, true]
+  | false, true, true, true, true, false, true, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, true, false, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, false, false, true, true, true, true => ![false, false, false, false, false, true, false, true, true, true]
+  | true, false, false, false, false, true, true, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, false, true, true, true, true => ![false, false, false, false, false, true, true, true, true, true]
+  | true, true, false, false, false, true, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, false, true, true, true, true => ![false, false, false, true, false, true, false, true, true, true]
+  | true, false, true, false, false, true, true, true, true => ![false, false, false, true, false, false, false, true, true, true]
+  | false, true, true, false, false, true, true, true, true => ![false, false, false, true, false, true, true, true, true, true]
+  | true, true, true, false, false, true, true, true, true => ![false, false, false, true, false, false, true, true, true, true]
+  | false, false, false, true, false, true, true, true, true => ![false, false, false, false, false, true, true, true, true, true]
+  | true, false, false, true, false, true, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, true, true, true, true => ![false, false, false, false, false, true, true, false, true, true]
+  | true, true, false, true, false, true, true, true, true => ![false, false, false, false, false, false, true, false, true, true]
+  | false, false, true, true, false, true, true, true, true => ![false, false, false, false, false, true, false, true, true, true]
+  | true, false, true, true, false, true, true, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, false, true, true, true, true => ![false, false, false, false, false, true, true, true, true, true]
+  | true, true, true, true, false, true, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, false, true, true, true, true, true => ![false, false, false, false, true, true, false, true, true, true]
+  | true, false, false, false, true, true, true, true, true => ![false, false, false, false, true, false, false, true, true, true]
+  | false, true, false, false, true, true, true, true, true => ![false, false, false, false, false, true, false, true, true, true]
+  | true, true, false, false, true, true, true, true, true => ![false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, true, true, true => ![false, false, false, true, true, true, false, true, true, true]
+  | true, false, true, false, true, true, true, true, true => ![false, false, false, true, true, false, false, true, true, true]
+  | false, true, true, false, true, true, true, true, true => ![false, false, false, true, false, true, false, true, true, true]
+  | true, true, true, false, true, true, true, true, true => ![false, false, false, true, false, false, false, true, true, true]
+  | false, false, false, true, true, true, true, true, true => ![false, false, false, false, true, true, true, true, true, true]
+  | true, false, false, true, true, true, true, true, true => ![false, false, false, false, true, false, true, true, true, true]
+  | false, true, false, true, true, true, true, true, true => ![false, false, false, false, false, true, true, true, true, true]
+  | true, true, false, true, true, true, true, true, true => ![false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, true, true, true, true, true, true => ![false, false, false, false, true, true, false, true, true, true]
+  | true, false, true, true, true, true, true, true, true => ![false, false, false, false, true, false, false, true, true, true]
+  | false, true, true, true, true, true, true, true, true => ![false, false, false, false, false, true, false, true, true, true]
+  | true, true, true, true, true, true, true, true, true => ![false, false, false, false, false, false, false, true, true, true]
+
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 4000 in
+/-- **Single-flip (edge) nonexpansiveness of `facet5bf`.** Flipping any one of the 9 input
+coordinates changes the 10-bit output by at most one Hamming unit — the `4608` edge cases,
+checked by the kernel evaluator (`decide +kernel`, with recursion depth and heartbeat budget raised
+to accommodate the case tree). -/
+theorem facet5bf_singleFlip :
+    ∀ (p : Fin 9 → Bool) (i : Fin 9),
+      (∑ j, bdiff (facet5bf p j) (facet5bf (Function.update p i (!(p i))) j)) ≤ 1 := by
+  decide +kernel
+
+/-- **Global nonexpansiveness of `facet5bf`, derived from the single-flip reduction.** Obtained from
+`nonexpansive_of_singleFlip` by discharging only the `4608` single-flip edge cases (via
+`facet5bf_singleFlip`) rather than the `512²` input pairs. -/
+theorem facet5bf_nonexpansive (p q : Fin 9 → Bool) :
+    (∑ j, bdiff (facet5bf p j) (facet5bf q j)) ≤ ∑ i, bdiff (p i) (q i) :=
+  nonexpansive_of_singleFlip facet5bf facet5bf_singleFlip p q
+
+/-- The five color input patterns map through the contraction to the corresponding bounded-region
+membership pattern.  A finite `decide` over the five colors. -/
+lemma facet5bf_boundary (c : Fin 5) :
+    facet5bf (fun i => decide (c ∈ facet5bL_reg i)) = fun j => decide (c ∈ facet5bR_reg j) := by
+  fin_cases c <;> · funext j; fin_cases j <;> rfl
+
+/-- The purifier pattern (all `false`) maps to all `false` under `facet5bf`. -/
+lemma facet5bf_zero : facet5bf (fun _ => false) = fun _ => false := by
+  funext j; fin_cases j <;> rfl
+
+namespace Facet5B
+
+variable {bd : Finset V}
+
+/-- Membership of `v ∈ A c` in a larger-side region: `v ∈ facet5bL A i ↔ c ∈ facet5bL_reg i`. -/
+lemma mem_facet5bL_of_color (hR : Cyc5.Regions bd A) {v : V} {c : Fin 5} (hv : v ∈ A c) (i : Fin 9) :
+    v ∈ facet5bL A i ↔ c ∈ facet5bL_reg i := by
+  unfold facet5bL
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- `facet5bR A j ⊆ bd`. -/
+lemma facet5bR_sub (hR : Cyc5.Regions bd A) (j : Fin 10) : facet5bR A j ⊆ bd := by
+  unfold facet5bR
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- `facet5bL A i ⊆ bd`. -/
+lemma facet5bL_sub (hR : Cyc5.Regions bd A) (i : Fin 9) : facet5bL A i ⊆ bd := by
+  unfold facet5bL
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- Membership of `v ∈ A c` in a bounded region: `v ∈ facet5bR A j ↔ c ∈ facet5bR_reg j`. -/
+lemma mem_facet5bR_of_color (hR : Cyc5.Regions bd A) {v : V} {c : Fin 5} (hv : v ∈ A c) (j : Fin 10) :
+    v ∈ facet5bR A j ↔ c ∈ facet5bR_reg j := by
+  unfold facet5bR
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- For a boundary vertex of color `c`, the achieving cuts realize the larger-side pattern. -/
+lemma contractionPattern_of_color (hR : Cyc5.Regions bd A)
+    (X : Fin 9 → Finset V) (hX : ∀ i, IsRTCut bd (facet5bL A i) (X i))
+    {v : V} {c : Fin 5} (hv : v ∈ A c) :
+    contractionPattern X v = fun i => decide (c ∈ facet5bL_reg i) := by
+  funext i
+  simp only [contractionPattern, mem]
+  by_cases hc : c ∈ facet5bL_reg i
+  · have : v ∈ X i := (hX i).1 ((mem_facet5bL_of_color hR hv i).2 hc)
+    simp [this, hc]
+  · have hvL : v ∉ facet5bL A i := fun h => hc ((mem_facet5bL_of_color hR hv i).1 h)
+    have : v ∉ X i := (hX i).2 v (hR.sub c hv) hvL
+    simp [this, hc]
+
+/-- For a purifier vertex, the achieving cuts realize the all-`false` pattern. -/
+lemma contractionPattern_of_purifier
+    (X : Fin 9 → Finset V) (hX : ∀ i, IsRTCut bd (facet5bL A i) (X i))
+    {v : V} (hvbd : v ∈ bd) (hvout : ∀ c, v ∉ A c) :
+    contractionPattern X v = fun _ => false := by
+  funext i
+  simp only [contractionPattern, mem]
+  have hvL : v ∉ facet5bL A i := by
+    unfold facet5bL
+    rw [Finset.mem_biUnion]
+    rintro ⟨c, _, hvc⟩
+    exact hvout c hvc
+  have : v ∉ X i := (hX i).2 v hvbd hvL
+  simp [this]
+
+/-- **Validity of the recombined candidate cuts.** Each `contractionCut X facet5bf j` is an admissible
+RT cut for the bounded region `facet5bR A j`. -/
+lemma facet5_hvalid (hR : Cyc5.Regions bd A)
+    (X : Fin 9 → Finset V) (hX : ∀ i, IsRTCut bd (facet5bL A i) (X i)) (j : Fin 10) :
+    IsRTCut bd (facet5bR A j) (contractionCut X facet5bf j) := by
+  have hkey : ∀ v ∈ bd, mem (contractionCut X facet5bf j) v = mem (facet5bR A j) v := by
+    intro v hvbd
+    rw [mem_contractionCut]
+    by_cases hcolor : ∃ c, v ∈ A c
+    · obtain ⟨c, hvc⟩ := hcolor
+      rw [contractionPattern_of_color hR X hX hvc, facet5bf_boundary c]
+      simp only [mem]
+      rw [decide_eq_decide]
+      exact (mem_facet5bR_of_color hR hvc j).symm
+    · simp only [not_exists] at hcolor
+      rw [contractionPattern_of_purifier X hX hvbd hcolor, facet5bf_zero]
+      have : v ∉ facet5bR A j := by
+        unfold facet5bR
+        rw [Finset.mem_biUnion]
+        rintro ⟨c, _, hvc⟩
+        exact hcolor c hvc
+      simp [mem, this]
+  refine ⟨fun x hx => ?_, fun x hxbd hxout => ?_⟩
+  · have hxbd : x ∈ bd := facet5bR_sub hR j hx
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact this.2 hx
+  · intro hxin
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact hxout (this.1 hxin)
+
+end Facet5B
+
+open Facet5B
+
+/-- **A genuinely new five-party holographic entropy cone facet (10-term bounded side).**
+For five pairwise-disjoint boundary regions `A₀,…,A₄` (with the rest of `bd` a purifier) in any
+finite undirected nonnegative-real-weighted graph, the 9 larger-side regions dominate the 10
+bounded-side regions:
+
+  `∑ⱼ S(regionⱼ) ≤ ∑ᵢ S(largerᵢ)`.
+
+This inequality is **not implied by the `SA + SSA + MMI` cone**: it is a genuine facet of the
+five-party holographic entropy cone (source: the five-region holographic entropy cone literature).
+It is proved as an instance of the general contraction-map engine `entropyR_ineq_of_contraction`
+via the `512`-case map `facet5bf`, whose nonexpansiveness comes through the single-flip edge-case
+reduction.  The general holographic entropy cone for `n ≥ 5` remains open. -/
+theorem rtEntropyR_newFacet5b (G : GraphR V) {bd : Finset V} {A : Fin 5 → Finset V}
+    (hR : Cyc5.Regions bd A) :
+    (∑ j, rtEntropyR G bd (facet5bR A j) (Facet5B.facet5bR_sub hR j))
+      ≤ ∑ i, rtEntropyR G bd (facet5bL A i) (Facet5B.facet5bL_sub hR i) := by
+  have hXex : ∀ i, ∃ S, IsRTCut bd (facet5bL A i) S
+      ∧ rtEntropyR G bd (facet5bL A i) (Facet5B.facet5bL_sub hR i) = cutCapacityR G S :=
+    fun i => rtEntropyR_eq_cap G (Facet5B.facet5bL_sub hR i)
+  choose X hXcut hXcap using hXex
+  have hXok : ∀ i, IsRTCut bd (facet5bL A i) (X i)
+      ∧ cutCapacityR G (X i) = rtEntropyR G bd (facet5bL A i) (Facet5B.facet5bL_sub hR i) :=
+    fun i => ⟨hXcut i, (hXcap i).symm⟩
+  have hvalid : ∀ j, IsRTCut bd (facet5bR A j) (contractionCut X facet5bf j) :=
+    fun j => Facet5B.facet5_hvalid hR X hXcut j
+  exact entropyR_ineq_of_contraction G (facet5bL A) (facet5bR A)
+    (Facet5B.facet5bL_sub hR) (Facet5B.facet5bR_sub hR) X hXok facet5bf hvalid facet5bf_nonexpansive
+
+/-! #### Anti-vacuity witness: a strict five-party instance
+
+The five-party **star** on `Fin 7` (regions `A₀,…,A₄ = {0},…,{4}`, purifier vertex `5`, central
+bulk vertex `6`, unit bonds) witnesses strictness.  A region of `k` colored vertices has min-cut
+entropy `min(k, 6 − k)`: the larger-side regions have entropies `![3, 3, 3, 3, 3, 3, 3, 3, 3]` (sum `27`); the
+bounded-side regions have entropies `![2, 2, 2, 2, 2, 2, 3, 2, 2, 2]` (sum `21`), a strict slack of `6`, all
+entropies positive. -/
+
+/-- `facet5bR star5A j ⊆ star5Bd`. -/
+lemma star5_facet5bR_sub (j : Fin 10) : facet5bR star5A j ⊆ star5Bd :=
+  Facet5B.facet5bR_sub star5A_regions j
+/-- `facet5bL star5A i ⊆ star5Bd`. -/
+lemma star5_facet5bL_sub (i : Fin 9) : facet5bL star5A i ⊆ star5Bd :=
+  Facet5B.facet5bL_sub star5A_regions i
+
+/-- Each bounded-region entropy of the star witness, as `![2, 2, 2, 2, 2, 2, 3, 2, 2, 2]`. -/
+lemma star5_facet5bR (j : Fin 10) :
+    rtEntropy star5Graph star5Bd (facet5bR star5A j) (star5_facet5bR_sub j)
+      = (![2, 2, 2, 2, 2, 2, 3, 2, 2, 2] : Fin 10 → ℕ) j := by
+  fin_cases j <;> · unfold facet5bR facet5bR_reg star5A; decide
+
+/-- Each larger-side entropy of the star witness, as `![3, 3, 3, 3, 3, 3, 3, 3, 3]`. -/
+lemma star5_facet5bL (i : Fin 9) :
+    rtEntropy star5Graph star5Bd (facet5bL star5A i) (star5_facet5bL_sub i)
+      = (![3, 3, 3, 3, 3, 3, 3, 3, 3] : Fin 9 → ℕ) i := by
+  fin_cases i <;> · unfold facet5bL facet5bL_reg star5A; decide
+
+/-- **Strict five-party anti-vacuity witness (real).** On the cast star graph this new-facet
+inequality is strict: the bounded side sums to `21` and the larger side to `27` (slack
+`6`), so `rtEntropyR_newFacet5b` is not the vacuous `0 ≤ 0`. -/
+theorem rtEntropyR_newFacet5b_strict_witness :
+    (∑ j, rtEntropyR (castGraph star5Graph) star5Bd (facet5bR star5A j)
+        (Facet5B.facet5bR_sub (A := star5A) star5A_regions j))
+      < ∑ i, rtEntropyR (castGraph star5Graph) star5Bd (facet5bL star5A i)
+        (Facet5B.facet5bL_sub (A := star5A) star5A_regions i) := by
+  have hreg : ∀ j, rtEntropyR (castGraph star5Graph) star5Bd (facet5bR star5A j)
+      (Facet5B.facet5bR_sub (A := star5A) star5A_regions j)
+        = ((![2, 2, 2, 2, 2, 2, 3, 2, 2, 2] : Fin 10 → ℕ) j : ℝ) := by
+    intro j
+    rw [rtEntropyR_castGraph, star5_facet5bR j]
+  have hlar : ∀ i, rtEntropyR (castGraph star5Graph) star5Bd (facet5bL star5A i)
+      (Facet5B.facet5bL_sub (A := star5A) star5A_regions i)
+        = ((![3, 3, 3, 3, 3, 3, 3, 3, 3] : Fin 9 → ℕ) i : ℝ) := by
+    intro i
+    rw [rtEntropyR_castGraph, star5_facet5bL i]
+  rw [Finset.sum_congr rfl (fun j _ => hreg j), Finset.sum_congr rfl (fun i _ => hlar i)]
+  simp [Fin.sum_univ_succ]
+  norm_num
+
+/-- All min-cut entropies in this five-party strict new-facet witness are strictly positive. -/
+theorem rtEntropyR_newFacet5b_witness_mincuts_pos :
+    (∀ j, 0 < rtEntropyR (castGraph star5Graph) star5Bd (facet5bR star5A j)
+        (Facet5B.facet5bR_sub (A := star5A) star5A_regions j))
+      ∧ ∀ i, 0 < rtEntropyR (castGraph star5Graph) star5Bd (facet5bL star5A i)
+        (Facet5B.facet5bL_sub (A := star5A) star5A_regions i) := by
+  refine ⟨fun j => ?_, fun i => ?_⟩
+  · rw [rtEntropyR_castGraph, star5_facet5bR j]; fin_cases j <;> norm_num
+  · rw [rtEntropyR_castGraph, star5_facet5bL i]; fin_cases i <;> norm_num
+
 end Physlib.UndirectedMMICertificate
