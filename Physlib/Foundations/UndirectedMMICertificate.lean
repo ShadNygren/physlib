@@ -213,6 +213,120 @@ theorem edge_atoms_nonexpansive :
       ≤ bdiff uX vX + bdiff uY vY + bdiff uZ vZ := by
   decide
 
+/-! ## Edge-nonexpansiveness implies global nonexpansiveness
+
+A boolean map on the hypercube that changes its output by at most one Hamming unit whenever a
+single input coordinate is flipped is Hamming-nonexpansive on *every* pair of inputs.  This is a
+path-metric argument: any two inputs are joined by a path of single-coordinate flips of length equal
+to their Hamming distance, and nonexpansiveness accumulates along the path by the triangle
+inequality.  The reduction is quantitatively useful: it discharges the global `2ᵐ × 2ᵐ` pair
+obligation from just the `m · 2ᵐ` single-flip edge cases. -/
+
+/-- Triangle inequality for the boolean Hamming indicator `bdiff`. -/
+theorem bdiff_triangle (a b c : Bool) : bdiff a c ≤ bdiff a b + bdiff b c := by
+  unfold bdiff; revert a b c; decide
+
+/-- `bdiff` is symmetric. -/
+theorem bdiff_comm (a b : Bool) : bdiff a b = bdiff b a := by
+  unfold bdiff; revert a b; decide
+
+@[simp] theorem bdiff_self (a : Bool) : bdiff a a = 0 := by
+  unfold bdiff; simp
+
+/-- Summed triangle inequality: the Hamming distance between two boolean vectors is bounded by the
+distances through any intermediate vector. -/
+theorem hdist_triangle {ι : Type*} [Fintype ι] (A B C : ι → Bool) :
+    (∑ j, bdiff (A j) (C j)) ≤ (∑ j, bdiff (A j) (B j)) + (∑ j, bdiff (B j) (C j)) := by
+  rw [← Finset.sum_add_distrib]
+  exact Finset.sum_le_sum (fun j _ => bdiff_triangle (A j) (B j) (C j))
+
+/-- The Hamming distance between two patterns is zero iff they coincide. -/
+theorem sum_bdiff_eq_zero_iff {m : ℕ} (p q : Fin m → Bool) :
+    (∑ i, bdiff (p i) (q i)) = 0 ↔ p = q := by
+  constructor
+  · intro h
+    funext i
+    have hi : bdiff (p i) (q i) = 0 := by
+      by_contra hne
+      have : 0 < ∑ i, bdiff (p i) (q i) :=
+        Finset.sum_pos' (fun _ _ => Nat.zero_le _) ⟨i, Finset.mem_univ i, Nat.pos_of_ne_zero hne⟩
+      omega
+    unfold bdiff at hi
+    by_contra hpq
+    simp [hpq] at hi
+  · intro h; subst h; simp
+
+/-- Overwriting coordinate `i` of `p` with `q i` (where they differ) decrements the Hamming distance
+to `q` by exactly one. -/
+theorem sum_bdiff_update {m : ℕ} (p q : Fin m → Bool) (i : Fin m) (hi : p i ≠ q i) :
+    (∑ x, bdiff (Function.update p i (q i) x) (q x)) + 1 = ∑ x, bdiff (p x) (q x) := by
+  have hsplit : ∀ (f : Fin m → ℕ), ∑ x, f x = f i + ∑ x ∈ Finset.univ.erase i, f x := by
+    intro f
+    rw [← Finset.sum_erase_add _ _ (Finset.mem_univ i)]; ring
+  rw [hsplit (fun x => bdiff (Function.update p i (q i) x) (q x)),
+      hsplit (fun x => bdiff (p x) (q x))]
+  simp only [Function.update_self]
+  rw [bdiff_self]
+  have herase : ∑ x ∈ Finset.univ.erase i, bdiff (Function.update p i (q i) x) (q x)
+      = ∑ x ∈ Finset.univ.erase i, bdiff (p x) (q x) := by
+    apply Finset.sum_congr rfl
+    intro x hx
+    rw [Function.update_of_ne (Finset.ne_of_mem_erase hx)]
+  rw [herase]
+  have hbi : bdiff (p i) (q i) = 1 := by unfold bdiff; simp [hi]
+  rw [hbi]; ring
+
+/-- **Edge-nonexpansiveness implies global nonexpansiveness.** If a boolean map `f` is
+Hamming-nonexpansive across every hypercube edge — flipping any single input coordinate changes the
+output by at most one Hamming unit — then `f` is Hamming-nonexpansive on every pair of inputs.
+
+The proof is strong induction on the input Hamming distance `n`.  At `n = 0` the inputs coincide.
+Otherwise pick a differing coordinate `i`, overwrite it in `p` to match `q` (obtaining `p'` at
+distance `n - 1`, handled by the induction hypothesis), and note the single flip `p → p'` costs at
+most one output unit by hypothesis; the triangle inequality chains the two bounds. -/
+theorem nonexpansive_of_singleFlip {m k : ℕ} (f : (Fin m → Bool) → (Fin k → Bool))
+    (h : ∀ (p : Fin m → Bool) (i : Fin m),
+           (∑ j, bdiff (f p j) (f (Function.update p i (!(p i))) j)) ≤ 1) :
+    ∀ (p q : Fin m → Bool),
+      (∑ j, bdiff (f p j) (f q j)) ≤ (∑ i, bdiff (p i) (q i)) := by
+  suffices H : ∀ (n : ℕ) (p q : Fin m → Bool), (∑ i, bdiff (p i) (q i)) = n →
+      (∑ j, bdiff (f p j) (f q j)) ≤ n by
+    intro p q; exact H _ p q rfl
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    intro p q hn
+    rcases Nat.eq_zero_or_pos n with hz | hpos
+    · subst hz
+      have hpq : p = q := (sum_bdiff_eq_zero_iff p q).1 hn
+      subst hpq; simp
+    · have hne : (Finset.univ.filter (fun i => p i ≠ q i)).Nonempty := by
+        by_contra hempty
+        rw [Finset.not_nonempty_iff_eq_empty] at hempty
+        have hall : ∀ i, p i = q i := by
+          intro i
+          by_contra hne
+          have hmem : i ∈ Finset.univ.filter (fun i => p i ≠ q i) := by simp [hne]
+          rw [hempty] at hmem; simp at hmem
+        have : p = q := funext hall
+        subst this; simp at hn; omega
+      obtain ⟨i, hi⟩ := hne
+      rw [Finset.mem_filter] at hi
+      have hpqi : p i ≠ q i := hi.2
+      set p' := Function.update p i (q i) with hp'
+      have hdec : (∑ x, bdiff (p' x) (q x)) + 1 = ∑ x, bdiff (p x) (q x) :=
+        sum_bdiff_update p q i hpqi
+      have hn' : (∑ x, bdiff (p' x) (q x)) = n - 1 := by omega
+      have hflip : q i = !(p i) := by cases hpi : p i <;> cases hqi : q i <;> simp_all
+      have hupdate : p' = Function.update p i (!(p i)) := by rw [hp', hflip]
+      have hih : (∑ j, bdiff (f p' j) (f q j)) ≤ n - 1 := ih (n - 1) (by omega) p' q hn'
+      have hedge : (∑ j, bdiff (f p j) (f p' j)) ≤ 1 := by rw [hupdate]; exact h p i
+      calc (∑ j, bdiff (f p j) (f q j))
+          ≤ (∑ j, bdiff (f p j) (f p' j)) + (∑ j, bdiff (f p' j) (f q j)) :=
+            hdist_triangle (f p) (f p') (f q)
+        _ ≤ 1 + (n - 1) := Nat.add_le_add hedge hih
+        _ = n := by omega
+
 /-! ## From the boolean engine to the capacity certificate
 
 We instantiate the engine at each ordered pair with the actual set memberships, then sum against the
@@ -1479,6 +1593,22 @@ lemma facet5f_nonexpansive (p q : Fin 5 → Bool) :
   have key : ∀ p q : Fin 5 → Bool,
       (∑ j, bdiff (facet5f p j) (facet5f q j)) ≤ ∑ i, bdiff (p i) (q i) := by decide
   exact key p q
+
+/-- **Single-flip (edge) nonexpansiveness of `facet5f`.** Flipping any one of the five input
+coordinates changes the six-bit output by at most one Hamming unit — the `5 · 2⁵ = 160` edge cases,
+checked by `decide`. -/
+theorem facet5f_singleFlip :
+    ∀ (p : Fin 5 → Bool) (i : Fin 5),
+      (∑ j, bdiff (facet5f p j) (facet5f (Function.update p i (!(p i))) j)) ≤ 1 := by
+  decide
+
+/-- **Global nonexpansiveness of `facet5f`, re-derived from the single-flip reduction.** Identical in
+statement to `facet5f_nonexpansive`, but obtained from `nonexpansive_of_singleFlip` by discharging
+only the `160` single-flip edge cases (via `facet5f_singleFlip`) rather than the `1024` input pairs.
+This validates the edge-to-global reduction inside the kernel. -/
+theorem facet5f_nonexpansive_via_singleFlip (p q : Fin 5 → Bool) :
+    (∑ j, bdiff (facet5f p j) (facet5f q j)) ≤ ∑ i, bdiff (p i) (q i) :=
+  nonexpansive_of_singleFlip facet5f facet5f_singleFlip p q
 
 /-- The six input patterns carried by boundary vertices — one per elementary color and the all-`false`
 purifier pattern — map through `facet5f` exactly to the corresponding bounded-region membership
