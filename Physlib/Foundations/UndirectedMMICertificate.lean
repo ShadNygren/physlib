@@ -1697,4 +1697,409 @@ theorem rtEntropyR_newFacet5_witness_mincuts_pos :
   · rw [rtEntropyR_castGraph, star5_facet5L i]; norm_num
 
 
+/-! ### A second genuinely-new five-party holographic entropy cone facet
+
+As a further instance of the general contraction-map engine (`entropyR_ineq_of_contraction`), we
+certify a second five-party holographic entropy inequality that is a **genuine facet** of the
+five-party holographic entropy cone — that is, it is **not** implied by subadditivity, strong
+subadditivity and monogamy of mutual information (the `SA + SSA + MMI` cone).  With five elementary
+boundary regions `A₀,…,A₄` (colors `A,B,C,D,E`, plus a purifier = the rest of the boundary) the
+inequality is
+
+  `S(AD) + S(BC) + S(ABE) + S(ACE) + S(ADE) + S(BDE) + S(CDE)`
+    `≥ S(A) + S(B) + S(C) + S(D) + S(AE) + S(DE) + S(BCE) + S(ABDE) + S(ACDE)`,
+
+with the seven larger-side regions `AD, BC, ABE, ACE, ADE, BDE, CDE` and the nine bounded-side regions
+`A, B, C, D, AE, DE, BCE, ABDE, ACDE`.  Being outside the `SA + SSA + MMI` cone, it is a new facet of
+the five-party holographic entropy cone (source: the five-party holographic entropy cone literature);
+its validity for the undirected min-cut model is established here by exhibiting an explicit contraction
+map, not by cone membership.
+
+The `128`-entry boolean contraction map below recombines the seven larger-side cut membership bits
+(one per larger-side region) into the nine bounded-region membership bits; boundary validity of the
+recombined cuts is a finite check on the membership patterns that boundary vertices can carry (the
+five elementary colors plus the purifier).  The general holographic entropy cone for `n ≥ 5` remains
+open. -/
+
+/-- The seven larger-side regions of colors, as index sets in `Fin 5`:
+`{0,3}, {1,2}, {0,1,4}, {0,2,4}, {0,3,4}, {1,3,4}, {2,3,4}`. -/
+def facet8Sev : Fin 7 → Finset (Fin 5) :=
+  ![{0, 3}, {1, 2}, {0, 1, 4}, {0, 2, 4}, {0, 3, 4}, {1, 3, 4}, {2, 3, 4}]
+
+/-- The nine bounded-side regions of colors, as index sets in `Fin 5`:
+`{0}, {1}, {2}, {3}, {0,4}, {3,4}, {1,2,4}, {0,1,3,4}, {0,2,3,4}`. -/
+def facet8Reg : Fin 9 → Finset (Fin 5) :=
+  ![{0}, {1}, {2}, {3}, {0, 4}, {3, 4}, {1, 2, 4}, {0, 1, 3, 4}, {0, 2, 3, 4}]
+
+variable {A : Fin 5 → Finset V}
+
+/-- The `i`-th larger-side region: the union of the elementary regions in the `i`-th larger set. -/
+def facet8L (A : Fin 5 → Finset V) (i : Fin 7) : Finset V := (facet8Sev i).biUnion A
+
+/-- The `j`-th bounded-side region: the union of the elementary regions in the `j`-th region set. -/
+def facet8R (A : Fin 5 → Finset V) (j : Fin 9) : Finset V := (facet8Reg j).biUnion A
+
+/-- The `128`-entry boolean contraction map recombining the seven larger-side cut membership bits into
+the nine bounded-region membership bits.  Input bit `i` = "the vertex's color lies in the `i`-th
+larger-side region"; output bit `j` = "its color lies in the `j`-th bounded region".  Defined by an
+explicit match on the seven input bits so that `decide` evaluates it. -/
+def facet8f (p : Fin 7 → Bool) : Fin 9 → Bool :=
+  match p 0, p 1, p 2, p 3, p 4, p 5, p 6 with
+  | false, false, false, false, false, false, false => ![false, false, false, false, false, false, false, false, false]
+  | false, false, false, false, false, false, true => ![false, false, false, false, false, false, false, false, true]
+  | false, false, false, false, false, true, false => ![false, false, false, false, false, false, false, true, false]
+  | false, false, false, false, false, true, true => ![false, false, false, false, false, false, false, true, true]
+  | false, false, false, false, true, false, false => ![false, false, false, false, false, false, false, false, true]
+  | false, false, false, false, true, false, true => ![false, false, false, false, false, false, false, true, true]
+  | false, false, false, false, true, true, false => ![false, false, false, false, false, false, false, true, true]
+  | false, false, false, false, true, true, true => ![false, false, false, false, false, true, false, true, true]
+  | false, false, false, true, false, false, false => ![false, false, false, false, false, false, false, false, true]
+  | false, false, false, true, false, false, true => ![false, false, false, false, false, false, true, false, true]
+  | false, false, false, true, false, true, false => ![false, false, false, false, false, false, false, true, true]
+  | false, false, false, true, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, false, false => ![false, false, false, false, false, false, false, true, true]
+  | false, false, false, true, true, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, true, true => ![false, false, false, false, false, true, true, true, true]
+  | false, false, true, false, false, false, false => ![false, false, false, false, false, false, false, true, false]
+  | false, false, true, false, false, false, true => ![false, false, false, false, false, false, false, true, true]
+  | false, false, true, false, false, true, false => ![false, false, false, false, false, false, true, true, false]
+  | false, false, true, false, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, false, false => ![false, false, false, false, false, false, false, true, true]
+  | false, false, true, false, true, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, true => ![false, false, false, false, false, true, true, true, true]
+  | false, false, true, true, false, false, false => ![false, false, false, false, false, false, false, true, true]
+  | false, false, true, true, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, true, true => ![false, false, false, false, true, false, true, true, true]
+  | false, false, true, true, true, false, false => ![false, false, false, false, true, false, false, true, true]
+  | false, false, true, true, true, false, true => ![false, false, false, false, true, false, true, true, true]
+  | false, false, true, true, true, true, false => ![false, false, false, false, true, false, true, true, true]
+  | false, false, true, true, true, true, true => ![false, false, false, false, true, true, true, true, true]
+  | false, true, false, false, false, false, false => ![false, false, false, false, false, false, true, false, false]
+  | false, true, false, false, false, false, true => ![false, false, false, false, false, false, true, false, true]
+  | false, true, false, false, false, true, false => ![false, false, false, false, false, false, true, true, false]
+  | false, true, false, false, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, true, false, false => ![false, false, false, false, false, false, true, false, true]
+  | false, true, false, false, true, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, false, true, true, true => ![false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, false, false => ![false, false, false, false, false, false, true, false, true]
+  | false, true, false, true, false, false, true => ![false, false, true, false, false, false, true, false, true]
+  | false, true, false, true, false, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, true, false, true, true => ![false, false, true, false, false, false, true, true, true]
+  | false, true, false, true, true, false, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, true, true, false, true => ![false, false, true, false, false, false, true, true, true]
+  | false, true, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, false, true, true, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, false, false, false => ![false, false, false, false, false, false, true, true, false]
+  | false, true, true, false, false, false, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, false, true, false => ![false, true, false, false, false, false, true, true, false]
+  | false, true, true, false, false, true, true => ![false, false, false, false, false, false, true, true, false]
+  | false, true, true, false, true, false, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, false, true, false, true => ![false, false, true, false, false, false, true, true, true]
+  | false, true, true, false, true, true, false => ![false, false, false, false, false, false, true, true, false]
+  | false, true, true, false, true, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, false, false, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, false, false, true => ![false, false, true, false, false, false, true, true, true]
+  | false, true, true, true, false, true, false => ![false, false, false, false, false, false, true, true, false]
+  | false, true, true, true, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, false, false => ![false, false, false, false, true, false, true, true, true]
+  | false, true, true, true, true, false, true => ![false, false, true, false, true, false, true, true, true]
+  | false, true, true, true, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | false, true, true, true, true, true, true => ![false, false, false, false, true, false, true, true, true]
+  | true, false, false, false, false, false, false => ![false, false, false, false, false, false, false, true, false]
+  | true, false, false, false, false, false, true => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, false, false, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, false, false, true, true => ![false, false, false, false, false, true, false, true, true]
+  | true, false, false, false, true, false, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, false, true, false, true => ![false, false, false, true, false, false, false, true, true]
+  | true, false, false, false, true, true, false => ![false, false, false, true, false, false, false, true, true]
+  | true, false, false, false, true, true, true => ![false, false, false, true, false, true, false, true, true]
+  | true, false, false, true, false, false, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, true, false, false, true => ![false, false, false, false, false, false, false, false, true]
+  | true, false, false, true, false, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, true, false, true, true => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, true, true, false, false => ![false, false, false, false, true, false, false, true, true]
+  | true, false, false, true, true, false, true => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, true, true, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, false, true, true, true, true => ![false, false, false, false, false, true, false, true, true]
+  | true, false, true, false, false, false, false => ![true, false, false, false, false, false, false, true, false]
+  | true, false, true, false, false, false, true => ![true, false, false, false, false, false, false, true, true]
+  | true, false, true, false, false, true, false => ![false, false, false, false, false, false, false, true, false]
+  | true, false, true, false, false, true, true => ![false, false, false, false, false, false, false, true, true]
+  | true, false, true, false, true, false, false => ![true, false, false, false, false, false, false, true, true]
+  | true, false, true, false, true, false, true => ![false, false, false, false, false, false, false, true, true]
+  | true, false, true, false, true, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, true, false, true, true, true => ![false, false, false, false, false, true, false, true, true]
+  | true, false, true, true, false, false, false => ![true, false, false, false, false, false, false, true, true]
+  | true, false, true, true, false, false, true => ![false, false, false, false, false, false, false, true, true]
+  | true, false, true, true, false, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, false, true, true, false, true, true => ![false, false, false, false, true, false, false, true, true]
+  | true, false, true, true, true, false, false => ![true, false, false, false, true, false, false, true, true]
+  | true, false, true, true, true, false, true => ![false, false, false, false, true, false, false, true, true]
+  | true, false, true, true, true, true, false => ![false, false, false, false, true, false, false, true, true]
+  | true, false, true, true, true, true, true => ![false, false, false, false, true, true, false, true, true]
+  | true, true, false, false, false, false, false => ![false, false, false, false, false, false, false, false, false]
+  | true, true, false, false, false, false, true => ![false, false, false, false, false, false, false, false, true]
+  | true, true, false, false, false, true, false => ![false, false, false, false, false, false, false, true, false]
+  | true, true, false, false, false, true, true => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, false, true, false, false => ![false, false, false, false, false, false, false, false, true]
+  | true, true, false, false, true, false, true => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, false, true, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, false, true, true, true => ![false, false, false, false, false, true, false, true, true]
+  | true, true, false, true, false, false, false => ![false, false, false, false, false, false, false, false, true]
+  | true, true, false, true, false, false, true => ![false, false, true, false, false, false, false, false, true]
+  | true, true, false, true, false, true, false => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, true, false, true, true => ![false, false, true, false, false, false, false, true, true]
+  | true, true, false, true, true, false, false => ![false, false, false, false, false, false, false, true, true]
+  | true, true, false, true, true, false, true => ![false, false, true, false, false, false, false, true, true]
+  | true, true, false, true, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, false, true, true, true, true => ![false, false, false, false, false, false, false, true, true]
+  | true, true, true, false, false, false, false => ![false, false, false, false, false, false, false, true, false]
+  | true, true, true, false, false, false, true => ![false, false, false, false, false, false, false, true, true]
+  | true, true, true, false, false, true, false => ![false, false, false, false, false, false, true, true, false]
+  | true, true, true, false, false, true, true => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, false, false => ![false, false, false, false, false, false, false, true, true]
+  | true, true, true, false, true, false, true => ![false, false, true, false, false, false, false, true, true]
+  | true, true, true, false, true, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, false, true, true, true => ![false, false, false, false, false, false, false, true, true]
+  | true, true, true, true, false, false, false => ![false, false, false, false, false, false, false, true, true]
+  | true, true, true, true, false, false, true => ![false, false, true, false, false, false, false, true, true]
+  | true, true, true, true, false, true, false => ![false, false, false, false, false, false, true, true, true]
+  | true, true, true, true, false, true, true => ![false, false, false, false, false, false, false, true, true]
+  | true, true, true, true, true, false, false => ![false, false, false, false, true, false, false, true, true]
+  | true, true, true, true, true, false, true => ![false, false, true, false, true, false, false, true, true]
+  | true, true, true, true, true, true, false => ![false, false, false, false, true, false, true, true, true]
+  | true, true, true, true, true, true, true => ![false, false, false, false, true, false, false, true, true]
+
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 4000 in
+/-- **Contraction (Hamming-nonexpansiveness) of `facet8f`.** For any two seven-bit input patterns, the
+nine output bits separate them at most as often as the seven input bits.  A finite `16384`-pair fact,
+checked by the kernel evaluator (`decide +kernel`, with the recursion depth and heartbeat budget
+raised to accommodate the seven-bit case tree). -/
+lemma facet8f_nonexpansive (p q : Fin 7 → Bool) :
+    (∑ j, bdiff (facet8f p j) (facet8f q j)) ≤ ∑ i, bdiff (p i) (q i) := by
+  have key : ∀ p q : Fin 7 → Bool,
+      (∑ j, bdiff (facet8f p j) (facet8f q j)) ≤ ∑ i, bdiff (p i) (q i) := by decide +kernel
+  exact key p q
+
+/-- The six input patterns carried by boundary vertices — one per elementary color and the all-`false`
+purifier pattern — map through `facet8f` exactly to the corresponding bounded-region membership
+pattern.  `facet8f (fun i => color ∈ region i) j = (color ∈ region j)`, and the purifier maps
+`false ↦ false`.  A finite `decide` over the five colors. -/
+lemma facet8f_boundary (c : Fin 5) :
+    facet8f (fun i => decide (c ∈ facet8Sev i)) = fun j => decide (c ∈ facet8Reg j) := by
+  fin_cases c <;> · funext j; fin_cases j <;> rfl
+
+/-- The purifier pattern (all `false`) maps to all `false` under `facet8f`. -/
+lemma facet8f_zero : facet8f (fun _ => false) = fun _ => false := by
+  funext j; fin_cases j <;> rfl
+
+namespace Facet8
+
+variable {bd : Finset V}
+
+/-- Membership of `v ∈ A c` in a larger-side region: `v ∈ facet8L A i ↔ c ∈ facet8Sev i`. -/
+lemma mem_facet8L_of_color (hR : Cyc5.Regions bd A) {v : V} {c : Fin 5} (hv : v ∈ A c) (i : Fin 7) :
+    v ∈ facet8L A i ↔ c ∈ facet8Sev i := by
+  unfold facet8L
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- `facet8R A j ⊆ bd`. -/
+lemma facet8R_sub (hR : Cyc5.Regions bd A) (j : Fin 9) : facet8R A j ⊆ bd := by
+  unfold facet8R
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- `facet8L A i ⊆ bd`. -/
+lemma facet8L_sub (hR : Cyc5.Regions bd A) (i : Fin 7) : facet8L A i ⊆ bd := by
+  unfold facet8L
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- Membership of `v ∈ A c` in a bounded region: `v ∈ facet8R A j ↔ c ∈ facet8Reg j`. -/
+lemma mem_facet8R_of_color (hR : Cyc5.Regions bd A) {v : V} {c : Fin 5} (hv : v ∈ A c) (j : Fin 9) :
+    v ∈ facet8R A j ↔ c ∈ facet8Reg j := by
+  unfold facet8R
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- For a boundary vertex of color `c`, the achieving cuts realize the larger-side pattern:
+`contractionPattern X v = fun i => decide (c ∈ facet8Sev i)`. -/
+lemma contractionPattern_of_color (hR : Cyc5.Regions bd A)
+    (X : Fin 7 → Finset V) (hX : ∀ i, IsRTCut bd (facet8L A i) (X i))
+    {v : V} {c : Fin 5} (hv : v ∈ A c) :
+    contractionPattern X v = fun i => decide (c ∈ facet8Sev i) := by
+  funext i
+  simp only [contractionPattern, mem]
+  by_cases hc : c ∈ facet8Sev i
+  · have : v ∈ X i := (hX i).1 ((mem_facet8L_of_color hR hv i).2 hc)
+    simp [this, hc]
+  · have hvL : v ∉ facet8L A i := fun h => hc ((mem_facet8L_of_color hR hv i).1 h)
+    have : v ∉ X i := (hX i).2 v (hR.sub c hv) hvL
+    simp [this, hc]
+
+/-- For a purifier vertex (in `bd`, outside every elementary region), the achieving cuts realize the
+all-`false` pattern. -/
+lemma contractionPattern_of_purifier
+    (X : Fin 7 → Finset V) (hX : ∀ i, IsRTCut bd (facet8L A i) (X i))
+    {v : V} (hvbd : v ∈ bd) (hvout : ∀ c, v ∉ A c) :
+    contractionPattern X v = fun _ => false := by
+  funext i
+  simp only [contractionPattern, mem]
+  have hvL : v ∉ facet8L A i := by
+    unfold facet8L
+    rw [Finset.mem_biUnion]
+    rintro ⟨c, _, hvc⟩
+    exact hvout c hvc
+  have : v ∉ X i := (hX i).2 v hvbd hvL
+  simp [this]
+
+/-- **Validity of the recombined candidate cuts.** Each `contractionCut X facet8f j` is an admissible
+RT cut for the bounded region `facet8R A j`.  For every boundary vertex, its `facet8f`-image
+membership matches its bounded-region membership: colors via `facet8f_boundary`, the purifier via
+`facet8f_zero`; bulk vertices are free. -/
+lemma facet8_hvalid (hR : Cyc5.Regions bd A)
+    (X : Fin 7 → Finset V) (hX : ∀ i, IsRTCut bd (facet8L A i) (X i)) (j : Fin 9) :
+    IsRTCut bd (facet8R A j) (contractionCut X facet8f j) := by
+  have hkey : ∀ v ∈ bd, mem (contractionCut X facet8f j) v = mem (facet8R A j) v := by
+    intro v hvbd
+    rw [mem_contractionCut]
+    by_cases hcolor : ∃ c, v ∈ A c
+    · obtain ⟨c, hvc⟩ := hcolor
+      rw [contractionPattern_of_color hR X hX hvc, facet8f_boundary c]
+      simp only [mem]
+      rw [decide_eq_decide]
+      exact (mem_facet8R_of_color hR hvc j).symm
+    · simp only [not_exists] at hcolor
+      rw [contractionPattern_of_purifier X hX hvbd hcolor, facet8f_zero]
+      have : v ∉ facet8R A j := by
+        unfold facet8R
+        rw [Finset.mem_biUnion]
+        rintro ⟨c, _, hvc⟩
+        exact hcolor c hvc
+      simp [mem, this]
+  refine ⟨fun x hx => ?_, fun x hxbd hxout => ?_⟩
+  · have hxbd : x ∈ bd := facet8R_sub hR j hx
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact this.2 hx
+  · intro hxin
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact hxout (this.1 hxin)
+
+end Facet8
+
+open Facet8
+
+/-- **A second genuinely new five-party holographic entropy cone facet.**
+For five pairwise-disjoint boundary regions `A₀,…,A₄` (with the rest of `bd` a purifier) in any finite
+undirected nonnegative-real-weighted graph, the seven larger-side regions dominate the nine
+bounded-side regions:
+
+  `∑ⱼ S(regionⱼ) ≤ ∑ᵢ S(largerᵢ)`,
+
+i.e.
+
+  `S(A) + S(B) + S(C) + S(D) + S(AE) + S(DE) + S(BCE) + S(ABDE) + S(ACDE)`
+    `≤ S(AD) + S(BC) + S(ABE) + S(ACE) + S(ADE) + S(BDE) + S(CDE)`.
+
+Like `rtEntropyR_newFacet5` (and unlike `rtEntropyR_cyclic5`), this inequality is **not implied by the
+`SA + SSA + MMI` cone**: it is a second genuine facet of the five-party holographic entropy cone
+(source: the five-party holographic entropy cone literature).  It is proved here as an instance of the
+general contraction-map engine `entropyR_ineq_of_contraction` via the `128`-case map `facet8f`.  The
+general holographic entropy cone for `n ≥ 5` remains open. -/
+theorem rtEntropyR_newFacet8 (G : GraphR V) {bd : Finset V} {A : Fin 5 → Finset V}
+    (hR : Cyc5.Regions bd A) :
+    (∑ j, rtEntropyR G bd (facet8R A j) (Facet8.facet8R_sub hR j))
+      ≤ ∑ i, rtEntropyR G bd (facet8L A i) (Facet8.facet8L_sub hR i) := by
+  have hXex : ∀ i, ∃ S, IsRTCut bd (facet8L A i) S
+      ∧ rtEntropyR G bd (facet8L A i) (Facet8.facet8L_sub hR i) = cutCapacityR G S :=
+    fun i => rtEntropyR_eq_cap G (Facet8.facet8L_sub hR i)
+  choose X hXcut hXcap using hXex
+  have hXok : ∀ i, IsRTCut bd (facet8L A i) (X i)
+      ∧ cutCapacityR G (X i) = rtEntropyR G bd (facet8L A i) (Facet8.facet8L_sub hR i) :=
+    fun i => ⟨hXcut i, (hXcap i).symm⟩
+  have hvalid : ∀ j, IsRTCut bd (facet8R A j) (contractionCut X facet8f j) :=
+    fun j => Facet8.facet8_hvalid hR X hXcut j
+  exact entropyR_ineq_of_contraction G (facet8L A) (facet8R A)
+    (Facet8.facet8L_sub hR) (Facet8.facet8R_sub hR) X hXok facet8f hvalid facet8f_nonexpansive
+
+/-! ### Anti-vacuity witness: a strict five-party instance
+
+The same five-party **star** on `Fin 7` (regions `A₀,…,A₄ = {0},…,{4}`, purifier vertex `5`, central
+bulk vertex `6`, unit bonds) witnesses strictness.  A region of `k` colored vertices has min-cut
+entropy `min(k, 6 − k)`: the larger-side regions have cardinalities `[2,2,3,3,3,3,3]` (entropies
+`[2,2,3,3,3,3,3]`, sum `19`); the bounded-side regions have cardinalities `[1,1,1,1,2,2,3,4,4]`
+(entropies `[1,1,1,1,2,2,3,2,2]`, sum `15`), a strict slack of `4`, with all sixteen entropies
+positive. -/
+
+/-- `facet8R star5A j ⊆ star5Bd`. -/
+lemma star5_facet8R_sub (j : Fin 9) : facet8R star5A j ⊆ star5Bd :=
+  Facet8.facet8R_sub star5A_regions j
+/-- `facet8L star5A i ⊆ star5Bd`. -/
+lemma star5_facet8L_sub (i : Fin 7) : facet8L star5A i ⊆ star5Bd :=
+  Facet8.facet8L_sub star5A_regions i
+
+/-- Each bounded-region entropy of the star witness, as the vector `![1,1,1,1,2,2,3,2,2]`. -/
+lemma star5_facet8R (j : Fin 9) :
+    rtEntropy star5Graph star5Bd (facet8R star5A j) (star5_facet8R_sub j)
+      = ![1, 1, 1, 1, 2, 2, 3, 2, 2] j := by
+  fin_cases j <;> · unfold facet8R facet8Reg star5A; decide
+
+/-- Each larger-side entropy of the star witness, as the vector `![2,2,3,3,3,3,3]`. -/
+lemma star5_facet8L (i : Fin 7) :
+    rtEntropy star5Graph star5Bd (facet8L star5A i) (star5_facet8L_sub i)
+      = ![2, 2, 3, 3, 3, 3, 3] i := by
+  fin_cases i <;> · unfold facet8L facet8Sev star5A; decide
+
+/-- **Strict five-party anti-vacuity witness (real).** On the cast star graph the second new-facet
+inequality is strict: the bounded side sums to `15` and the larger side to `19` (slack `4`), so
+`rtEntropyR_newFacet8` is not the vacuous `0 ≤ 0`. -/
+theorem rtEntropyR_newFacet8_strict_witness :
+    (∑ j, rtEntropyR (castGraph star5Graph) star5Bd (facet8R star5A j)
+        (Facet8.facet8R_sub (A := star5A) star5A_regions j))
+      < ∑ i, rtEntropyR (castGraph star5Graph) star5Bd (facet8L star5A i)
+        (Facet8.facet8L_sub (A := star5A) star5A_regions i) := by
+  have hreg : ∀ j, rtEntropyR (castGraph star5Graph) star5Bd (facet8R star5A j)
+      (Facet8.facet8R_sub (A := star5A) star5A_regions j)
+        = ((![1, 1, 1, 1, 2, 2, 3, 2, 2] : Fin 9 → ℕ) j : ℝ) := by
+    intro j
+    rw [rtEntropyR_castGraph, star5_facet8R j]
+  have hlar : ∀ i, rtEntropyR (castGraph star5Graph) star5Bd (facet8L star5A i)
+      (Facet8.facet8L_sub (A := star5A) star5A_regions i)
+        = ((![2, 2, 3, 3, 3, 3, 3] : Fin 7 → ℕ) i : ℝ) := by
+    intro i
+    rw [rtEntropyR_castGraph, star5_facet8L i]
+  rw [Finset.sum_congr rfl (fun j _ => hreg j), Finset.sum_congr rfl (fun i _ => hlar i)]
+  simp [Fin.sum_univ_succ]
+  norm_num
+
+/-- All sixteen min-cut entropies in the second five-party strict new-facet witness are strictly
+positive. -/
+theorem rtEntropyR_newFacet8_witness_mincuts_pos :
+    (∀ j, 0 < rtEntropyR (castGraph star5Graph) star5Bd (facet8R star5A j)
+        (Facet8.facet8R_sub (A := star5A) star5A_regions j))
+      ∧ ∀ i, 0 < rtEntropyR (castGraph star5Graph) star5Bd (facet8L star5A i)
+        (Facet8.facet8L_sub (A := star5A) star5A_regions i) := by
+  refine ⟨fun j => ?_, fun i => ?_⟩
+  · rw [rtEntropyR_castGraph, star5_facet8R j]; fin_cases j <;> norm_num
+  · rw [rtEntropyR_castGraph, star5_facet8L i]; fin_cases i <;> norm_num
+
+
 end Physlib.UndirectedMMICertificate
