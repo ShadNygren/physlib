@@ -4580,5 +4580,352 @@ theorem rtEntropyR_newFacet6_witness_mincuts_pos :
   · rw [rtEntropyR_castGraph, star5_facet6R j]; norm_num
   · rw [rtEntropyR_castGraph, star5_facet6L i]; norm_num
 
+/-! ### A genuinely new six-party holographic entropy cone facet
+
+As a further instance of the general contraction-map engine (`entropyR_ineq_of_contraction`), we
+certify a six-party holographic entropy inequality that is a **genuine facet** of the six-party
+holographic entropy cone — not implied by subadditivity, strong subadditivity and monogamy of mutual
+information.  With six elementary boundary regions `A₀,…,A₅` (colors `A,B,C,D,E,F`, plus a purifier =
+the rest of the boundary) the inequality is
+
+  `S(ABC) + S(ABD) + S(ABE) + S(ACD) + S(ACF) + S(BCEF)`
+    `≥ S(AB) + S(AC) + S(AD) + S(BE) + S(CF) + S(ABCD) + S(ABCEF)`,
+
+with the six larger-side regions `ABC, ABD, ABE, ACD, ACF, BCEF` and the seven bounded-side regions
+`AB, AC, AD, BE, CF, ABCD, ABCEF` (source: the six-party holographic entropy cone / Hernández-Cuenca
+holographic entropy cone database).  Its validity for the undirected min-cut model is established
+here by exhibiting an explicit `64`-entry boolean contraction map, not by cone membership. -/
+
+namespace Facet6n174
+
+-- LHS regions (Fin 6 color-sets), bit order i=0..5:  bit l = [color in LHS[l]]; LHS order as listed (size-lex)
+def facet6n174L_reg : Fin 6 → Finset (Fin 6) :=
+  ![{0, 1, 2}, {0, 1, 3}, {0, 1, 4}, {0, 2, 3}, {0, 2, 5}, {1, 2, 4, 5}]
+-- RHS regions (Fin 6 color-sets), bit order j=0..6:  bit r = [color in RHS[r]]; RHS order as listed (size-lex)
+def facet6n174R_reg : Fin 7 → Finset (Fin 6) :=
+  ![{0, 1}, {0, 2}, {0, 3}, {1, 4}, {2, 5}, {0, 1, 2, 3}, {0, 1, 2, 4, 5}]
+
+def facet6n174f (p : Fin 6 → Bool) : Fin 7 → Bool :=
+  match p 0, p 1, p 2, p 3, p 4, p 5 with
+  | false, false, false, false, false, false => ![false, false, false, false, false, false, false]
+  | false, false, false, false, false, true => ![false, false, false, false, false, false, true]
+  | false, false, false, false, true, false => ![false, false, false, false, false, false, true]
+  | false, false, false, false, true, true => ![false, false, false, false, true, false, true]
+  | false, false, false, true, false, false => ![false, false, false, false, false, true, false]
+  | false, false, false, true, false, true => ![false, false, false, false, false, true, true]
+  | false, false, false, true, true, false => ![false, false, false, false, false, true, true]
+  | false, false, false, true, true, true => ![false, false, false, false, true, true, true]
+  | false, false, true, false, false, false => ![false, false, false, false, false, false, true]
+  | false, false, true, false, false, true => ![false, false, false, true, false, false, true]
+  | false, false, true, false, true, false => ![false, false, false, false, false, true, true]
+  | false, false, true, false, true, true => ![false, false, false, false, false, false, true]
+  | false, false, true, true, false, false => ![false, false, false, false, false, true, true]
+  | false, false, true, true, false, true => ![false, false, false, false, false, false, true]
+  | false, false, true, true, true, false => ![false, false, true, false, false, true, true]
+  | false, false, true, true, true, true => ![false, false, false, false, false, true, true]
+  | false, true, false, false, false, false => ![false, false, false, false, false, true, false]
+  | false, true, false, false, false, true => ![false, false, false, false, false, true, true]
+  | false, true, false, false, true, false => ![false, false, false, false, false, true, true]
+  | false, true, false, false, true, true => ![false, false, false, false, false, false, true]
+  | false, true, false, true, false, false => ![false, false, true, false, false, true, false]
+  | false, true, false, true, false, true => ![false, false, false, false, false, true, false]
+  | false, true, false, true, true, false => ![false, false, true, false, false, true, true]
+  | false, true, false, true, true, true => ![false, false, false, false, false, true, true]
+  | false, true, true, false, false, false => ![false, false, false, false, false, true, true]
+  | false, true, true, false, false, true => ![false, false, false, true, false, true, true]
+  | false, true, true, false, true, false => ![false, false, true, false, false, true, true]
+  | false, true, true, false, true, true => ![false, false, false, false, false, true, true]
+  | false, true, true, true, false, false => ![false, false, true, false, false, true, true]
+  | false, true, true, true, false, true => ![false, false, false, false, false, true, true]
+  | false, true, true, true, true, false => ![false, true, true, false, false, true, true]
+  | false, true, true, true, true, true => ![false, true, false, false, false, true, true]
+  | true, false, false, false, false, false => ![false, false, false, false, false, false, true]
+  | true, false, false, false, false, true => ![false, false, false, false, false, true, true]
+  | true, false, false, false, true, false => ![false, false, false, false, false, true, true]
+  | true, false, false, false, true, true => ![false, false, false, false, true, true, true]
+  | true, false, false, true, false, false => ![false, false, false, false, false, true, true]
+  | true, false, false, true, false, true => ![false, false, false, false, true, true, true]
+  | true, false, false, true, true, false => ![false, true, false, false, false, true, true]
+  | true, false, false, true, true, true => ![false, true, false, false, true, true, true]
+  | true, false, true, false, false, false => ![false, false, false, false, false, true, true]
+  | true, false, true, false, false, true => ![false, false, false, true, false, true, true]
+  | true, false, true, false, true, false => ![false, false, true, false, false, true, true]
+  | true, false, true, false, true, true => ![false, false, false, false, false, true, true]
+  | true, false, true, true, false, false => ![false, false, true, false, false, true, true]
+  | true, false, true, true, false, true => ![false, false, false, false, false, true, true]
+  | true, false, true, true, true, false => ![false, true, true, false, false, true, true]
+  | true, false, true, true, true, true => ![false, true, false, false, false, true, true]
+  | true, true, false, false, false, false => ![false, false, false, false, false, true, true]
+  | true, true, false, false, false, true => ![false, false, false, true, false, true, true]
+  | true, true, false, false, true, false => ![false, false, true, false, false, true, true]
+  | true, true, false, false, true, true => ![false, false, false, false, false, true, true]
+  | true, true, false, true, false, false => ![false, false, true, false, false, true, true]
+  | true, true, false, true, false, true => ![false, false, false, false, false, true, true]
+  | true, true, false, true, true, false => ![false, true, true, false, false, true, true]
+  | true, true, false, true, true, true => ![false, true, false, false, false, true, true]
+  | true, true, true, false, false, false => ![true, false, false, false, false, true, true]
+  | true, true, true, false, false, true => ![true, false, false, true, false, true, true]
+  | true, true, true, false, true, false => ![true, false, true, false, false, true, true]
+  | true, true, true, false, true, true => ![true, false, false, false, false, true, true]
+  | true, true, true, true, false, false => ![true, false, true, false, false, true, true]
+  | true, true, true, true, false, true => ![true, false, false, false, false, true, true]
+  | true, true, true, true, true, false => ![true, true, true, false, false, true, true]
+  | true, true, true, true, true, true => ![true, true, false, false, false, true, true]
+
+variable {bd : Finset V}
+
+/-- Pairwise disjointness and boundary-containment of the six elementary regions. -/
+structure Regions6 (bd : Finset V) (A : Fin 6 → Finset V) : Prop where
+  /-- each elementary region lies in the boundary -/
+  sub : ∀ c, A c ⊆ bd
+  /-- distinct elementary regions are disjoint -/
+  disj : ∀ c c', c ≠ c' → Disjoint (A c) (A c')
+
+variable {A : Fin 6 → Finset V}
+
+/-- The `i`-th larger-side region: the union of the elementary regions in the `i`-th color set. -/
+def facet6n174L (A : Fin 6 → Finset V) (i : Fin 6) : Finset V := (facet6n174L_reg i).biUnion A
+
+/-- The `j`-th bounded-side region: the union of the elementary regions in the `j`-th color set. -/
+def facet6n174R (A : Fin 6 → Finset V) (j : Fin 7) : Finset V := (facet6n174R_reg j).biUnion A
+
+set_option maxHeartbeats 0 in
+/-- **Single-flip (edge) nonexpansiveness of `facet6n174f`.** Flipping any one of the six input
+coordinates changes the seven-bit output by at most one Hamming unit — the `6 · 2⁶ = 384` edge cases,
+checked by `decide`. -/
+theorem facet6n174f_singleFlip :
+    ∀ (p : Fin 6 → Bool) (i : Fin 6),
+      (∑ j, bdiff (facet6n174f p j) (facet6n174f (Function.update p i (!(p i))) j)) ≤ 1 := by
+  decide
+
+/-- **Global nonexpansiveness of `facet6n174f`, derived from the single-flip reduction.** The seven
+output bits separate any two six-bit inputs at most as often as the six input bits, obtained from
+`nonexpansive_of_singleFlip` by discharging only the `384` single-flip edge cases. -/
+theorem facet6n174f_nonexpansive_via_singleFlip (p q : Fin 6 → Bool) :
+    (∑ j, bdiff (facet6n174f p j) (facet6n174f q j)) ≤ ∑ i, bdiff (p i) (q i) :=
+  nonexpansive_of_singleFlip facet6n174f facet6n174f_singleFlip p q
+
+/-- The seven input patterns carried by boundary vertices — one per elementary color and the
+all-`false` purifier pattern — map through `facet6n174f` exactly to the corresponding bounded-region
+membership pattern. -/
+lemma facet6n174f_boundary (c : Fin 6) :
+    facet6n174f (fun i => decide (c ∈ facet6n174L_reg i)) = fun j => decide (c ∈ facet6n174R_reg j) := by
+  fin_cases c <;> · funext j; fin_cases j <;> rfl
+
+/-- The purifier pattern (all `false`) maps to all `false` under `facet6n174f`. -/
+lemma facet6n174f_zero : facet6n174f (fun _ => false) = fun _ => false := by
+  funext j; fin_cases j <;> rfl
+
+/-- Membership of `v ∈ A c` in a larger-side region: `v ∈ facet6n174L A i ↔ c ∈ facet6n174L_reg i`. -/
+lemma mem_facet6n174L_of_color (hR : Regions6 bd A) {v : V} {c : Fin 6} (hv : v ∈ A c) (i : Fin 6) :
+    v ∈ facet6n174L A i ↔ c ∈ facet6n174L_reg i := by
+  unfold facet6n174L
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- `facet6n174R A j ⊆ bd`. -/
+lemma facet6n174R_sub (hR : Regions6 bd A) (j : Fin 7) : facet6n174R A j ⊆ bd := by
+  unfold facet6n174R
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- `facet6n174L A i ⊆ bd`. -/
+lemma facet6n174L_sub (hR : Regions6 bd A) (i : Fin 6) : facet6n174L A i ⊆ bd := by
+  unfold facet6n174L
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- Membership of `v ∈ A c` in a bounded region: `v ∈ facet6n174R A j ↔ c ∈ facet6n174R_reg j`. -/
+lemma mem_facet6n174R_of_color (hR : Regions6 bd A) {v : V} {c : Fin 6} (hv : v ∈ A c) (j : Fin 7) :
+    v ∈ facet6n174R A j ↔ c ∈ facet6n174R_reg j := by
+  unfold facet6n174R
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- For a boundary vertex of color `c`, the achieving cuts realize the larger-side pattern:
+`contractionPattern X v = fun i => decide (c ∈ facet6n174L_reg i)`. -/
+lemma contractionPattern_of_color (hR : Regions6 bd A)
+    (X : Fin 6 → Finset V) (hX : ∀ i, IsRTCut bd (facet6n174L A i) (X i))
+    {v : V} {c : Fin 6} (hv : v ∈ A c) :
+    contractionPattern X v = fun i => decide (c ∈ facet6n174L_reg i) := by
+  funext i
+  simp only [contractionPattern, mem]
+  by_cases hc : c ∈ facet6n174L_reg i
+  · have : v ∈ X i := (hX i).1 ((mem_facet6n174L_of_color hR hv i).2 hc)
+    simp [this, hc]
+  · have hvL : v ∉ facet6n174L A i := fun h => hc ((mem_facet6n174L_of_color hR hv i).1 h)
+    have : v ∉ X i := (hX i).2 v (hR.sub c hv) hvL
+    simp [this, hc]
+
+/-- For a purifier vertex (in `bd`, outside every elementary region), the achieving cuts realize the
+all-`false` pattern. -/
+lemma contractionPattern_of_purifier
+    (X : Fin 6 → Finset V) (hX : ∀ i, IsRTCut bd (facet6n174L A i) (X i))
+    {v : V} (hvbd : v ∈ bd) (hvout : ∀ c, v ∉ A c) :
+    contractionPattern X v = fun _ => false := by
+  funext i
+  simp only [contractionPattern, mem]
+  have hvL : v ∉ facet6n174L A i := by
+    unfold facet6n174L
+    rw [Finset.mem_biUnion]
+    rintro ⟨c, _, hvc⟩
+    exact hvout c hvc
+  have : v ∉ X i := (hX i).2 v hvbd hvL
+  simp [this]
+
+/-- **Validity of the recombined candidate cuts.** Each `contractionCut X facet6n174f j` is an
+admissible RT cut for the bounded region `facet6n174R A j`. -/
+lemma facet6n174_hvalid (hR : Regions6 bd A)
+    (X : Fin 6 → Finset V) (hX : ∀ i, IsRTCut bd (facet6n174L A i) (X i)) (j : Fin 7) :
+    IsRTCut bd (facet6n174R A j) (contractionCut X facet6n174f j) := by
+  have hkey : ∀ v ∈ bd, mem (contractionCut X facet6n174f j) v = mem (facet6n174R A j) v := by
+    intro v hvbd
+    rw [mem_contractionCut]
+    by_cases hcolor : ∃ c, v ∈ A c
+    · obtain ⟨c, hvc⟩ := hcolor
+      rw [contractionPattern_of_color hR X hX hvc, facet6n174f_boundary c]
+      simp only [mem]
+      rw [decide_eq_decide]
+      exact (mem_facet6n174R_of_color hR hvc j).symm
+    · simp only [not_exists] at hcolor
+      rw [contractionPattern_of_purifier X hX hvbd hcolor, facet6n174f_zero]
+      have : v ∉ facet6n174R A j := by
+        unfold facet6n174R
+        rw [Finset.mem_biUnion]
+        rintro ⟨c, _, hvc⟩
+        exact hcolor c hvc
+      simp [mem, this]
+  refine ⟨fun x hx => ?_, fun x hxbd hxout => ?_⟩
+  · have hxbd : x ∈ bd := facet6n174R_sub hR j hx
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact this.2 hx
+  · intro hxin
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact hxout (this.1 hxin)
+
+/-- **A genuinely new six-party holographic entropy cone facet.**
+For six pairwise-disjoint boundary regions `A₀,…,A₅` (with the rest of `bd` a purifier) in any finite
+undirected nonnegative-real-weighted graph, the six larger-side regions dominate the seven bounded-side
+regions:
+
+  `∑ⱼ S(regionⱼ) ≤ ∑ᵢ S(larger-regionᵢ)`,
+
+i.e.
+
+  `S(AB) + S(AC) + S(AD) + S(BE) + S(CF) + S(ABCD) + S(ABCEF)`
+    `≤ S(ABC) + S(ABD) + S(ABE) + S(ACD) + S(ACF) + S(BCEF)`.
+
+This inequality is a genuine facet of the six-party holographic entropy cone (source: the six-party
+holographic entropy cone / Hernández-Cuenca holographic entropy cone database), not implied by the
+`SA + SSA + MMI` cone.  It is proved here as an instance of the general contraction-map engine
+`entropyR_ineq_of_contraction` via the `64`-case map `facet6n174f`. -/
+theorem rtEntropyR_newFacet_n6_59174 (G : GraphR V) {bd : Finset V} {A : Fin 6 → Finset V}
+    (hR : Regions6 bd A) :
+    (∑ j, rtEntropyR G bd (facet6n174R A j) (facet6n174R_sub hR j))
+      ≤ ∑ i, rtEntropyR G bd (facet6n174L A i) (facet6n174L_sub hR i) := by
+  have hXex : ∀ i, ∃ S, IsRTCut bd (facet6n174L A i) S
+      ∧ rtEntropyR G bd (facet6n174L A i) (facet6n174L_sub hR i) = cutCapacityR G S :=
+    fun i => rtEntropyR_eq_cap G (facet6n174L_sub hR i)
+  choose X hXcut hXcap using hXex
+  have hXok : ∀ i, IsRTCut bd (facet6n174L A i) (X i)
+      ∧ cutCapacityR G (X i) = rtEntropyR G bd (facet6n174L A i) (facet6n174L_sub hR i) :=
+    fun i => ⟨hXcut i, (hXcap i).symm⟩
+  have hvalid : ∀ j, IsRTCut bd (facet6n174R A j) (contractionCut X facet6n174f j) :=
+    fun j => facet6n174_hvalid hR X hXcut j
+  exact entropyR_ineq_of_contraction G (facet6n174L A) (facet6n174R A)
+    (facet6n174L_sub hR) (facet6n174R_sub hR) X hXok facet6n174f hvalid
+    facet6n174f_nonexpansive_via_singleFlip
+
+/-! ### Anti-vacuity witness: a strict six-party instance
+
+The six-party **star** on `Fin 8` has six colored boundary vertices `0,…,5` (regions `A₀,…,A₅`), one
+purifier boundary vertex `6`, and one central bulk vertex `7`, with every boundary vertex joined to the
+center by a weight-`1` bond.  A region of `k` colored vertices among the `7` boundary vertices has
+min-cut entropy `min(k, 7 − k)`.  Each larger-side region here has entropy `3` (the five triples with
+`k = 3`, and `BCEF` with `k = 4`, `min(4, 3) = 3`), so the larger side sums to `18`; the bounded side
+gives `AB, AC, AD, BE, CF = 2`, `ABCD = min(4, 3) = 3`, `ABCEF = min(5, 2) = 2`, summing to `15`, a
+strict slack of `3`, with all thirteen entropies positive. -/
+
+/-- The six-party star bulk graph on `Fin 8`: boundary `0,…,6` each bonded (weight `1`) to central
+bulk vertex `7`. -/
+def star6Graph : Graph (Fin 8) where
+  w := fun u v => if (u = 7 ∧ v.val < 7) ∨ (v = 7 ∧ u.val < 7) then 1 else 0
+  symm := by intro u v; by_cases h : u = 7 <;> by_cases h2 : v = 7 <;> simp_all
+
+/-- Boundary of the six-party star: `{0,1,2,3,4,5,6}` (six colors plus a purifier). -/
+def star6Bd : Finset (Fin 8) := {0, 1, 2, 3, 4, 5, 6}
+
+/-- The six elementary regions of the star witness: `A c = {c}` for `c ∈ Fin 6`. -/
+def star6A : Fin 6 → Finset (Fin 8) := ![{0}, {1}, {2}, {3}, {4}, {5}]
+
+lemma star6A_regions : Regions6 star6Bd star6A where
+  sub := by decide
+  disj := by decide
+
+/-- `facet6n174R star6A j ⊆ star6Bd`. -/
+lemma star6_facet6n174R_sub (j : Fin 7) : facet6n174R star6A j ⊆ star6Bd :=
+  facet6n174R_sub star6A_regions j
+/-- `facet6n174L star6A i ⊆ star6Bd`. -/
+lemma star6_facet6n174L_sub (i : Fin 6) : facet6n174L star6A i ⊆ star6Bd :=
+  facet6n174L_sub star6A_regions i
+
+/-- Each bounded-region entropy of the star witness: `AB, AC, AD, BE, CF = 2`, `ABCD = 3`,
+`ABCEF = 2`. -/
+lemma star6_facet6n174R (j : Fin 7) :
+    rtEntropy star6Graph star6Bd (facet6n174R star6A j) (star6_facet6n174R_sub j)
+      = if j = 5 then 3 else 2 := by
+  fin_cases j <;> · unfold facet6n174R facet6n174R_reg star6A; decide
+
+/-- Each larger-side region entropy of the star witness is `3`. -/
+lemma star6_facet6n174L (i : Fin 6) :
+    rtEntropy star6Graph star6Bd (facet6n174L star6A i) (star6_facet6n174L_sub i) = 3 := by
+  fin_cases i <;> · unfold facet6n174L facet6n174L_reg star6A; decide
+
+/-- **Strict six-party anti-vacuity witness (real).** On the cast star graph the new-facet inequality
+is strict: the bounded side sums to `15` and the larger side to `18` (slack `3`), so
+`rtEntropyR_newFacet_n6_59174` is not the vacuous `0 ≤ 0`. -/
+theorem rtEntropyR_newFacet_n6_59174_strict_witness :
+    (∑ j, rtEntropyR (castGraph star6Graph) star6Bd (facet6n174R star6A j)
+        (facet6n174R_sub (A := star6A) star6A_regions j))
+      < ∑ i, rtEntropyR (castGraph star6Graph) star6Bd (facet6n174L star6A i)
+        (facet6n174L_sub (A := star6A) star6A_regions i) := by
+  have hreg : ∀ j, rtEntropyR (castGraph star6Graph) star6Bd (facet6n174R star6A j)
+      (facet6n174R_sub (A := star6A) star6A_regions j) = if j = 5 then (3 : ℝ) else 2 := by
+    intro j
+    rw [rtEntropyR_castGraph, star6_facet6n174R j]
+    split <;> norm_num
+  have hlar : ∀ i, rtEntropyR (castGraph star6Graph) star6Bd (facet6n174L star6A i)
+      (facet6n174L_sub (A := star6A) star6A_regions i) = (3 : ℝ) := by
+    intro i
+    rw [rtEntropyR_castGraph, star6_facet6n174L i]; norm_num
+  rw [Finset.sum_congr rfl (fun j _ => hreg j), Finset.sum_congr rfl (fun i _ => hlar i)]
+  rw [Fin.sum_univ_seven, Fin.sum_univ_six]
+  rw [if_neg (by decide), if_neg (by decide), if_neg (by decide), if_neg (by decide),
+    if_neg (by decide), if_pos (by decide), if_neg (by decide)]
+  norm_num
+
+/-- All thirteen min-cut entropies in the six-party strict new-facet witness are strictly positive. -/
+theorem rtEntropyR_newFacet_n6_59174_witness_mincuts_pos :
+    (∀ j, 0 < rtEntropyR (castGraph star6Graph) star6Bd (facet6n174R star6A j)
+        (facet6n174R_sub (A := star6A) star6A_regions j))
+      ∧ ∀ i, 0 < rtEntropyR (castGraph star6Graph) star6Bd (facet6n174L star6A i)
+        (facet6n174L_sub (A := star6A) star6A_regions i) := by
+  refine ⟨fun j => ?_, fun i => ?_⟩
+  · rw [rtEntropyR_castGraph, star6_facet6n174R j]; split <;> norm_num
+  · rw [rtEntropyR_castGraph, star6_facet6n174L i]; norm_num
+
+end Facet6n174
 
 end Physlib.UndirectedMMICertificate
