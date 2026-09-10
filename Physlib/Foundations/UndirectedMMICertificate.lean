@@ -18,6 +18,9 @@ public import Physlib.Foundations.Facet6Lip6
 public import Physlib.Foundations.Facet6Lip7
 public import Physlib.Foundations.Facet6Lip8
 public import Physlib.Foundations.Facet6Lip9
+public import Physlib.Foundations.FacetN61411Lip
+public import Physlib.Foundations.FacetN612982Lip
+public import Physlib.Foundations.FacetN67451Lip
 
 /-!
 # The undirected min-cut model satisfies monogamy of mutual information
@@ -6718,6 +6721,3033 @@ theorem rtEntropyR_newFacet_n6_35246_witness_mincuts_pos :
 
 end Facet6n35246
 
+
+
+
+/-! ### A six-party holographic entropy cone facet (database index 1160)
+
+A direct boolean contraction map with 9 larger-side regions and 12 bounded-side regions,
+drawn from the six-party holographic entropy cone / Hernández-Cuenca holographic entropy cone
+database, realized in the undirected min-cut model. -/
+namespace Facet6n1160
+
+open Physlib.UndirectedMMICertificate.Facet6n174
+
+def facet1160L_reg : Fin 9 → Finset (Fin 6) := ![{0, 3}, {0, 4}, {1, 2}, {0, 1, 5}, {0, 3, 5}, {1, 3, 5}, {1, 4, 5}, {0, 2, 4, 5}, {2, 3, 4, 5}]
+def facet1160R_reg : Fin 12 → Finset (Fin 6) := ![{0}, {0}, {1}, {2}, {3}, {4}, {1, 5}, {3, 5}, {0, 4, 5}, {0, 1, 3, 5}, {1, 2, 4, 5}, {0, 2, 3, 4, 5}]
+def facet1160f (p : Fin 9 → Bool) : Fin 12 → Bool :=
+  match p 0, p 1, p 2, p 3, p 4, p 5, p 6, p 7, p 8 with
+  | false, false, false, false, false, false, false, false, false => ![false, false, false, false, false, false, false, false, false, false, false, false]
+  | false, false, false, false, false, false, false, false, true => ![false, false, false, false, false, false, false, false, false, false, false, true]
+  | false, false, false, false, false, false, false, true, false => ![false, false, false, false, false, false, false, false, false, false, false, true]
+  | false, false, false, false, false, false, false, true, true => ![false, false, false, false, false, false, false, false, false, false, true, true]
+  | false, false, false, false, false, false, true, false, false => ![false, false, false, false, false, false, false, false, false, false, true, false]
+  | false, false, false, false, false, false, true, false, true => ![false, false, false, false, false, false, false, false, false, false, true, true]
+  | false, false, false, false, false, false, true, true, false => ![false, false, false, false, false, false, false, false, false, false, true, true]
+  | false, false, false, false, false, false, true, true, true => ![false, false, false, false, false, false, false, false, true, false, true, true]
+  | false, false, false, false, false, true, false, false, false => ![false, false, false, false, false, false, false, false, false, true, false, false]
+  | false, false, false, false, false, true, false, false, true => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | false, false, false, false, false, true, false, true, false => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | false, false, false, false, false, true, false, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, false, true, true, false, false => ![false, false, false, false, false, false, false, false, false, true, true, false]
+  | false, false, false, false, false, true, true, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, false, true, true, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, false, true, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, false, true, false, false, false, false => ![false, false, false, false, false, false, false, false, false, true, false, false]
+  | false, false, false, false, true, false, false, false, true => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | false, false, false, false, true, false, false, true, false => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | false, false, false, false, true, false, false, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, true, false, true, false, false => ![false, false, false, false, false, false, false, false, false, true, true, false]
+  | false, false, false, false, true, false, true, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, true, false, true, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, true, false, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, false, true, true, false, false, false => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | false, false, false, false, true, true, false, false, true => ![false, false, false, false, false, false, false, true, false, true, false, true]
+  | false, false, false, false, true, true, false, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, true, true, false, true, true => ![false, false, false, false, false, false, false, true, false, true, true, true]
+  | false, false, false, false, true, true, true, false, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, false, true, true, true, false, true => ![false, false, false, false, false, false, false, true, false, true, true, true]
+  | false, false, false, false, true, true, true, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, false, true, true, true, true, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | false, false, false, true, false, false, false, false, false => ![false, false, false, false, false, false, false, false, false, true, false, false]
+  | false, false, false, true, false, false, false, false, true => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | false, false, false, true, false, false, false, true, false => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | false, false, false, true, false, false, false, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, false, false, true, false, false => ![false, false, false, false, false, false, false, false, false, true, true, false]
+  | false, false, false, true, false, false, true, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, false, false, true, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, false, false, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, false, true, false, false, false => ![false, false, false, false, false, false, false, false, false, true, true, false]
+  | false, false, false, true, false, true, false, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, false, true, false, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, false, true, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, false, true, true, false, false => ![false, false, false, false, false, false, true, false, false, true, true, false]
+  | false, false, false, true, false, true, true, false, true => ![false, false, false, false, false, false, true, false, false, true, true, true]
+  | false, false, false, true, false, true, true, true, false => ![false, false, false, false, false, false, true, false, false, true, true, true]
+  | false, false, false, true, false, true, true, true, true => ![false, false, false, false, false, false, true, false, true, true, true, true]
+  | false, false, false, true, true, false, false, false, false => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | false, false, false, true, true, false, false, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, false, false, true, false => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | false, false, false, true, true, false, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, true, false, true, false, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, false, true, false, true => ![false, false, false, false, false, false, true, false, false, true, true, true]
+  | false, false, false, true, true, false, true, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, true, false, true, true, true => ![false, false, false, false, false, false, true, false, true, true, true, true]
+  | false, false, false, true, true, true, false, false, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, false, true, true, true, false, false, true => ![false, false, false, false, false, false, false, true, false, true, true, true]
+  | false, false, false, true, true, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, false, false, true, true, true, false, true, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | false, false, false, true, true, true, true, false, false => ![false, false, false, false, false, false, true, false, false, true, true, true]
+  | false, false, false, true, true, true, true, false, true => ![false, false, false, false, false, false, true, true, false, true, true, true]
+  | false, false, false, true, true, true, true, true, false => ![false, false, false, false, false, false, true, false, true, true, true, true]
+  | false, false, false, true, true, true, true, true, true => ![false, false, false, false, false, false, true, true, true, true, true, true]
+  | false, false, true, false, false, false, false, false, false => ![false, false, false, false, false, false, false, false, false, false, true, false]
+  | false, false, true, false, false, false, false, false, true => ![false, false, false, false, false, false, false, false, false, false, true, true]
+  | false, false, true, false, false, false, false, true, false => ![false, false, false, false, false, false, false, false, false, false, true, true]
+  | false, false, true, false, false, false, false, true, true => ![false, false, false, true, false, false, false, false, false, false, true, true]
+  | false, false, true, false, false, false, true, false, false => ![false, false, true, false, false, false, false, false, false, false, true, false]
+  | false, false, true, false, false, false, true, false, true => ![false, false, true, false, false, false, false, false, false, false, true, true]
+  | false, false, true, false, false, false, true, true, false => ![false, false, true, false, false, false, false, false, false, false, true, true]
+  | false, false, true, false, false, false, true, true, true => ![false, false, false, false, false, false, false, false, false, false, true, true]
+  | false, false, true, false, false, true, false, false, false => ![false, false, false, false, false, false, false, false, false, true, true, false]
+  | false, false, true, false, false, true, false, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, false, true, false, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, false, true, false, true, true => ![false, false, false, true, false, false, false, false, false, true, true, true]
+  | false, false, true, false, false, true, true, false, false => ![false, false, true, false, false, false, false, false, false, true, true, false]
+  | false, false, true, false, false, true, true, false, true => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, false, true, true, true, false => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, false, true, true, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, false, false, false, false => ![false, false, false, false, false, false, false, false, false, true, true, false]
+  | false, false, true, false, true, false, false, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, false, false, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, false, false, true, true => ![false, false, false, true, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, false, true, false, false => ![false, false, true, false, false, false, false, false, false, true, true, false]
+  | false, false, true, false, true, false, true, false, true => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, false, true, true, false => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, false, true, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, false, false, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, false, false, true => ![false, false, false, false, false, false, false, true, false, true, true, true]
+  | false, false, true, false, true, true, false, true, false => ![true, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, false, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, true, false, false => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, true, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, true, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, false, true, true, true, true, true => ![false, false, false, false, false, false, false, true, false, true, true, true]
+  | false, false, true, true, false, false, false, false, false => ![false, false, false, false, false, false, false, false, false, true, true, false]
+  | false, false, true, true, false, false, false, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, false, false, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, false, false, true, true => ![false, false, false, true, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, false, true, false, false => ![false, false, true, false, false, false, false, false, false, true, true, false]
+  | false, false, true, true, false, false, true, false, true => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, false, true, true, false => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, false, true, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, true, false, false, false => ![false, false, true, false, false, false, false, false, false, true, true, false]
+  | false, false, true, true, false, true, false, false, true => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, true, false, true, false => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, true, false, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, false, true, true, false, false => ![false, false, true, false, false, false, true, false, false, true, true, false]
+  | false, false, true, true, false, true, true, false, true => ![false, false, true, false, false, false, true, false, false, true, true, true]
+  | false, false, true, true, false, true, true, true, false => ![false, false, true, false, false, false, true, false, false, true, true, true]
+  | false, false, true, true, false, true, true, true, true => ![false, false, false, false, false, false, true, false, false, true, true, true]
+  | false, false, true, true, true, false, false, false, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, false, false, false, true => ![true, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, false, false, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, false, true, true, true, false, false, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, false, true, false, false => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, false, true, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, false, true, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, false, true, true, true => ![false, false, false, false, false, false, true, false, false, true, true, true]
+  | false, false, true, true, true, true, false, false, false => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, true, false, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, true, false, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | false, false, true, true, true, true, false, true, true => ![false, false, false, false, false, false, false, true, false, true, true, true]
+  | false, false, true, true, true, true, true, false, false => ![false, false, true, false, false, false, true, false, false, true, true, true]
+  | false, false, true, true, true, true, true, false, true => ![false, false, false, false, false, false, true, false, false, true, true, true]
+  | false, false, true, true, true, true, true, true, false => ![false, false, false, false, false, false, true, false, false, true, true, true]
+  | false, false, true, true, true, true, true, true, true => ![false, false, false, false, false, false, true, true, false, true, true, true]
+  | false, true, false, false, false, false, false, false, false => ![false, false, false, false, false, false, false, false, true, false, false, false]
+  | false, true, false, false, false, false, false, false, true => ![false, false, false, false, false, false, false, false, true, false, false, true]
+  | false, true, false, false, false, false, false, true, false => ![false, false, false, false, false, false, false, false, true, false, false, true]
+  | false, true, false, false, false, false, false, true, true => ![false, false, false, false, false, false, false, false, true, false, true, true]
+  | false, true, false, false, false, false, true, false, false => ![false, false, false, false, false, false, false, false, true, false, true, false]
+  | false, true, false, false, false, false, true, false, true => ![false, false, false, false, false, false, false, false, true, false, true, true]
+  | false, true, false, false, false, false, true, true, false => ![false, false, false, false, false, false, false, false, true, false, true, true]
+  | false, true, false, false, false, false, true, true, true => ![false, false, false, false, false, true, false, false, true, false, true, true]
+  | false, true, false, false, false, true, false, false, false => ![false, false, false, false, false, false, false, false, true, true, false, false]
+  | false, true, false, false, false, true, false, false, true => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, false, false, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, false, false, true, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, false, true, true, false, false => ![false, false, false, false, false, false, false, false, true, true, true, false]
+  | false, true, false, false, false, true, true, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, false, true, true, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, false, true, true, true, true => ![false, false, false, false, false, true, false, false, true, true, true, true]
+  | false, true, false, false, true, false, false, false, false => ![false, false, false, false, false, false, false, false, true, true, false, false]
+  | false, true, false, false, true, false, false, false, true => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, false, true, false, false, true, false => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, false, true, false, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, true, false, true, false, false => ![false, false, false, false, false, false, false, false, true, true, true, false]
+  | false, true, false, false, true, false, true, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, true, false, true, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, true, false, true, true, true => ![false, false, false, false, false, true, false, false, true, true, true, true]
+  | false, true, false, false, true, true, false, false, false => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, false, true, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true, false, true]
+  | false, true, false, false, true, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, true, true, false, true, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | false, true, false, false, true, true, true, false, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, true, true, true, false, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | false, true, false, false, true, true, true, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, false, true, true, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, false, false, false, false => ![false, false, false, false, false, false, false, false, true, true, false, false]
+  | false, true, false, true, false, false, false, false, true => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, true, false, false, false, true, false => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, true, false, false, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, false, true, false, false => ![false, false, false, false, false, false, false, false, true, true, true, false]
+  | false, true, false, true, false, false, true, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, false, true, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, false, true, true, true => ![false, false, false, false, false, true, false, false, true, true, true, true]
+  | false, true, false, true, false, true, false, false, false => ![false, false, false, false, false, false, false, false, true, true, true, false]
+  | false, true, false, true, false, true, false, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, true, false, true, true => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, false, true, true, false, false => ![false, false, false, false, false, false, true, false, true, true, true, false]
+  | false, true, false, true, false, true, true, false, true => ![false, false, false, false, false, false, true, false, true, true, true, true]
+  | false, true, false, true, false, true, true, true, false => ![false, false, false, false, false, false, true, false, true, true, true, true]
+  | false, true, false, true, false, true, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, false, false, false, false => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, true, true, false, false, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, false, false, true, false => ![true, false, false, false, false, false, false, false, true, true, false, true]
+  | false, true, false, true, true, false, false, true, true => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, false, true, false, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, false, true, false, true => ![false, false, false, false, false, false, true, false, true, true, true, true]
+  | false, true, false, true, true, false, true, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, false, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, true, false, false, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | false, true, false, true, true, true, false, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, true, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, false, true, true, true, true, false, false => ![false, false, false, false, false, false, true, false, true, true, true, true]
+  | false, true, false, true, true, true, true, false, true => ![false, false, false, false, false, false, true, true, true, true, true, true]
+  | false, true, false, true, true, true, true, true, false => ![true, false, false, false, false, false, true, false, true, true, true, true]
+  | false, true, false, true, true, true, true, true, true => ![false, false, false, false, false, false, true, false, true, true, true, true]
+  | false, true, true, false, false, false, false, false, false => ![false, false, false, false, false, false, false, false, true, false, true, false]
+  | false, true, true, false, false, false, false, false, true => ![false, false, false, false, false, false, false, false, true, false, true, true]
+  | false, true, true, false, false, false, false, true, false => ![false, false, false, false, false, false, false, false, true, false, true, true]
+  | false, true, true, false, false, false, false, true, true => ![false, false, false, true, false, false, false, false, true, false, true, true]
+  | false, true, true, false, false, false, true, false, false => ![false, false, true, false, false, false, false, false, true, false, true, false]
+  | false, true, true, false, false, false, true, false, true => ![false, false, true, false, false, false, false, false, true, false, true, true]
+  | false, true, true, false, false, false, true, true, false => ![false, false, true, false, false, false, false, false, true, false, true, true]
+  | false, true, true, false, false, false, true, true, true => ![false, false, false, false, false, false, false, false, true, false, true, true]
+  | false, true, true, false, false, true, false, false, false => ![false, false, false, false, false, false, false, false, true, true, true, false]
+  | false, true, true, false, false, true, false, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, false, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, false, true, false, true, true => ![false, false, false, true, false, false, false, false, true, true, true, true]
+  | false, true, true, false, false, true, true, false, false => ![false, false, true, false, false, false, false, false, true, true, true, false]
+  | false, true, true, false, false, true, true, false, true => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, false, true, true, true, false => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, false, true, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, false, false, false, false => ![false, false, false, false, false, false, false, false, true, true, true, false]
+  | false, true, true, false, true, false, false, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, false, false, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, false, false, true, true => ![false, false, false, true, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, false, true, false, false => ![false, false, true, false, false, false, false, false, true, true, true, false]
+  | false, true, true, false, true, false, true, false, true => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, false, true, true, false => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, false, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, true, false, false, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | false, true, true, false, true, true, false, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, true, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, true, true, false, false => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, true, true, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, true, true, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, false, true, true, true, true, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | false, true, true, true, false, false, false, false, false => ![false, false, false, false, false, false, false, false, true, true, true, false]
+  | false, true, true, true, false, false, false, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, false, false, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, false, false, true, true => ![false, false, false, true, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, false, true, false, false => ![false, false, true, false, false, false, false, false, true, true, true, false]
+  | false, true, true, true, false, false, true, false, true => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, false, true, true, false => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, false, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, true, false, false, false => ![false, false, true, false, false, false, false, false, true, true, true, false]
+  | false, true, true, true, false, true, false, false, true => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, true, false, true, false => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, true, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, false, true, true, false, false => ![false, false, true, false, false, false, true, false, true, true, true, false]
+  | false, true, true, true, false, true, true, false, true => ![false, false, true, false, false, false, true, false, true, true, true, true]
+  | false, true, true, true, false, true, true, true, false => ![false, false, true, false, false, false, true, false, true, true, true, true]
+  | false, true, true, true, false, true, true, true, true => ![false, false, false, false, false, false, true, false, true, true, true, true]
+  | false, true, true, true, true, false, false, false, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, false, false, false, true => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, false, false, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, false, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, false, true, false, false => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, false, true, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, false, true, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, false, true, true, true => ![false, false, false, false, false, false, true, false, true, true, true, true]
+  | false, true, true, true, true, true, false, false, false => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, true, false, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | false, true, true, true, true, true, false, true, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | false, true, true, true, true, true, true, false, false => ![false, false, true, false, false, false, true, false, true, true, true, true]
+  | false, true, true, true, true, true, true, false, true => ![false, false, false, false, false, false, true, false, true, true, true, true]
+  | false, true, true, true, true, true, true, true, false => ![false, false, false, false, false, false, true, false, true, true, true, true]
+  | false, true, true, true, true, true, true, true, true => ![false, false, false, false, false, false, true, true, true, true, true, true]
+  | true, false, false, false, false, false, false, false, false => ![false, false, false, false, false, false, false, false, false, true, false, false]
+  | true, false, false, false, false, false, false, false, true => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, false, false, false, false, true, false => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, false, false, false, false, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, false, false, true, false, false => ![false, false, false, false, false, false, false, false, false, true, true, false]
+  | true, false, false, false, false, false, true, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, false, false, true, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, false, false, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, false, false, true, false, false, false => ![false, false, false, false, true, false, false, false, false, true, false, false]
+  | true, false, false, false, false, true, false, false, true => ![false, false, false, false, true, false, false, false, false, true, false, true]
+  | true, false, false, false, false, true, false, true, false => ![false, false, false, false, true, false, false, false, false, true, false, true]
+  | true, false, false, false, false, true, false, true, true => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, false, false, true, true, false, false => ![false, false, false, false, true, false, false, false, false, true, true, false]
+  | true, false, false, false, false, true, true, false, true => ![false, false, false, false, true, false, false, false, false, true, true, true]
+  | true, false, false, false, false, true, true, true, false => ![false, false, false, false, true, false, false, false, false, true, true, true]
+  | true, false, false, false, false, true, true, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, true, false, false, false, false => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, false, true, false, false, false, true => ![false, false, false, false, true, false, false, false, false, true, false, true]
+  | true, false, false, false, true, false, false, true, false => ![true, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, false, true, false, false, true, true => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, false, true, false, true, false, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, true, false, true, false, true => ![false, false, false, false, true, false, false, false, false, true, true, true]
+  | true, false, false, false, true, false, true, true, false => ![true, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, true, false, true, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, true, true, false, false, false => ![false, false, false, false, true, false, false, false, false, true, false, true]
+  | true, false, false, false, true, true, false, false, true => ![false, false, false, false, true, false, false, true, false, true, false, true]
+  | true, false, false, false, true, true, false, true, false => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, false, true, true, false, true, true => ![false, false, false, false, false, false, false, true, false, true, false, true]
+  | true, false, false, false, true, true, true, false, false => ![false, false, false, false, true, false, false, false, false, true, true, true]
+  | true, false, false, false, true, true, true, false, true => ![false, false, false, false, true, false, false, true, false, true, true, true]
+  | true, false, false, false, true, true, true, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, false, true, true, true, true, true => ![false, false, false, false, false, false, false, true, false, true, true, true]
+  | true, false, false, true, false, false, false, false, false => ![true, false, false, false, false, false, false, false, false, true, false, false]
+  | true, false, false, true, false, false, false, false, true => ![true, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, true, false, false, false, true, false => ![true, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, true, false, false, false, true, true => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, true, false, false, true, false, false => ![true, false, false, false, false, false, false, false, false, true, true, false]
+  | true, false, false, true, false, false, true, false, true => ![true, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, false, false, true, true, false => ![true, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, false, false, true, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, false, true, false, false, false => ![false, false, false, false, false, false, false, false, false, true, false, false]
+  | true, false, false, true, false, true, false, false, true => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, true, false, true, false, true, false => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, true, false, true, false, true, true => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, false, false, true, false, true, true, false, false => ![false, false, false, false, false, false, false, false, false, true, true, false]
+  | true, false, false, true, false, true, true, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, false, true, true, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, false, true, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, true, false, false, false, false => ![true, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, true, true, false, false, false, true => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, true, true, false, false, true, false => ![true, false, false, false, false, false, false, false, true, true, false, true]
+  | true, false, false, true, true, false, false, true, true => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, false, false, true, true, false, true, false, false => ![true, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, true, false, true, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, true, false, true, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, true, false, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, true, true, false, false, false => ![false, false, false, false, false, false, false, false, false, true, false, true]
+  | true, false, false, true, true, true, false, false, true => ![false, false, false, false, false, false, false, true, false, true, false, true]
+  | true, false, false, true, true, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, false, false, true, true, true, false, true, true => ![false, false, false, false, false, false, false, true, true, true, false, true]
+  | true, false, false, true, true, true, true, false, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, false, true, true, true, true, false, true => ![false, false, false, false, false, false, false, true, false, true, true, true]
+  | true, false, false, true, true, true, true, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, false, false, true, true, true, true, true, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | true, false, true, false, false, false, false, false, false => ![false, false, false, false, false, false, false, false, false, true, true, false]
+  | true, false, true, false, false, false, false, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, false, false, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, false, false, true, true => ![false, false, false, true, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, false, true, false, false => ![false, false, true, false, false, false, false, false, false, true, true, false]
+  | true, false, true, false, false, false, true, false, true => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, false, true, true, false => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, false, true, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, true, false, false, false => ![false, false, false, false, true, false, false, false, false, true, true, false]
+  | true, false, true, false, false, true, false, false, true => ![false, false, false, false, true, false, false, false, false, true, true, true]
+  | true, false, true, false, false, true, false, true, false => ![false, false, false, false, true, false, false, false, false, true, true, true]
+  | true, false, true, false, false, true, false, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, false, true, true, false, false => ![false, false, true, false, true, false, false, false, false, true, true, false]
+  | true, false, true, false, false, true, true, false, true => ![false, false, true, false, true, false, false, false, false, true, true, true]
+  | true, false, true, false, false, true, true, true, false => ![false, false, true, false, true, false, false, false, false, true, true, true]
+  | true, false, true, false, false, true, true, true, true => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, false, false, false, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, false, false, false, true => ![false, false, false, false, true, false, false, false, false, true, true, true]
+  | true, false, true, false, true, false, false, true, false => ![true, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, false, false, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, false, true, false, false => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, false, true, false, true => ![false, false, true, false, true, false, false, false, false, true, true, true]
+  | true, false, true, false, true, false, true, true, false => ![true, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, false, true, true, true => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, true, false, false, false => ![false, false, false, false, true, false, false, false, false, true, true, true]
+  | true, false, true, false, true, true, false, false, true => ![false, false, false, false, true, false, false, true, false, true, true, true]
+  | true, false, true, false, true, true, false, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, true, false, true, true => ![false, false, false, false, false, false, false, true, false, true, true, true]
+  | true, false, true, false, true, true, true, false, false => ![false, false, true, false, true, false, false, false, false, true, true, true]
+  | true, false, true, false, true, true, true, false, true => ![false, false, false, false, true, false, false, false, false, true, true, true]
+  | true, false, true, false, true, true, true, true, false => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, false, true, true, true, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, false, false, false, false => ![true, false, false, false, false, false, false, false, false, true, true, false]
+  | true, false, true, true, false, false, false, false, true => ![true, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, false, false, true, false => ![true, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, false, false, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, false, true, false, false => ![true, false, true, false, false, false, false, false, false, true, true, false]
+  | true, false, true, true, false, false, true, false, true => ![true, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, false, true, true, false => ![true, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, false, true, true, true => ![true, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, true, false, false, false => ![false, false, false, false, false, false, false, false, false, true, true, false]
+  | true, false, true, true, false, true, false, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, true, false, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, true, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, false, true, true, false, false => ![false, false, true, false, false, false, false, false, false, true, true, false]
+  | true, false, true, true, false, true, true, false, true => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, true, true, true, false => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, false, true, true, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, false, false, false => ![true, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, false, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, false, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, true, false, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, true, false, true, false, false => ![true, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, true, false, true => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, true, true, false => ![true, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, false, true, true, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, true, false, false, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, true, false, false, true => ![false, false, false, false, false, false, false, true, false, true, true, true]
+  | true, false, true, true, true, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, false, true, true, true, true, false, true, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | true, false, true, true, true, true, true, false, false => ![false, false, true, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, true, true, false, true => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, true, true, true, false => ![false, false, false, false, false, false, false, false, false, true, true, true]
+  | true, false, true, true, true, true, true, true, true => ![false, false, false, false, false, false, false, true, false, true, true, true]
+  | true, true, false, false, false, false, false, false, false => ![false, false, false, false, false, false, false, false, true, true, false, false]
+  | true, true, false, false, false, false, false, false, true => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, false, false, false, false, true, false => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, false, false, false, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, false, false, true, false, false => ![false, false, false, false, false, false, false, false, true, true, true, false]
+  | true, true, false, false, false, false, true, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, false, false, true, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, false, false, true, true, true => ![false, false, false, false, false, true, false, false, true, true, true, true]
+  | true, true, false, false, false, true, false, false, false => ![false, false, false, false, true, false, false, false, true, true, false, false]
+  | true, true, false, false, false, true, false, false, true => ![false, false, false, false, true, false, false, false, true, true, false, true]
+  | true, true, false, false, false, true, false, true, false => ![false, false, false, false, true, false, false, false, true, true, false, true]
+  | true, true, false, false, false, true, false, true, true => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, false, false, true, true, false, false => ![false, false, false, false, true, false, false, false, true, true, true, false]
+  | true, true, false, false, false, true, true, false, true => ![false, false, false, false, true, false, false, false, true, true, true, true]
+  | true, true, false, false, false, true, true, true, false => ![false, false, false, false, true, false, false, false, true, true, true, true]
+  | true, true, false, false, false, true, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, true, false, false, false, false => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, false, true, false, false, false, true => ![false, false, false, false, true, false, false, false, true, true, false, true]
+  | true, true, false, false, true, false, false, true, false => ![true, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, false, true, false, false, true, true => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, false, true, false, true, false, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, true, false, true, false, true => ![false, false, false, false, true, false, false, false, true, true, true, true]
+  | true, true, false, false, true, false, true, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, true, false, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, true, true, false, false, false => ![false, false, false, false, true, false, false, false, true, true, false, true]
+  | true, true, false, false, true, true, false, false, true => ![false, false, false, false, true, false, false, true, true, true, false, true]
+  | true, true, false, false, true, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, false, true, true, false, true, true => ![false, false, false, false, false, false, false, true, true, true, false, true]
+  | true, true, false, false, true, true, true, false, false => ![false, false, false, false, true, false, false, false, true, true, true, true]
+  | true, true, false, false, true, true, true, false, true => ![false, false, false, false, true, false, false, true, true, true, true, true]
+  | true, true, false, false, true, true, true, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, false, true, true, true, true, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | true, true, false, true, false, false, false, false, false => ![true, false, false, false, false, false, false, false, true, true, false, false]
+  | true, true, false, true, false, false, false, false, true => ![true, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, false, false, false, true, false => ![true, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, false, false, false, true, true => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, false, false, true, false, false => ![true, false, false, false, false, false, false, false, true, true, true, false]
+  | true, true, false, true, false, false, true, false, true => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, false, false, true, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, false, false, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, false, true, false, false, false => ![false, false, false, false, false, false, false, false, true, true, false, false]
+  | true, true, false, true, false, true, false, false, true => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, false, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, false, true, false, true, true => ![true, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, false, true, true, false, false => ![false, false, false, false, false, false, false, false, true, true, true, false]
+  | true, true, false, true, false, true, true, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, false, true, true, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, false, true, true, true, true => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, false, false, false, false => ![true, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, true, false, false, false, true => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, true, false, false, true, false => ![true, true, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, true, false, false, true, true => ![true, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, true, false, true, false, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, false, true, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, false, true, true, false => ![true, true, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, false, true, true, true => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, true, false, false, false => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, true, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true, false, true]
+  | true, true, false, true, true, true, false, true, false => ![true, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, true, true, false, true, true => ![false, false, false, false, false, false, false, false, true, true, false, true]
+  | true, true, false, true, true, true, true, false, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, true, true, false, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | true, true, false, true, true, true, true, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, false, true, true, true, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, false, false, false, false => ![false, false, false, false, false, false, false, false, true, true, true, false]
+  | true, true, true, false, false, false, false, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, false, false, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, false, false, true, true => ![false, false, false, true, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, false, true, false, false => ![false, false, true, false, false, false, false, false, true, true, true, false]
+  | true, true, true, false, false, false, true, false, true => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, false, true, true, false => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, false, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, true, false, false, false => ![false, false, false, false, true, false, false, false, true, true, true, false]
+  | true, true, true, false, false, true, false, false, true => ![false, false, false, false, true, false, false, false, true, true, true, true]
+  | true, true, true, false, false, true, false, true, false => ![false, false, false, false, true, false, false, false, true, true, true, true]
+  | true, true, true, false, false, true, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, false, true, true, false, false => ![false, false, true, false, true, false, false, false, true, true, true, false]
+  | true, true, true, false, false, true, true, false, true => ![false, false, true, false, true, false, false, false, true, true, true, true]
+  | true, true, true, false, false, true, true, true, false => ![false, false, true, false, true, false, false, false, true, true, true, true]
+  | true, true, true, false, false, true, true, true, true => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, false, false, false, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, false, false, false, true => ![false, false, false, false, true, false, false, false, true, true, true, true]
+  | true, true, true, false, true, false, false, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, false, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, false, true, false, false => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, false, true, false, true => ![false, false, true, false, true, false, false, false, true, true, true, true]
+  | true, true, true, false, true, false, true, true, false => ![true, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, false, true, true, true => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, true, false, false, false => ![false, false, false, false, true, false, false, false, true, true, true, true]
+  | true, true, true, false, true, true, false, false, true => ![false, false, false, false, true, false, false, true, true, true, true, true]
+  | true, true, true, false, true, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, true, false, true, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | true, true, true, false, true, true, true, false, false => ![false, false, true, false, true, false, false, false, true, true, true, true]
+  | true, true, true, false, true, true, true, false, true => ![false, false, false, false, true, false, false, false, true, true, true, true]
+  | true, true, true, false, true, true, true, true, false => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, false, true, true, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, false, false, false, false => ![true, false, false, false, false, false, false, false, true, true, true, false]
+  | true, true, true, true, false, false, false, false, true => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, false, false, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, false, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, false, true, false, false => ![true, false, true, false, false, false, false, false, true, true, true, false]
+  | true, true, true, true, false, false, true, false, true => ![true, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, false, true, true, false => ![true, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, false, true, true, true => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, true, false, false, false => ![false, false, false, false, false, false, false, false, true, true, true, false]
+  | true, true, true, true, false, true, false, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, true, false, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, true, false, true, true => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, true, true, false, false => ![false, false, true, false, false, false, false, false, true, true, true, false]
+  | true, true, true, true, false, true, true, false, true => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, true, true, true, false => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, false, true, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, false, false, false, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, false, false, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, false, false, true, false => ![true, true, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, false, false, true, true => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, false, true, false, false => ![true, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, false, true, false, true => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, false, true, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, false, true, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, true, false, false, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, true, false, false, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+  | true, true, true, true, true, true, false, true, false => ![true, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, true, false, true, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, true, true, false, false => ![false, false, true, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, true, true, false, true => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, true, true, true, false => ![false, false, false, false, false, false, false, false, true, true, true, true]
+  | true, true, true, true, true, true, true, true, true => ![false, false, false, false, false, false, false, true, true, true, true, true]
+
+variable {bd : Finset V}
+variable {A : Fin 6 → Finset V}
+
+/-- The `i`-th larger-side region: the union of the elementary regions in the `i`-th color set. -/
+def facet1160L (A : Fin 6 → Finset V) (i : Fin 9) : Finset V := (facet1160L_reg i).biUnion A
+
+/-- The `j`-th bounded-side region: the union of the elementary regions in the `j`-th color set. -/
+def facet1160R (A : Fin 6 → Finset V) (j : Fin 12) : Finset V := (facet1160R_reg j).biUnion A
+
+set_option maxHeartbeats 0 in
+/-- **Single-flip (edge) nonexpansiveness of `facet1160f`.** Flipping any one of the 9 input
+coordinates changes the 12-bit output by at most one Hamming unit, checked over all single-flip
+edge cases. -/
+theorem facet1160f_singleFlip :
+    ∀ (p : Fin 9 → Bool) (i : Fin 9),
+      (∑ j, bdiff (facet1160f p j) (facet1160f (Function.update p i (!(p i))) j)) ≤ 1 := by
+  decide +kernel
+
+/-- **Global nonexpansiveness of `facet1160f`, derived from the single-flip reduction.** -/
+theorem facet1160f_nonexpansive_via_singleFlip (p q : Fin 9 → Bool) :
+    (∑ j, bdiff (facet1160f p j) (facet1160f q j)) ≤ ∑ i, bdiff (p i) (q i) :=
+  nonexpansive_of_singleFlip facet1160f facet1160f_singleFlip p q
+
+/-- The boundary input patterns map through `facet1160f` exactly to the bounded-region membership
+pattern. -/
+lemma facet1160f_boundary (c : Fin 6) :
+    facet1160f (fun i => decide (c ∈ facet1160L_reg i)) = fun j => decide (c ∈ facet1160R_reg j) := by
+  fin_cases c <;> · funext j; fin_cases j <;> rfl
+
+/-- The purifier pattern (all `false`) maps to all `false` under `facet1160f`. -/
+lemma facet1160f_zero : facet1160f (fun _ => false) = fun _ => false := by
+  funext j; fin_cases j <;> rfl
+
+/-- Membership of `v ∈ A c` in a larger-side region. -/
+lemma mem_facet1160L_of_color (hR : Regions6 bd A) {v : V} {c : Fin 6} (hv : v ∈ A c) (i : Fin 9) :
+    v ∈ facet1160L A i ↔ c ∈ facet1160L_reg i := by
+  unfold facet1160L
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- `facet1160R A j ⊆ bd`. -/
+lemma facet1160R_sub (hR : Regions6 bd A) (j : Fin 12) : facet1160R A j ⊆ bd := by
+  unfold facet1160R
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- `facet1160L A i ⊆ bd`. -/
+lemma facet1160L_sub (hR : Regions6 bd A) (i : Fin 9) : facet1160L A i ⊆ bd := by
+  unfold facet1160L
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- Membership of `v ∈ A c` in a bounded region. -/
+lemma mem_facet1160R_of_color (hR : Regions6 bd A) {v : V} {c : Fin 6} (hv : v ∈ A c) (j : Fin 12) :
+    v ∈ facet1160R A j ↔ c ∈ facet1160R_reg j := by
+  unfold facet1160R
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- For a boundary vertex of color `c`, the achieving cuts realize the larger-side pattern. -/
+lemma contractionPattern_of_color_1160 (hR : Regions6 bd A)
+    (X : Fin 9 → Finset V) (hX : ∀ i, IsRTCut bd (facet1160L A i) (X i))
+    {v : V} {c : Fin 6} (hv : v ∈ A c) :
+    contractionPattern X v = fun i => decide (c ∈ facet1160L_reg i) := by
+  funext i
+  simp only [contractionPattern, mem]
+  by_cases hc : c ∈ facet1160L_reg i
+  · have : v ∈ X i := (hX i).1 ((mem_facet1160L_of_color hR hv i).2 hc)
+    simp [this, hc]
+  · have hvL : v ∉ facet1160L A i := fun h => hc ((mem_facet1160L_of_color hR hv i).1 h)
+    have : v ∉ X i := (hX i).2 v (hR.sub c hv) hvL
+    simp [this, hc]
+
+/-- For a purifier vertex, the achieving cuts realize the all-`false` pattern. -/
+lemma contractionPattern_of_purifier_1160
+    (X : Fin 9 → Finset V) (hX : ∀ i, IsRTCut bd (facet1160L A i) (X i))
+    {v : V} (hvbd : v ∈ bd) (hvout : ∀ c, v ∉ A c) :
+    contractionPattern X v = fun _ => false := by
+  funext i
+  simp only [contractionPattern, mem]
+  have hvL : v ∉ facet1160L A i := by
+    unfold facet1160L
+    rw [Finset.mem_biUnion]
+    rintro ⟨c, _, hvc⟩
+    exact hvout c hvc
+  have : v ∉ X i := (hX i).2 v hvbd hvL
+  simp [this]
+
+/-- **Validity of the recombined candidate cuts.** -/
+lemma facet1160_hvalid (hR : Regions6 bd A)
+    (X : Fin 9 → Finset V) (hX : ∀ i, IsRTCut bd (facet1160L A i) (X i)) (j : Fin 12) :
+    IsRTCut bd (facet1160R A j) (contractionCut X facet1160f j) := by
+  have hkey : ∀ v ∈ bd, mem (contractionCut X facet1160f j) v = mem (facet1160R A j) v := by
+    intro v hvbd
+    rw [mem_contractionCut]
+    by_cases hcolor : ∃ c, v ∈ A c
+    · obtain ⟨c, hvc⟩ := hcolor
+      rw [contractionPattern_of_color_1160 hR X hX hvc, facet1160f_boundary c]
+      simp only [mem]
+      rw [decide_eq_decide]
+      exact (mem_facet1160R_of_color hR hvc j).symm
+    · simp only [not_exists] at hcolor
+      rw [contractionPattern_of_purifier_1160 X hX hvbd hcolor, facet1160f_zero]
+      have : v ∉ facet1160R A j := by
+        unfold facet1160R
+        rw [Finset.mem_biUnion]
+        rintro ⟨c, _, hvc⟩
+        exact hcolor c hvc
+      simp [mem, this]
+  refine ⟨fun x hx => ?_, fun x hxbd hxout => ?_⟩
+  · have hxbd : x ∈ bd := facet1160R_sub hR j hx
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact this.2 hx
+  · intro hxin
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact hxout (this.1 hxin)
+
+/-- **A six-party holographic entropy cone facet (database index 1160).**
+For six pairwise-disjoint boundary regions `A₀,…,A₅` in any finite undirected
+nonnegative-real-weighted graph, the 9 larger-side regions dominate the 12 bounded-side regions:
+
+  `∑ⱼ S(regionⱼ) ≤ ∑ᵢ S(larger-regionᵢ)`.
+
+This inequality is a facet of the six-party holographic entropy cone (source: the six-party
+holographic entropy cone / Hernández-Cuenca holographic entropy cone database), proved here as an
+instance of the general contraction-map engine `entropyR_ineq_of_contraction`. -/
+theorem rtEntropyR_newFacet_n6_1160 (G : GraphR V) {bd : Finset V} {A : Fin 6 → Finset V}
+    (hR : Regions6 bd A) :
+    (∑ j, rtEntropyR G bd (facet1160R A j) (facet1160R_sub hR j))
+      ≤ ∑ i, rtEntropyR G bd (facet1160L A i) (facet1160L_sub hR i) := by
+  have hXex : ∀ i, ∃ S, IsRTCut bd (facet1160L A i) S
+      ∧ rtEntropyR G bd (facet1160L A i) (facet1160L_sub hR i) = cutCapacityR G S :=
+    fun i => rtEntropyR_eq_cap G (facet1160L_sub hR i)
+  choose X hXcut hXcap using hXex
+  have hXok : ∀ i, IsRTCut bd (facet1160L A i) (X i)
+      ∧ cutCapacityR G (X i) = rtEntropyR G bd (facet1160L A i) (facet1160L_sub hR i) :=
+    fun i => ⟨hXcut i, (hXcap i).symm⟩
+  have hvalid : ∀ j, IsRTCut bd (facet1160R A j) (contractionCut X facet1160f j) :=
+    fun j => facet1160_hvalid hR X hXcut j
+  exact entropyR_ineq_of_contraction G (facet1160L A) (facet1160R A)
+    (facet1160L_sub hR) (facet1160R_sub hR) X hXok facet1160f hvalid
+    facet1160f_nonexpansive_via_singleFlip
+
+/-! ### Anti-vacuity witness: a strict six-party instance on the perfect-tensor star. -/
+
+/-- `facet1160R star6A j ⊆ star6Bd`. -/
+lemma star6_facet1160R_sub (j : Fin 12) : facet1160R star6A j ⊆ star6Bd :=
+  facet1160R_sub star6A_regions j
+/-- `facet1160L star6A i ⊆ star6Bd`. -/
+lemma star6_facet1160L_sub (i : Fin 9) : facet1160L star6A i ⊆ star6Bd :=
+  facet1160L_sub star6A_regions i
+
+/-- Each bounded-region entropy of the star witness, as a vector of values. -/
+lemma star6_facet1160R (j : Fin 12) :
+    rtEntropy star6Graph star6Bd (facet1160R star6A j) (star6_facet1160R_sub j)
+      = ((![1, 1, 1, 1, 1, 1, 2, 2, 3, 3, 3, 2] : Fin 12 → ℕ) j) := by
+  fin_cases j <;> · unfold facet1160R facet1160R_reg star6A; decide
+
+/-- Each larger-side region entropy of the star witness, as a vector of values. -/
+lemma star6_facet1160L (i : Fin 9) :
+    rtEntropy star6Graph star6Bd (facet1160L star6A i) (star6_facet1160L_sub i)
+      = ((![2, 2, 2, 3, 3, 3, 3, 3, 3] : Fin 9 → ℕ) i) := by
+  fin_cases i <;> · unfold facet1160L facet1160L_reg star6A; decide
+
+/-- **Strict six-party anti-vacuity witness.** On the cast star graph the facet inequality is
+strict: the bounded side sums to `21` and the larger side to `24` (slack `3`). -/
+theorem rtEntropyR_newFacet_n6_1160_strict_witness :
+    (∑ j, rtEntropyR (castGraph star6Graph) star6Bd (facet1160R star6A j)
+        (facet1160R_sub (A := star6A) star6A_regions j))
+      < ∑ i, rtEntropyR (castGraph star6Graph) star6Bd (facet1160L star6A i)
+        (facet1160L_sub (A := star6A) star6A_regions i) := by
+  have hreg : ∀ j, rtEntropyR (castGraph star6Graph) star6Bd (facet1160R star6A j)
+      (facet1160R_sub (A := star6A) star6A_regions j) = ((![1, 1, 1, 1, 1, 1, 2, 2, 3, 3, 3, 2] : Fin 12 → ℕ) j : ℝ) := by
+    intro j
+    rw [rtEntropyR_castGraph, star6_facet1160R j]
+  have hlar : ∀ i, rtEntropyR (castGraph star6Graph) star6Bd (facet1160L star6A i)
+      (facet1160L_sub (A := star6A) star6A_regions i) = ((![2, 2, 2, 3, 3, 3, 3, 3, 3] : Fin 9 → ℕ) i : ℝ) := by
+    intro i
+    rw [rtEntropyR_castGraph, star6_facet1160L i]
+  rw [Finset.sum_congr rfl (fun j _ => hreg j), Finset.sum_congr rfl (fun i _ => hlar i)]
+  simp [Fin.sum_univ_succ]
+  norm_num
+
+/-- All min-cut entropies in the six-party strict witness are strictly positive. -/
+theorem rtEntropyR_newFacet_n6_1160_witness_mincuts_pos :
+    (∀ j, 0 < rtEntropyR (castGraph star6Graph) star6Bd (facet1160R star6A j)
+        (facet1160R_sub (A := star6A) star6A_regions j))
+      ∧ ∀ i, 0 < rtEntropyR (castGraph star6Graph) star6Bd (facet1160L star6A i)
+        (facet1160L_sub (A := star6A) star6A_regions i) := by
+  refine ⟨fun j => ?_, fun i => ?_⟩
+  · rw [rtEntropyR_castGraph, star6_facet1160R j]; fin_cases j <;> norm_num
+  · rw [rtEntropyR_castGraph, star6_facet1160L i]; fin_cases i <;> norm_num
+
+end Facet6n1160
+
+/-! ### A six-party holographic entropy cone facet (database index 1411)
+
+A count-lattice boolean contraction map with 10 larger-side regions and 13 bounded-side regions,
+drawn from the six-party holographic entropy cone / Hernández-Cuenca holographic entropy cone
+database, realized in the undirected min-cut model. -/
+namespace Facet6n1411
+
+open Physlib.UndirectedMMICertificate.Facet6n174
+
+def facet1411L_reg : Fin 10 → Finset (Fin 6) := ![{0, 3}, {1, 2}, {0, 1, 4}, {0, 1, 5}, {1, 3, 4}, {0, 1, 2, 3}, {0, 2, 3, 4}, {0, 2, 3, 5}, {1, 2, 3, 5}, {1, 2, 3, 5}]
+def facet1411R_reg : Fin 13 → Finset (Fin 6) := ![{0}, {0}, {1}, {2}, {3}, {1, 4}, {1, 5}, {0, 3, 4}, {1, 2, 3}, {2, 3, 5}, {0, 1, 2, 3, 4}, {0, 1, 2, 3, 5}, {0, 1, 2, 3, 5}]
+
+/-! Block-popcount accessors (definitional). -/
+@[simp] lemma bp1411_0 (p : Fin 10 → Bool) : facet1411blockPopcounts p 0 = facet1411bit p 0 := rfl
+@[simp] lemma bp1411_1 (p : Fin 10 → Bool) : facet1411blockPopcounts p 1 = facet1411bit p 1 := rfl
+@[simp] lemma bp1411_2 (p : Fin 10 → Bool) : facet1411blockPopcounts p 2 = facet1411bit p 2 := rfl
+@[simp] lemma bp1411_3 (p : Fin 10 → Bool) : facet1411blockPopcounts p 3 = facet1411bit p 3 := rfl
+@[simp] lemma bp1411_4 (p : Fin 10 → Bool) : facet1411blockPopcounts p 4 = facet1411bit p 4 := rfl
+@[simp] lemma bp1411_5 (p : Fin 10 → Bool) : facet1411blockPopcounts p 5 = facet1411bit p 5 := rfl
+@[simp] lemma bp1411_6 (p : Fin 10 → Bool) : facet1411blockPopcounts p 6 = facet1411bit p 6 := rfl
+@[simp] lemma bp1411_7 (p : Fin 10 → Bool) : facet1411blockPopcounts p 7 = facet1411bit p 7 := rfl
+@[simp] lemma bp1411_8 (p : Fin 10 → Bool) : facet1411blockPopcounts p 8 = facet1411bit p 8 + facet1411bit p 9 := rfl
+
+lemma facet1411f_eq (p : Fin 10 → Bool) :
+    facet1411f p = facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) := rfl
+
+lemma facet1411bit_le_one (p : Fin 10 → Bool) (i : Fin 10) : facet1411bit p i ≤ 1 := by
+  unfold facet1411bit; split_ifs <;> omega
+lemma facet1411bit_eq_zero_of_false (p : Fin 10 → Bool) (i : Fin 10) (hp : p i = false) :
+    facet1411bit p i = 0 := by
+  unfold facet1411bit; rw [hp]; simp
+
+macro "bpLoose1411" x:term : tactic =>
+  `(tactic|
+    (simp only [bp1411_0, bp1411_1, bp1411_2, bp1411_3, bp1411_4, bp1411_5, bp1411_6, bp1411_7, bp1411_8]
+     have _hb0 := facet1411bit_le_one $x 0
+     have _hb1 := facet1411bit_le_one $x 1
+     have _hb2 := facet1411bit_le_one $x 2
+     have _hb3 := facet1411bit_le_one $x 3
+     have _hb4 := facet1411bit_le_one $x 4
+     have _hb5 := facet1411bit_le_one $x 5
+     have _hb6 := facet1411bit_le_one $x 6
+     have _hb7 := facet1411bit_le_one $x 7
+     have _hb8 := facet1411bit_le_one $x 8
+     have _hb9 := facet1411bit_le_one $x 9
+     omega))
+macro "bpStrict1411" x:term "," h:ident : tactic =>
+  `(tactic|
+    (simp only [bp1411_0, bp1411_1, bp1411_2, bp1411_3, bp1411_4, bp1411_5, bp1411_6, bp1411_7, bp1411_8,
+       facet1411bit_eq_zero_of_false $x _ $h]
+     have _hb0 := facet1411bit_le_one $x 0
+     have _hb1 := facet1411bit_le_one $x 1
+     have _hb2 := facet1411bit_le_one $x 2
+     have _hb3 := facet1411bit_le_one $x 3
+     have _hb4 := facet1411bit_le_one $x 4
+     have _hb5 := facet1411bit_le_one $x 5
+     have _hb6 := facet1411bit_le_one $x 6
+     have _hb7 := facet1411bit_le_one $x 7
+     have _hb8 := facet1411bit_le_one $x 8
+     have _hb9 := facet1411bit_le_one $x 9
+     omega))
+
+set_option maxHeartbeats 2000000 in
+/-- **Single-flip (edge) nonexpansiveness of `facet1411f`.** -/
+theorem facet1411f_singleFlip :
+    ∀ (p : Fin 10 → Bool) (i : Fin 10),
+      (∑ j, bdiff (facet1411f p j) (facet1411f (Function.update p i (!(p i))) j)) ≤ 1 := by
+  intro p i
+  fin_cases i
+  · -- flip input bit 0 (block 0)
+    show (∑ j, bdiff (facet1411f p j)
+          (facet1411f (Function.update p 0 (!(p 0))) j)) ≤ 1
+    set q := Function.update p 0 (!(p 0)) with hq
+    have hother : ∀ x : Fin 10, x ≠ 0 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e1 : facet1411blockPopcounts q 1 = facet1411blockPopcounts p 1 := by
+      simp only [bp1411_1, facet1411bit, hother 1 (by decide)]
+    have e2 : facet1411blockPopcounts q 2 = facet1411blockPopcounts p 2 := by
+      simp only [bp1411_2, facet1411bit, hother 2 (by decide)]
+    have e3 : facet1411blockPopcounts q 3 = facet1411blockPopcounts p 3 := by
+      simp only [bp1411_3, facet1411bit, hother 3 (by decide)]
+    have e4 : facet1411blockPopcounts q 4 = facet1411blockPopcounts p 4 := by
+      simp only [bp1411_4, facet1411bit, hother 4 (by decide)]
+    have e5 : facet1411blockPopcounts q 5 = facet1411blockPopcounts p 5 := by
+      simp only [bp1411_5, facet1411bit, hother 5 (by decide)]
+    have e6 : facet1411blockPopcounts q 6 = facet1411blockPopcounts p 6 := by
+      simp only [bp1411_6, facet1411bit, hother 6 (by decide)]
+    have e7 : facet1411blockPopcounts q 7 = facet1411blockPopcounts p 7 := by
+      simp only [bp1411_7, facet1411bit, hother 7 (by decide)]
+    have e8 : facet1411blockPopcounts q 8 = facet1411blockPopcounts p 8 := by
+      simp only [bp1411_8, facet1411bit, hother 8 (by decide), hother 9 (by decide)]
+    cases hpi : p 0 with
+    | false =>
+      have hqi : q 0 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e0 : facet1411blockPopcounts q 0 = facet1411blockPopcounts p 0 + 1 := by
+        first
+        | (simp only [bp1411_0, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_0, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet1411G_lip_0 (facet1411blockPopcounts p 0) (by bpStrict1411 p, hpi) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+    | true =>
+      have hqi : q 0 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e0 : facet1411blockPopcounts q 0 + 1 = facet1411blockPopcounts p 0 := by
+        first
+        | (simp only [bp1411_0, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_0, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e1, e2, e3, e4, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts q 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet1411G (facet1411blockPopcounts q 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e0]
+      exact facet1411G_lip_0 (facet1411blockPopcounts q 0) (by bpStrict1411 q, hqi) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+  · -- flip input bit 1 (block 1)
+    show (∑ j, bdiff (facet1411f p j)
+          (facet1411f (Function.update p 1 (!(p 1))) j)) ≤ 1
+    set q := Function.update p 1 (!(p 1)) with hq
+    have hother : ∀ x : Fin 10, x ≠ 1 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1411blockPopcounts q 0 = facet1411blockPopcounts p 0 := by
+      simp only [bp1411_0, facet1411bit, hother 0 (by decide)]
+    have e2 : facet1411blockPopcounts q 2 = facet1411blockPopcounts p 2 := by
+      simp only [bp1411_2, facet1411bit, hother 2 (by decide)]
+    have e3 : facet1411blockPopcounts q 3 = facet1411blockPopcounts p 3 := by
+      simp only [bp1411_3, facet1411bit, hother 3 (by decide)]
+    have e4 : facet1411blockPopcounts q 4 = facet1411blockPopcounts p 4 := by
+      simp only [bp1411_4, facet1411bit, hother 4 (by decide)]
+    have e5 : facet1411blockPopcounts q 5 = facet1411blockPopcounts p 5 := by
+      simp only [bp1411_5, facet1411bit, hother 5 (by decide)]
+    have e6 : facet1411blockPopcounts q 6 = facet1411blockPopcounts p 6 := by
+      simp only [bp1411_6, facet1411bit, hother 6 (by decide)]
+    have e7 : facet1411blockPopcounts q 7 = facet1411blockPopcounts p 7 := by
+      simp only [bp1411_7, facet1411bit, hother 7 (by decide)]
+    have e8 : facet1411blockPopcounts q 8 = facet1411blockPopcounts p 8 := by
+      simp only [bp1411_8, facet1411bit, hother 8 (by decide), hother 9 (by decide)]
+    cases hpi : p 1 with
+    | false =>
+      have hqi : q 1 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet1411blockPopcounts q 1 = facet1411blockPopcounts p 1 + 1 := by
+        first
+        | (simp only [bp1411_1, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_1, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet1411G_lip_1 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpStrict1411 p, hpi) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+    | true =>
+      have hqi : q 1 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet1411blockPopcounts q 1 + 1 = facet1411blockPopcounts p 1 := by
+        first
+        | (simp only [bp1411_1, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_1, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e2, e3, e4, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts q 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts q 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e1]
+      exact facet1411G_lip_1 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts q 1) (by bpStrict1411 q, hqi) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+  · -- flip input bit 2 (block 2)
+    show (∑ j, bdiff (facet1411f p j)
+          (facet1411f (Function.update p 2 (!(p 2))) j)) ≤ 1
+    set q := Function.update p 2 (!(p 2)) with hq
+    have hother : ∀ x : Fin 10, x ≠ 2 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1411blockPopcounts q 0 = facet1411blockPopcounts p 0 := by
+      simp only [bp1411_0, facet1411bit, hother 0 (by decide)]
+    have e1 : facet1411blockPopcounts q 1 = facet1411blockPopcounts p 1 := by
+      simp only [bp1411_1, facet1411bit, hother 1 (by decide)]
+    have e3 : facet1411blockPopcounts q 3 = facet1411blockPopcounts p 3 := by
+      simp only [bp1411_3, facet1411bit, hother 3 (by decide)]
+    have e4 : facet1411blockPopcounts q 4 = facet1411blockPopcounts p 4 := by
+      simp only [bp1411_4, facet1411bit, hother 4 (by decide)]
+    have e5 : facet1411blockPopcounts q 5 = facet1411blockPopcounts p 5 := by
+      simp only [bp1411_5, facet1411bit, hother 5 (by decide)]
+    have e6 : facet1411blockPopcounts q 6 = facet1411blockPopcounts p 6 := by
+      simp only [bp1411_6, facet1411bit, hother 6 (by decide)]
+    have e7 : facet1411blockPopcounts q 7 = facet1411blockPopcounts p 7 := by
+      simp only [bp1411_7, facet1411bit, hother 7 (by decide)]
+    have e8 : facet1411blockPopcounts q 8 = facet1411blockPopcounts p 8 := by
+      simp only [bp1411_8, facet1411bit, hother 8 (by decide), hother 9 (by decide)]
+    cases hpi : p 2 with
+    | false =>
+      have hqi : q 2 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e2 : facet1411blockPopcounts q 2 = facet1411blockPopcounts p 2 + 1 := by
+        first
+        | (simp only [bp1411_2, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_2, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet1411G_lip_2 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpStrict1411 p, hpi) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+    | true =>
+      have hqi : q 2 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e2 : facet1411blockPopcounts q 2 + 1 = facet1411blockPopcounts p 2 := by
+        first
+        | (simp only [bp1411_2, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_2, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e3, e4, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts q 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts q 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e2]
+      exact facet1411G_lip_2 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts q 2) (by bpStrict1411 q, hqi) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+  · -- flip input bit 3 (block 3)
+    show (∑ j, bdiff (facet1411f p j)
+          (facet1411f (Function.update p 3 (!(p 3))) j)) ≤ 1
+    set q := Function.update p 3 (!(p 3)) with hq
+    have hother : ∀ x : Fin 10, x ≠ 3 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1411blockPopcounts q 0 = facet1411blockPopcounts p 0 := by
+      simp only [bp1411_0, facet1411bit, hother 0 (by decide)]
+    have e1 : facet1411blockPopcounts q 1 = facet1411blockPopcounts p 1 := by
+      simp only [bp1411_1, facet1411bit, hother 1 (by decide)]
+    have e2 : facet1411blockPopcounts q 2 = facet1411blockPopcounts p 2 := by
+      simp only [bp1411_2, facet1411bit, hother 2 (by decide)]
+    have e4 : facet1411blockPopcounts q 4 = facet1411blockPopcounts p 4 := by
+      simp only [bp1411_4, facet1411bit, hother 4 (by decide)]
+    have e5 : facet1411blockPopcounts q 5 = facet1411blockPopcounts p 5 := by
+      simp only [bp1411_5, facet1411bit, hother 5 (by decide)]
+    have e6 : facet1411blockPopcounts q 6 = facet1411blockPopcounts p 6 := by
+      simp only [bp1411_6, facet1411bit, hother 6 (by decide)]
+    have e7 : facet1411blockPopcounts q 7 = facet1411blockPopcounts p 7 := by
+      simp only [bp1411_7, facet1411bit, hother 7 (by decide)]
+    have e8 : facet1411blockPopcounts q 8 = facet1411blockPopcounts p 8 := by
+      simp only [bp1411_8, facet1411bit, hother 8 (by decide), hother 9 (by decide)]
+    cases hpi : p 3 with
+    | false =>
+      have hqi : q 3 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e3 : facet1411blockPopcounts q 3 = facet1411blockPopcounts p 3 + 1 := by
+        first
+        | (simp only [bp1411_3, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_3, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet1411G_lip_3 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpStrict1411 p, hpi) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+    | true =>
+      have hqi : q 3 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e3 : facet1411blockPopcounts q 3 + 1 = facet1411blockPopcounts p 3 := by
+        first
+        | (simp only [bp1411_3, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_3, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e4, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts q 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts q 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e3]
+      exact facet1411G_lip_3 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts q 3) (by bpStrict1411 q, hqi) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+  · -- flip input bit 4 (block 4)
+    show (∑ j, bdiff (facet1411f p j)
+          (facet1411f (Function.update p 4 (!(p 4))) j)) ≤ 1
+    set q := Function.update p 4 (!(p 4)) with hq
+    have hother : ∀ x : Fin 10, x ≠ 4 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1411blockPopcounts q 0 = facet1411blockPopcounts p 0 := by
+      simp only [bp1411_0, facet1411bit, hother 0 (by decide)]
+    have e1 : facet1411blockPopcounts q 1 = facet1411blockPopcounts p 1 := by
+      simp only [bp1411_1, facet1411bit, hother 1 (by decide)]
+    have e2 : facet1411blockPopcounts q 2 = facet1411blockPopcounts p 2 := by
+      simp only [bp1411_2, facet1411bit, hother 2 (by decide)]
+    have e3 : facet1411blockPopcounts q 3 = facet1411blockPopcounts p 3 := by
+      simp only [bp1411_3, facet1411bit, hother 3 (by decide)]
+    have e5 : facet1411blockPopcounts q 5 = facet1411blockPopcounts p 5 := by
+      simp only [bp1411_5, facet1411bit, hother 5 (by decide)]
+    have e6 : facet1411blockPopcounts q 6 = facet1411blockPopcounts p 6 := by
+      simp only [bp1411_6, facet1411bit, hother 6 (by decide)]
+    have e7 : facet1411blockPopcounts q 7 = facet1411blockPopcounts p 7 := by
+      simp only [bp1411_7, facet1411bit, hother 7 (by decide)]
+    have e8 : facet1411blockPopcounts q 8 = facet1411blockPopcounts p 8 := by
+      simp only [bp1411_8, facet1411bit, hother 8 (by decide), hother 9 (by decide)]
+    cases hpi : p 4 with
+    | false =>
+      have hqi : q 4 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e4 : facet1411blockPopcounts q 4 = facet1411blockPopcounts p 4 + 1 := by
+        first
+        | (simp only [bp1411_4, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_4, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet1411G_lip_4 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpStrict1411 p, hpi) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+    | true =>
+      have hqi : q 4 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e4 : facet1411blockPopcounts q 4 + 1 = facet1411blockPopcounts p 4 := by
+        first
+        | (simp only [bp1411_4, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_4, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts q 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts q 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e4]
+      exact facet1411G_lip_4 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts q 4) (by bpStrict1411 q, hqi) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+  · -- flip input bit 5 (block 5)
+    show (∑ j, bdiff (facet1411f p j)
+          (facet1411f (Function.update p 5 (!(p 5))) j)) ≤ 1
+    set q := Function.update p 5 (!(p 5)) with hq
+    have hother : ∀ x : Fin 10, x ≠ 5 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1411blockPopcounts q 0 = facet1411blockPopcounts p 0 := by
+      simp only [bp1411_0, facet1411bit, hother 0 (by decide)]
+    have e1 : facet1411blockPopcounts q 1 = facet1411blockPopcounts p 1 := by
+      simp only [bp1411_1, facet1411bit, hother 1 (by decide)]
+    have e2 : facet1411blockPopcounts q 2 = facet1411blockPopcounts p 2 := by
+      simp only [bp1411_2, facet1411bit, hother 2 (by decide)]
+    have e3 : facet1411blockPopcounts q 3 = facet1411blockPopcounts p 3 := by
+      simp only [bp1411_3, facet1411bit, hother 3 (by decide)]
+    have e4 : facet1411blockPopcounts q 4 = facet1411blockPopcounts p 4 := by
+      simp only [bp1411_4, facet1411bit, hother 4 (by decide)]
+    have e6 : facet1411blockPopcounts q 6 = facet1411blockPopcounts p 6 := by
+      simp only [bp1411_6, facet1411bit, hother 6 (by decide)]
+    have e7 : facet1411blockPopcounts q 7 = facet1411blockPopcounts p 7 := by
+      simp only [bp1411_7, facet1411bit, hother 7 (by decide)]
+    have e8 : facet1411blockPopcounts q 8 = facet1411blockPopcounts p 8 := by
+      simp only [bp1411_8, facet1411bit, hother 8 (by decide), hother 9 (by decide)]
+    cases hpi : p 5 with
+    | false =>
+      have hqi : q 5 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e5 : facet1411blockPopcounts q 5 = facet1411blockPopcounts p 5 + 1 := by
+        first
+        | (simp only [bp1411_5, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_5, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet1411G_lip_5 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpStrict1411 p, hpi) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+    | true =>
+      have hqi : q 5 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e5 : facet1411blockPopcounts q 5 + 1 = facet1411blockPopcounts p 5 := by
+        first
+        | (simp only [bp1411_5, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_5, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts q 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts q 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e5]
+      exact facet1411G_lip_5 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts q 5) (by bpStrict1411 q, hqi) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+  · -- flip input bit 6 (block 6)
+    show (∑ j, bdiff (facet1411f p j)
+          (facet1411f (Function.update p 6 (!(p 6))) j)) ≤ 1
+    set q := Function.update p 6 (!(p 6)) with hq
+    have hother : ∀ x : Fin 10, x ≠ 6 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1411blockPopcounts q 0 = facet1411blockPopcounts p 0 := by
+      simp only [bp1411_0, facet1411bit, hother 0 (by decide)]
+    have e1 : facet1411blockPopcounts q 1 = facet1411blockPopcounts p 1 := by
+      simp only [bp1411_1, facet1411bit, hother 1 (by decide)]
+    have e2 : facet1411blockPopcounts q 2 = facet1411blockPopcounts p 2 := by
+      simp only [bp1411_2, facet1411bit, hother 2 (by decide)]
+    have e3 : facet1411blockPopcounts q 3 = facet1411blockPopcounts p 3 := by
+      simp only [bp1411_3, facet1411bit, hother 3 (by decide)]
+    have e4 : facet1411blockPopcounts q 4 = facet1411blockPopcounts p 4 := by
+      simp only [bp1411_4, facet1411bit, hother 4 (by decide)]
+    have e5 : facet1411blockPopcounts q 5 = facet1411blockPopcounts p 5 := by
+      simp only [bp1411_5, facet1411bit, hother 5 (by decide)]
+    have e7 : facet1411blockPopcounts q 7 = facet1411blockPopcounts p 7 := by
+      simp only [bp1411_7, facet1411bit, hother 7 (by decide)]
+    have e8 : facet1411blockPopcounts q 8 = facet1411blockPopcounts p 8 := by
+      simp only [bp1411_8, facet1411bit, hother 8 (by decide), hother 9 (by decide)]
+    cases hpi : p 6 with
+    | false =>
+      have hqi : q 6 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e6 : facet1411blockPopcounts q 6 = facet1411blockPopcounts p 6 + 1 := by
+        first
+        | (simp only [bp1411_6, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_6, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet1411G_lip_6 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpStrict1411 p, hpi) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+    | true =>
+      have hqi : q 6 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e6 : facet1411blockPopcounts q 6 + 1 = facet1411blockPopcounts p 6 := by
+        first
+        | (simp only [bp1411_6, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_6, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e7, e8]
+      rw [show (∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts q 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts q 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e6]
+      exact facet1411G_lip_6 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts q 6) (by bpStrict1411 q, hqi) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+  · -- flip input bit 7 (block 7)
+    show (∑ j, bdiff (facet1411f p j)
+          (facet1411f (Function.update p 7 (!(p 7))) j)) ≤ 1
+    set q := Function.update p 7 (!(p 7)) with hq
+    have hother : ∀ x : Fin 10, x ≠ 7 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1411blockPopcounts q 0 = facet1411blockPopcounts p 0 := by
+      simp only [bp1411_0, facet1411bit, hother 0 (by decide)]
+    have e1 : facet1411blockPopcounts q 1 = facet1411blockPopcounts p 1 := by
+      simp only [bp1411_1, facet1411bit, hother 1 (by decide)]
+    have e2 : facet1411blockPopcounts q 2 = facet1411blockPopcounts p 2 := by
+      simp only [bp1411_2, facet1411bit, hother 2 (by decide)]
+    have e3 : facet1411blockPopcounts q 3 = facet1411blockPopcounts p 3 := by
+      simp only [bp1411_3, facet1411bit, hother 3 (by decide)]
+    have e4 : facet1411blockPopcounts q 4 = facet1411blockPopcounts p 4 := by
+      simp only [bp1411_4, facet1411bit, hother 4 (by decide)]
+    have e5 : facet1411blockPopcounts q 5 = facet1411blockPopcounts p 5 := by
+      simp only [bp1411_5, facet1411bit, hother 5 (by decide)]
+    have e6 : facet1411blockPopcounts q 6 = facet1411blockPopcounts p 6 := by
+      simp only [bp1411_6, facet1411bit, hother 6 (by decide)]
+    have e8 : facet1411blockPopcounts q 8 = facet1411blockPopcounts p 8 := by
+      simp only [bp1411_8, facet1411bit, hother 8 (by decide), hother 9 (by decide)]
+    cases hpi : p 7 with
+    | false =>
+      have hqi : q 7 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e7 : facet1411blockPopcounts q 7 = facet1411blockPopcounts p 7 + 1 := by
+        first
+        | (simp only [bp1411_7, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_7, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet1411G_lip_7 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpStrict1411 p, hpi) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+    | true =>
+      have hqi : q 7 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e7 : facet1411blockPopcounts q 7 + 1 = facet1411blockPopcounts p 7 := by
+        first
+        | (simp only [bp1411_7, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_7, facet1411bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e8]
+      rw [show (∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts q 7) (facet1411blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts q 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e7]
+      exact facet1411G_lip_7 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts q 7) (by bpStrict1411 q, hqi) (facet1411blockPopcounts p 8) (by bpLoose1411 p)
+  · -- flip input bit 8 (block 8)
+    show (∑ j, bdiff (facet1411f p j)
+          (facet1411f (Function.update p 8 (!(p 8))) j)) ≤ 1
+    set q := Function.update p 8 (!(p 8)) with hq
+    have hother : ∀ x : Fin 10, x ≠ 8 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1411blockPopcounts q 0 = facet1411blockPopcounts p 0 := by
+      simp only [bp1411_0, facet1411bit, hother 0 (by decide)]
+    have e1 : facet1411blockPopcounts q 1 = facet1411blockPopcounts p 1 := by
+      simp only [bp1411_1, facet1411bit, hother 1 (by decide)]
+    have e2 : facet1411blockPopcounts q 2 = facet1411blockPopcounts p 2 := by
+      simp only [bp1411_2, facet1411bit, hother 2 (by decide)]
+    have e3 : facet1411blockPopcounts q 3 = facet1411blockPopcounts p 3 := by
+      simp only [bp1411_3, facet1411bit, hother 3 (by decide)]
+    have e4 : facet1411blockPopcounts q 4 = facet1411blockPopcounts p 4 := by
+      simp only [bp1411_4, facet1411bit, hother 4 (by decide)]
+    have e5 : facet1411blockPopcounts q 5 = facet1411blockPopcounts p 5 := by
+      simp only [bp1411_5, facet1411bit, hother 5 (by decide)]
+    have e6 : facet1411blockPopcounts q 6 = facet1411blockPopcounts p 6 := by
+      simp only [bp1411_6, facet1411bit, hother 6 (by decide)]
+    have e7 : facet1411blockPopcounts q 7 = facet1411blockPopcounts p 7 := by
+      simp only [bp1411_7, facet1411bit, hother 7 (by decide)]
+    cases hpi : p 8 with
+    | false =>
+      have hqi : q 8 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e8 : facet1411blockPopcounts q 8 = facet1411blockPopcounts p 8 + 1 := by
+        first
+        | (simp only [bp1411_8, facet1411bit, hother 9 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_8, facet1411bit, hother 9 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet1411G_lip_8 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpStrict1411 p, hpi)
+    | true =>
+      have hqi : q 8 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e8 : facet1411blockPopcounts q 8 + 1 = facet1411blockPopcounts p 8 := by
+        first
+        | (simp only [bp1411_8, facet1411bit, hother 9 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_8, facet1411bit, hother 9 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e7]
+      rw [show (∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts q 8) j))
+          = ∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts q 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e8]
+      exact facet1411G_lip_8 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts q 8) (by bpStrict1411 q, hqi)
+  · -- flip input bit 9 (block 8)
+    show (∑ j, bdiff (facet1411f p j)
+          (facet1411f (Function.update p 9 (!(p 9))) j)) ≤ 1
+    set q := Function.update p 9 (!(p 9)) with hq
+    have hother : ∀ x : Fin 10, x ≠ 9 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1411blockPopcounts q 0 = facet1411blockPopcounts p 0 := by
+      simp only [bp1411_0, facet1411bit, hother 0 (by decide)]
+    have e1 : facet1411blockPopcounts q 1 = facet1411blockPopcounts p 1 := by
+      simp only [bp1411_1, facet1411bit, hother 1 (by decide)]
+    have e2 : facet1411blockPopcounts q 2 = facet1411blockPopcounts p 2 := by
+      simp only [bp1411_2, facet1411bit, hother 2 (by decide)]
+    have e3 : facet1411blockPopcounts q 3 = facet1411blockPopcounts p 3 := by
+      simp only [bp1411_3, facet1411bit, hother 3 (by decide)]
+    have e4 : facet1411blockPopcounts q 4 = facet1411blockPopcounts p 4 := by
+      simp only [bp1411_4, facet1411bit, hother 4 (by decide)]
+    have e5 : facet1411blockPopcounts q 5 = facet1411blockPopcounts p 5 := by
+      simp only [bp1411_5, facet1411bit, hother 5 (by decide)]
+    have e6 : facet1411blockPopcounts q 6 = facet1411blockPopcounts p 6 := by
+      simp only [bp1411_6, facet1411bit, hother 6 (by decide)]
+    have e7 : facet1411blockPopcounts q 7 = facet1411blockPopcounts p 7 := by
+      simp only [bp1411_7, facet1411bit, hother 7 (by decide)]
+    cases hpi : p 9 with
+    | false =>
+      have hqi : q 9 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e8 : facet1411blockPopcounts q 8 = facet1411blockPopcounts p 8 + 1 := by
+        first
+        | (simp only [bp1411_8, facet1411bit, hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_8, facet1411bit, hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet1411G_lip_8 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts p 8) (by bpStrict1411 p, hpi)
+    | true =>
+      have hqi : q 9 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e8 : facet1411blockPopcounts q 8 + 1 = facet1411blockPopcounts p 8 := by
+        first
+        | (simp only [bp1411_8, facet1411bit, hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1411_8, facet1411bit, hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1411f_eq p, facet1411f_eq q, e0, e1, e2, e3, e4, e5, e6, e7]
+      rw [show (∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts q 8) j))
+          = ∑ j, bdiff (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts q 8) j) (facet1411G (facet1411blockPopcounts p 0) (facet1411blockPopcounts p 1) (facet1411blockPopcounts p 2) (facet1411blockPopcounts p 3) (facet1411blockPopcounts p 4) (facet1411blockPopcounts p 5) (facet1411blockPopcounts p 6) (facet1411blockPopcounts p 7) (facet1411blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e8]
+      exact facet1411G_lip_8 (facet1411blockPopcounts p 0) (by bpLoose1411 p) (facet1411blockPopcounts p 1) (by bpLoose1411 p) (facet1411blockPopcounts p 2) (by bpLoose1411 p) (facet1411blockPopcounts p 3) (by bpLoose1411 p) (facet1411blockPopcounts p 4) (by bpLoose1411 p) (facet1411blockPopcounts p 5) (by bpLoose1411 p) (facet1411blockPopcounts p 6) (by bpLoose1411 p) (facet1411blockPopcounts p 7) (by bpLoose1411 p) (facet1411blockPopcounts q 8) (by bpStrict1411 q, hqi)
+
+
+variable {bd : Finset V}
+variable {A : Fin 6 → Finset V}
+
+/-- The `i`-th larger-side region. -/
+def facet1411L (A : Fin 6 → Finset V) (i : Fin 10) : Finset V := (facet1411L_reg i).biUnion A
+
+/-- The `j`-th bounded-side region. -/
+def facet1411R (A : Fin 6 → Finset V) (j : Fin 13) : Finset V := (facet1411R_reg j).biUnion A
+
+/-- **Global nonexpansiveness of `facet1411f`, derived from the single-flip reduction.** -/
+theorem facet1411f_nonexpansive_via_singleFlip (p q : Fin 10 → Bool) :
+    (∑ j, bdiff (facet1411f p j) (facet1411f q j)) ≤ ∑ i, bdiff (p i) (q i) :=
+  nonexpansive_of_singleFlip facet1411f facet1411f_singleFlip p q
+
+/-- The boundary input patterns map through `facet1411f` exactly to the bounded-region pattern. -/
+lemma facet1411f_boundary (c : Fin 6) :
+    facet1411f (fun i => decide (c ∈ facet1411L_reg i)) = fun j => decide (c ∈ facet1411R_reg j) := by
+  fin_cases c <;> · funext j; fin_cases j <;> rfl
+
+/-- The purifier pattern maps to all `false`. -/
+lemma facet1411f_zero : facet1411f (fun _ => false) = fun _ => false := by
+  funext j; fin_cases j <;> rfl
+
+/-- Membership of `v ∈ A c` in a larger-side region. -/
+lemma mem_facet1411L_of_color (hR : Regions6 bd A) {v : V} {c : Fin 6} (hv : v ∈ A c) (i : Fin 10) :
+    v ∈ facet1411L A i ↔ c ∈ facet1411L_reg i := by
+  unfold facet1411L
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- `facet1411R A j ⊆ bd`. -/
+lemma facet1411R_sub (hR : Regions6 bd A) (j : Fin 13) : facet1411R A j ⊆ bd := by
+  unfold facet1411R
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- `facet1411L A i ⊆ bd`. -/
+lemma facet1411L_sub (hR : Regions6 bd A) (i : Fin 10) : facet1411L A i ⊆ bd := by
+  unfold facet1411L
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- Membership of `v ∈ A c` in a bounded region. -/
+lemma mem_facet1411R_of_color (hR : Regions6 bd A) {v : V} {c : Fin 6} (hv : v ∈ A c) (j : Fin 13) :
+    v ∈ facet1411R A j ↔ c ∈ facet1411R_reg j := by
+  unfold facet1411R
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- For a boundary vertex of color `c`, the achieving cuts realize the larger-side pattern. -/
+lemma contractionPattern_of_color_1411 (hR : Regions6 bd A)
+    (X : Fin 10 → Finset V) (hX : ∀ i, IsRTCut bd (facet1411L A i) (X i))
+    {v : V} {c : Fin 6} (hv : v ∈ A c) :
+    contractionPattern X v = fun i => decide (c ∈ facet1411L_reg i) := by
+  funext i
+  simp only [contractionPattern, mem]
+  by_cases hc : c ∈ facet1411L_reg i
+  · have : v ∈ X i := (hX i).1 ((mem_facet1411L_of_color hR hv i).2 hc)
+    simp [this, hc]
+  · have hvL : v ∉ facet1411L A i := fun h => hc ((mem_facet1411L_of_color hR hv i).1 h)
+    have : v ∉ X i := (hX i).2 v (hR.sub c hv) hvL
+    simp [this, hc]
+
+/-- For a purifier vertex, the achieving cuts realize the all-`false` pattern. -/
+lemma contractionPattern_of_purifier_1411
+    (X : Fin 10 → Finset V) (hX : ∀ i, IsRTCut bd (facet1411L A i) (X i))
+    {v : V} (hvbd : v ∈ bd) (hvout : ∀ c, v ∉ A c) :
+    contractionPattern X v = fun _ => false := by
+  funext i
+  simp only [contractionPattern, mem]
+  have hvL : v ∉ facet1411L A i := by
+    unfold facet1411L
+    rw [Finset.mem_biUnion]
+    rintro ⟨c, _, hvc⟩
+    exact hvout c hvc
+  have : v ∉ X i := (hX i).2 v hvbd hvL
+  simp [this]
+
+/-- **Validity of the recombined candidate cuts.** -/
+lemma facet1411_hvalid (hR : Regions6 bd A)
+    (X : Fin 10 → Finset V) (hX : ∀ i, IsRTCut bd (facet1411L A i) (X i)) (j : Fin 13) :
+    IsRTCut bd (facet1411R A j) (contractionCut X facet1411f j) := by
+  have hkey : ∀ v ∈ bd, mem (contractionCut X facet1411f j) v = mem (facet1411R A j) v := by
+    intro v hvbd
+    rw [mem_contractionCut]
+    by_cases hcolor : ∃ c, v ∈ A c
+    · obtain ⟨c, hvc⟩ := hcolor
+      rw [contractionPattern_of_color_1411 hR X hX hvc, facet1411f_boundary c]
+      simp only [mem]
+      rw [decide_eq_decide]
+      exact (mem_facet1411R_of_color hR hvc j).symm
+    · simp only [not_exists] at hcolor
+      rw [contractionPattern_of_purifier_1411 X hX hvbd hcolor, facet1411f_zero]
+      have : v ∉ facet1411R A j := by
+        unfold facet1411R
+        rw [Finset.mem_biUnion]
+        rintro ⟨c, _, hvc⟩
+        exact hcolor c hvc
+      simp [mem, this]
+  refine ⟨fun x hx => ?_, fun x hxbd hxout => ?_⟩
+  · have hxbd : x ∈ bd := facet1411R_sub hR j hx
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact this.2 hx
+  · intro hxin
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact hxout (this.1 hxin)
+
+/-- **A six-party holographic entropy cone facet (database index 1411).**
+For six pairwise-disjoint boundary regions in any finite undirected nonnegative-real-weighted
+graph, the 10 larger-side regions dominate the 13 bounded-side regions. Source: the six-party
+holographic entropy cone / Hernandez-Cuenca holographic entropy cone database. The contraction map
+is handled by a count-lattice factorisation (`facet1411f = facet1411G ∘ facet1411blockPopcounts`);
+its Hamming-nonexpansiveness comes from the single-flip reduction over the block-popcount lattice. -/
+theorem rtEntropyR_newFacet_n6_1411 (G : GraphR V) {bd : Finset V} {A : Fin 6 → Finset V}
+    (hR : Regions6 bd A) :
+    (∑ j, rtEntropyR G bd (facet1411R A j) (facet1411R_sub hR j))
+      ≤ ∑ i, rtEntropyR G bd (facet1411L A i) (facet1411L_sub hR i) := by
+  have hXex : ∀ i, ∃ S, IsRTCut bd (facet1411L A i) S
+      ∧ rtEntropyR G bd (facet1411L A i) (facet1411L_sub hR i) = cutCapacityR G S :=
+    fun i => rtEntropyR_eq_cap G (facet1411L_sub hR i)
+  choose X hXcut hXcap using hXex
+  have hXok : ∀ i, IsRTCut bd (facet1411L A i) (X i)
+      ∧ cutCapacityR G (X i) = rtEntropyR G bd (facet1411L A i) (facet1411L_sub hR i) :=
+    fun i => ⟨hXcut i, (hXcap i).symm⟩
+  have hvalid : ∀ j, IsRTCut bd (facet1411R A j) (contractionCut X facet1411f j) :=
+    fun j => facet1411_hvalid hR X hXcut j
+  exact entropyR_ineq_of_contraction G (facet1411L A) (facet1411R A)
+    (facet1411L_sub hR) (facet1411R_sub hR) X hXok facet1411f hvalid
+    facet1411f_nonexpansive_via_singleFlip
+
+/-! ### Anti-vacuity witness: a strict six-party instance on the perfect-tensor star. -/
+
+/-- `facet1411R star6A j ⊆ star6Bd`. -/
+lemma star6_facet1411R_sub (j : Fin 13) : facet1411R star6A j ⊆ star6Bd :=
+  facet1411R_sub star6A_regions j
+/-- `facet1411L star6A i ⊆ star6Bd`. -/
+lemma star6_facet1411L_sub (i : Fin 10) : facet1411L star6A i ⊆ star6Bd :=
+  facet1411L_sub star6A_regions i
+
+/-- Each bounded-region entropy of the star witness, as a vector of values. -/
+lemma star6_facet1411R (j : Fin 13) :
+    rtEntropy star6Graph star6Bd (facet1411R star6A j) (star6_facet1411R_sub j)
+      = ((![1, 1, 1, 1, 1, 2, 2, 3, 3, 3, 2, 2, 2] : Fin 13 → ℕ) j) := by
+  fin_cases j <;> · unfold facet1411R facet1411R_reg star6A; decide
+
+/-- Each larger-side region entropy of the star witness, as a vector of values. -/
+lemma star6_facet1411L (i : Fin 10) :
+    rtEntropy star6Graph star6Bd (facet1411L star6A i) (star6_facet1411L_sub i)
+      = ((![2, 2, 3, 3, 3, 3, 3, 3, 3, 3] : Fin 10 → ℕ) i) := by
+  fin_cases i <;> · unfold facet1411L facet1411L_reg star6A; decide
+
+/-- **Strict six-party anti-vacuity witness.** On the cast star graph the facet inequality is
+strict: the bounded side sums to 24 and the larger side to 28 (slack 4). -/
+theorem rtEntropyR_newFacet_n6_1411_strict_witness :
+    (∑ j, rtEntropyR (castGraph star6Graph) star6Bd (facet1411R star6A j)
+        (facet1411R_sub (A := star6A) star6A_regions j))
+      < ∑ i, rtEntropyR (castGraph star6Graph) star6Bd (facet1411L star6A i)
+        (facet1411L_sub (A := star6A) star6A_regions i) := by
+  have hreg : ∀ j, rtEntropyR (castGraph star6Graph) star6Bd (facet1411R star6A j)
+      (facet1411R_sub (A := star6A) star6A_regions j) = ((![1, 1, 1, 1, 1, 2, 2, 3, 3, 3, 2, 2, 2] : Fin 13 → ℕ) j : ℝ) := by
+    intro j
+    rw [rtEntropyR_castGraph, star6_facet1411R j]
+  have hlar : ∀ i, rtEntropyR (castGraph star6Graph) star6Bd (facet1411L star6A i)
+      (facet1411L_sub (A := star6A) star6A_regions i) = ((![2, 2, 3, 3, 3, 3, 3, 3, 3, 3] : Fin 10 → ℕ) i : ℝ) := by
+    intro i
+    rw [rtEntropyR_castGraph, star6_facet1411L i]
+  rw [Finset.sum_congr rfl (fun j _ => hreg j), Finset.sum_congr rfl (fun i _ => hlar i)]
+  simp [Fin.sum_univ_succ]
+  norm_num
+
+/-- All min-cut entropies in the six-party strict witness are strictly positive. -/
+theorem rtEntropyR_newFacet_n6_1411_witness_mincuts_pos :
+    (∀ j, 0 < rtEntropyR (castGraph star6Graph) star6Bd (facet1411R star6A j)
+        (facet1411R_sub (A := star6A) star6A_regions j))
+      ∧ ∀ i, 0 < rtEntropyR (castGraph star6Graph) star6Bd (facet1411L star6A i)
+        (facet1411L_sub (A := star6A) star6A_regions i) := by
+  refine ⟨fun j => ?_, fun i => ?_⟩
+  · rw [rtEntropyR_castGraph, star6_facet1411R j]; fin_cases j <;> norm_num
+  · rw [rtEntropyR_castGraph, star6_facet1411L i]; fin_cases i <;> norm_num
+
+end Facet6n1411
+
+
+/-! ### A six-party holographic entropy cone facet (database index 12982)
+
+A count-lattice boolean contraction map with 12 larger-side regions and 15 bounded-side regions,
+drawn from the six-party holographic entropy cone / Hernández-Cuenca holographic entropy cone
+database, realized in the undirected min-cut model. -/
+namespace Facet6n12982
+
+open Physlib.UndirectedMMICertificate.Facet6n174
+
+def facet12982L_reg : Fin 12 → Finset (Fin 6) := ![{0, 1, 3}, {0, 1, 3}, {0, 3, 4}, {0, 3, 4}, {0, 4, 5}, {1, 4, 5}, {2, 3, 5}, {3, 4, 5}, {3, 4, 5}, {0, 1, 2, 4}, {0, 2, 4, 5}, {1, 2, 3, 4}]
+def facet12982R_reg : Fin 15 → Finset (Fin 6) := ![{0}, {1}, {2}, {0, 3}, {0, 4}, {1, 3}, {3, 4}, {3, 5}, {4, 5}, {4, 5}, {0, 1, 3, 4}, {0, 3, 4, 5}, {2, 3, 4, 5}, {0, 1, 2, 3, 4}, {0, 1, 2, 4, 5}]
+
+/-! Block-popcount accessors (definitional). -/
+@[simp] lemma bp12982_0 (p : Fin 12 → Bool) : facet12982blockPopcounts p 0 = facet12982bit p 0 + facet12982bit p 1 := rfl
+@[simp] lemma bp12982_1 (p : Fin 12 → Bool) : facet12982blockPopcounts p 1 = facet12982bit p 2 + facet12982bit p 3 := rfl
+@[simp] lemma bp12982_2 (p : Fin 12 → Bool) : facet12982blockPopcounts p 2 = facet12982bit p 4 := rfl
+@[simp] lemma bp12982_3 (p : Fin 12 → Bool) : facet12982blockPopcounts p 3 = facet12982bit p 5 := rfl
+@[simp] lemma bp12982_4 (p : Fin 12 → Bool) : facet12982blockPopcounts p 4 = facet12982bit p 6 := rfl
+@[simp] lemma bp12982_5 (p : Fin 12 → Bool) : facet12982blockPopcounts p 5 = facet12982bit p 7 + facet12982bit p 8 := rfl
+@[simp] lemma bp12982_6 (p : Fin 12 → Bool) : facet12982blockPopcounts p 6 = facet12982bit p 9 := rfl
+@[simp] lemma bp12982_7 (p : Fin 12 → Bool) : facet12982blockPopcounts p 7 = facet12982bit p 10 := rfl
+@[simp] lemma bp12982_8 (p : Fin 12 → Bool) : facet12982blockPopcounts p 8 = facet12982bit p 11 := rfl
+
+lemma facet12982f_eq (p : Fin 12 → Bool) :
+    facet12982f p = facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) := rfl
+
+lemma facet12982bit_le_one (p : Fin 12 → Bool) (i : Fin 12) : facet12982bit p i ≤ 1 := by
+  unfold facet12982bit; split_ifs <;> omega
+lemma facet12982bit_eq_zero_of_false (p : Fin 12 → Bool) (i : Fin 12) (hp : p i = false) :
+    facet12982bit p i = 0 := by
+  unfold facet12982bit; rw [hp]; simp
+
+macro "bpLoose12982" x:term : tactic =>
+  `(tactic|
+    (simp only [bp12982_0, bp12982_1, bp12982_2, bp12982_3, bp12982_4, bp12982_5, bp12982_6, bp12982_7, bp12982_8]
+     have _hb0 := facet12982bit_le_one $x 0
+     have _hb1 := facet12982bit_le_one $x 1
+     have _hb2 := facet12982bit_le_one $x 2
+     have _hb3 := facet12982bit_le_one $x 3
+     have _hb4 := facet12982bit_le_one $x 4
+     have _hb5 := facet12982bit_le_one $x 5
+     have _hb6 := facet12982bit_le_one $x 6
+     have _hb7 := facet12982bit_le_one $x 7
+     have _hb8 := facet12982bit_le_one $x 8
+     have _hb9 := facet12982bit_le_one $x 9
+     have _hb10 := facet12982bit_le_one $x 10
+     have _hb11 := facet12982bit_le_one $x 11
+     omega))
+macro "bpStrict12982" x:term "," h:ident : tactic =>
+  `(tactic|
+    (simp only [bp12982_0, bp12982_1, bp12982_2, bp12982_3, bp12982_4, bp12982_5, bp12982_6, bp12982_7, bp12982_8,
+       facet12982bit_eq_zero_of_false $x _ $h]
+     have _hb0 := facet12982bit_le_one $x 0
+     have _hb1 := facet12982bit_le_one $x 1
+     have _hb2 := facet12982bit_le_one $x 2
+     have _hb3 := facet12982bit_le_one $x 3
+     have _hb4 := facet12982bit_le_one $x 4
+     have _hb5 := facet12982bit_le_one $x 5
+     have _hb6 := facet12982bit_le_one $x 6
+     have _hb7 := facet12982bit_le_one $x 7
+     have _hb8 := facet12982bit_le_one $x 8
+     have _hb9 := facet12982bit_le_one $x 9
+     have _hb10 := facet12982bit_le_one $x 10
+     have _hb11 := facet12982bit_le_one $x 11
+     omega))
+
+set_option maxHeartbeats 2000000 in
+/-- **Single-flip (edge) nonexpansiveness of `facet12982f`.** -/
+theorem facet12982f_singleFlip :
+    ∀ (p : Fin 12 → Bool) (i : Fin 12),
+      (∑ j, bdiff (facet12982f p j) (facet12982f (Function.update p i (!(p i))) j)) ≤ 1 := by
+  intro p i
+  fin_cases i
+  · -- flip input bit 0 (block 0)
+    show (∑ j, bdiff (facet12982f p j)
+          (facet12982f (Function.update p 0 (!(p 0))) j)) ≤ 1
+    set q := Function.update p 0 (!(p 0)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 0 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e1 : facet12982blockPopcounts q 1 = facet12982blockPopcounts p 1 := by
+      simp only [bp12982_1, facet12982bit, hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet12982blockPopcounts q 2 = facet12982blockPopcounts p 2 := by
+      simp only [bp12982_2, facet12982bit, hother 4 (by decide)]
+    have e3 : facet12982blockPopcounts q 3 = facet12982blockPopcounts p 3 := by
+      simp only [bp12982_3, facet12982bit, hother 5 (by decide)]
+    have e4 : facet12982blockPopcounts q 4 = facet12982blockPopcounts p 4 := by
+      simp only [bp12982_4, facet12982bit, hother 6 (by decide)]
+    have e5 : facet12982blockPopcounts q 5 = facet12982blockPopcounts p 5 := by
+      simp only [bp12982_5, facet12982bit, hother 7 (by decide), hother 8 (by decide)]
+    have e6 : facet12982blockPopcounts q 6 = facet12982blockPopcounts p 6 := by
+      simp only [bp12982_6, facet12982bit, hother 9 (by decide)]
+    have e7 : facet12982blockPopcounts q 7 = facet12982blockPopcounts p 7 := by
+      simp only [bp12982_7, facet12982bit, hother 10 (by decide)]
+    have e8 : facet12982blockPopcounts q 8 = facet12982blockPopcounts p 8 := by
+      simp only [bp12982_8, facet12982bit, hother 11 (by decide)]
+    cases hpi : p 0 with
+    | false =>
+      have hqi : q 0 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e0 : facet12982blockPopcounts q 0 = facet12982blockPopcounts p 0 + 1 := by
+        first
+        | (simp only [bp12982_0, facet12982bit, hother 1 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_0, facet12982bit, hother 1 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet12982G_lip_0 (facet12982blockPopcounts p 0) (by bpStrict12982 p, hpi) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+    | true =>
+      have hqi : q 0 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e0 : facet12982blockPopcounts q 0 + 1 = facet12982blockPopcounts p 0 := by
+        first
+        | (simp only [bp12982_0, facet12982bit, hother 1 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_0, facet12982bit, hother 1 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e1, e2, e3, e4, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts q 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet12982G (facet12982blockPopcounts q 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e0]
+      exact facet12982G_lip_0 (facet12982blockPopcounts q 0) (by bpStrict12982 q, hqi) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+  · -- flip input bit 1 (block 0)
+    show (∑ j, bdiff (facet12982f p j)
+          (facet12982f (Function.update p 1 (!(p 1))) j)) ≤ 1
+    set q := Function.update p 1 (!(p 1)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 1 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e1 : facet12982blockPopcounts q 1 = facet12982blockPopcounts p 1 := by
+      simp only [bp12982_1, facet12982bit, hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet12982blockPopcounts q 2 = facet12982blockPopcounts p 2 := by
+      simp only [bp12982_2, facet12982bit, hother 4 (by decide)]
+    have e3 : facet12982blockPopcounts q 3 = facet12982blockPopcounts p 3 := by
+      simp only [bp12982_3, facet12982bit, hother 5 (by decide)]
+    have e4 : facet12982blockPopcounts q 4 = facet12982blockPopcounts p 4 := by
+      simp only [bp12982_4, facet12982bit, hother 6 (by decide)]
+    have e5 : facet12982blockPopcounts q 5 = facet12982blockPopcounts p 5 := by
+      simp only [bp12982_5, facet12982bit, hother 7 (by decide), hother 8 (by decide)]
+    have e6 : facet12982blockPopcounts q 6 = facet12982blockPopcounts p 6 := by
+      simp only [bp12982_6, facet12982bit, hother 9 (by decide)]
+    have e7 : facet12982blockPopcounts q 7 = facet12982blockPopcounts p 7 := by
+      simp only [bp12982_7, facet12982bit, hother 10 (by decide)]
+    have e8 : facet12982blockPopcounts q 8 = facet12982blockPopcounts p 8 := by
+      simp only [bp12982_8, facet12982bit, hother 11 (by decide)]
+    cases hpi : p 1 with
+    | false =>
+      have hqi : q 1 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e0 : facet12982blockPopcounts q 0 = facet12982blockPopcounts p 0 + 1 := by
+        first
+        | (simp only [bp12982_0, facet12982bit, hother 0 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_0, facet12982bit, hother 0 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet12982G_lip_0 (facet12982blockPopcounts p 0) (by bpStrict12982 p, hpi) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+    | true =>
+      have hqi : q 1 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e0 : facet12982blockPopcounts q 0 + 1 = facet12982blockPopcounts p 0 := by
+        first
+        | (simp only [bp12982_0, facet12982bit, hother 0 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_0, facet12982bit, hother 0 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e1, e2, e3, e4, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts q 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet12982G (facet12982blockPopcounts q 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e0]
+      exact facet12982G_lip_0 (facet12982blockPopcounts q 0) (by bpStrict12982 q, hqi) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+  · -- flip input bit 2 (block 1)
+    show (∑ j, bdiff (facet12982f p j)
+          (facet12982f (Function.update p 2 (!(p 2))) j)) ≤ 1
+    set q := Function.update p 2 (!(p 2)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 2 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet12982blockPopcounts q 0 = facet12982blockPopcounts p 0 := by
+      simp only [bp12982_0, facet12982bit, hother 0 (by decide), hother 1 (by decide)]
+    have e2 : facet12982blockPopcounts q 2 = facet12982blockPopcounts p 2 := by
+      simp only [bp12982_2, facet12982bit, hother 4 (by decide)]
+    have e3 : facet12982blockPopcounts q 3 = facet12982blockPopcounts p 3 := by
+      simp only [bp12982_3, facet12982bit, hother 5 (by decide)]
+    have e4 : facet12982blockPopcounts q 4 = facet12982blockPopcounts p 4 := by
+      simp only [bp12982_4, facet12982bit, hother 6 (by decide)]
+    have e5 : facet12982blockPopcounts q 5 = facet12982blockPopcounts p 5 := by
+      simp only [bp12982_5, facet12982bit, hother 7 (by decide), hother 8 (by decide)]
+    have e6 : facet12982blockPopcounts q 6 = facet12982blockPopcounts p 6 := by
+      simp only [bp12982_6, facet12982bit, hother 9 (by decide)]
+    have e7 : facet12982blockPopcounts q 7 = facet12982blockPopcounts p 7 := by
+      simp only [bp12982_7, facet12982bit, hother 10 (by decide)]
+    have e8 : facet12982blockPopcounts q 8 = facet12982blockPopcounts p 8 := by
+      simp only [bp12982_8, facet12982bit, hother 11 (by decide)]
+    cases hpi : p 2 with
+    | false =>
+      have hqi : q 2 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet12982blockPopcounts q 1 = facet12982blockPopcounts p 1 + 1 := by
+        first
+        | (simp only [bp12982_1, facet12982bit, hother 3 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_1, facet12982bit, hother 3 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet12982G_lip_1 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpStrict12982 p, hpi) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+    | true =>
+      have hqi : q 2 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet12982blockPopcounts q 1 + 1 = facet12982blockPopcounts p 1 := by
+        first
+        | (simp only [bp12982_1, facet12982bit, hother 3 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_1, facet12982bit, hother 3 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e2, e3, e4, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts q 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts q 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e1]
+      exact facet12982G_lip_1 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts q 1) (by bpStrict12982 q, hqi) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+  · -- flip input bit 3 (block 1)
+    show (∑ j, bdiff (facet12982f p j)
+          (facet12982f (Function.update p 3 (!(p 3))) j)) ≤ 1
+    set q := Function.update p 3 (!(p 3)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 3 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet12982blockPopcounts q 0 = facet12982blockPopcounts p 0 := by
+      simp only [bp12982_0, facet12982bit, hother 0 (by decide), hother 1 (by decide)]
+    have e2 : facet12982blockPopcounts q 2 = facet12982blockPopcounts p 2 := by
+      simp only [bp12982_2, facet12982bit, hother 4 (by decide)]
+    have e3 : facet12982blockPopcounts q 3 = facet12982blockPopcounts p 3 := by
+      simp only [bp12982_3, facet12982bit, hother 5 (by decide)]
+    have e4 : facet12982blockPopcounts q 4 = facet12982blockPopcounts p 4 := by
+      simp only [bp12982_4, facet12982bit, hother 6 (by decide)]
+    have e5 : facet12982blockPopcounts q 5 = facet12982blockPopcounts p 5 := by
+      simp only [bp12982_5, facet12982bit, hother 7 (by decide), hother 8 (by decide)]
+    have e6 : facet12982blockPopcounts q 6 = facet12982blockPopcounts p 6 := by
+      simp only [bp12982_6, facet12982bit, hother 9 (by decide)]
+    have e7 : facet12982blockPopcounts q 7 = facet12982blockPopcounts p 7 := by
+      simp only [bp12982_7, facet12982bit, hother 10 (by decide)]
+    have e8 : facet12982blockPopcounts q 8 = facet12982blockPopcounts p 8 := by
+      simp only [bp12982_8, facet12982bit, hother 11 (by decide)]
+    cases hpi : p 3 with
+    | false =>
+      have hqi : q 3 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet12982blockPopcounts q 1 = facet12982blockPopcounts p 1 + 1 := by
+        first
+        | (simp only [bp12982_1, facet12982bit, hother 2 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_1, facet12982bit, hother 2 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet12982G_lip_1 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpStrict12982 p, hpi) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+    | true =>
+      have hqi : q 3 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet12982blockPopcounts q 1 + 1 = facet12982blockPopcounts p 1 := by
+        first
+        | (simp only [bp12982_1, facet12982bit, hother 2 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_1, facet12982bit, hother 2 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e2, e3, e4, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts q 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts q 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e1]
+      exact facet12982G_lip_1 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts q 1) (by bpStrict12982 q, hqi) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+  · -- flip input bit 4 (block 2)
+    show (∑ j, bdiff (facet12982f p j)
+          (facet12982f (Function.update p 4 (!(p 4))) j)) ≤ 1
+    set q := Function.update p 4 (!(p 4)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 4 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet12982blockPopcounts q 0 = facet12982blockPopcounts p 0 := by
+      simp only [bp12982_0, facet12982bit, hother 0 (by decide), hother 1 (by decide)]
+    have e1 : facet12982blockPopcounts q 1 = facet12982blockPopcounts p 1 := by
+      simp only [bp12982_1, facet12982bit, hother 2 (by decide), hother 3 (by decide)]
+    have e3 : facet12982blockPopcounts q 3 = facet12982blockPopcounts p 3 := by
+      simp only [bp12982_3, facet12982bit, hother 5 (by decide)]
+    have e4 : facet12982blockPopcounts q 4 = facet12982blockPopcounts p 4 := by
+      simp only [bp12982_4, facet12982bit, hother 6 (by decide)]
+    have e5 : facet12982blockPopcounts q 5 = facet12982blockPopcounts p 5 := by
+      simp only [bp12982_5, facet12982bit, hother 7 (by decide), hother 8 (by decide)]
+    have e6 : facet12982blockPopcounts q 6 = facet12982blockPopcounts p 6 := by
+      simp only [bp12982_6, facet12982bit, hother 9 (by decide)]
+    have e7 : facet12982blockPopcounts q 7 = facet12982blockPopcounts p 7 := by
+      simp only [bp12982_7, facet12982bit, hother 10 (by decide)]
+    have e8 : facet12982blockPopcounts q 8 = facet12982blockPopcounts p 8 := by
+      simp only [bp12982_8, facet12982bit, hother 11 (by decide)]
+    cases hpi : p 4 with
+    | false =>
+      have hqi : q 4 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e2 : facet12982blockPopcounts q 2 = facet12982blockPopcounts p 2 + 1 := by
+        first
+        | (simp only [bp12982_2, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_2, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet12982G_lip_2 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpStrict12982 p, hpi) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+    | true =>
+      have hqi : q 4 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e2 : facet12982blockPopcounts q 2 + 1 = facet12982blockPopcounts p 2 := by
+        first
+        | (simp only [bp12982_2, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_2, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e3, e4, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts q 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts q 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e2]
+      exact facet12982G_lip_2 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts q 2) (by bpStrict12982 q, hqi) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+  · -- flip input bit 5 (block 3)
+    show (∑ j, bdiff (facet12982f p j)
+          (facet12982f (Function.update p 5 (!(p 5))) j)) ≤ 1
+    set q := Function.update p 5 (!(p 5)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 5 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet12982blockPopcounts q 0 = facet12982blockPopcounts p 0 := by
+      simp only [bp12982_0, facet12982bit, hother 0 (by decide), hother 1 (by decide)]
+    have e1 : facet12982blockPopcounts q 1 = facet12982blockPopcounts p 1 := by
+      simp only [bp12982_1, facet12982bit, hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet12982blockPopcounts q 2 = facet12982blockPopcounts p 2 := by
+      simp only [bp12982_2, facet12982bit, hother 4 (by decide)]
+    have e4 : facet12982blockPopcounts q 4 = facet12982blockPopcounts p 4 := by
+      simp only [bp12982_4, facet12982bit, hother 6 (by decide)]
+    have e5 : facet12982blockPopcounts q 5 = facet12982blockPopcounts p 5 := by
+      simp only [bp12982_5, facet12982bit, hother 7 (by decide), hother 8 (by decide)]
+    have e6 : facet12982blockPopcounts q 6 = facet12982blockPopcounts p 6 := by
+      simp only [bp12982_6, facet12982bit, hother 9 (by decide)]
+    have e7 : facet12982blockPopcounts q 7 = facet12982blockPopcounts p 7 := by
+      simp only [bp12982_7, facet12982bit, hother 10 (by decide)]
+    have e8 : facet12982blockPopcounts q 8 = facet12982blockPopcounts p 8 := by
+      simp only [bp12982_8, facet12982bit, hother 11 (by decide)]
+    cases hpi : p 5 with
+    | false =>
+      have hqi : q 5 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e3 : facet12982blockPopcounts q 3 = facet12982blockPopcounts p 3 + 1 := by
+        first
+        | (simp only [bp12982_3, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_3, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet12982G_lip_3 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpStrict12982 p, hpi) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+    | true =>
+      have hqi : q 5 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e3 : facet12982blockPopcounts q 3 + 1 = facet12982blockPopcounts p 3 := by
+        first
+        | (simp only [bp12982_3, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_3, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e4, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts q 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts q 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e3]
+      exact facet12982G_lip_3 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts q 3) (by bpStrict12982 q, hqi) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+  · -- flip input bit 6 (block 4)
+    show (∑ j, bdiff (facet12982f p j)
+          (facet12982f (Function.update p 6 (!(p 6))) j)) ≤ 1
+    set q := Function.update p 6 (!(p 6)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 6 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet12982blockPopcounts q 0 = facet12982blockPopcounts p 0 := by
+      simp only [bp12982_0, facet12982bit, hother 0 (by decide), hother 1 (by decide)]
+    have e1 : facet12982blockPopcounts q 1 = facet12982blockPopcounts p 1 := by
+      simp only [bp12982_1, facet12982bit, hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet12982blockPopcounts q 2 = facet12982blockPopcounts p 2 := by
+      simp only [bp12982_2, facet12982bit, hother 4 (by decide)]
+    have e3 : facet12982blockPopcounts q 3 = facet12982blockPopcounts p 3 := by
+      simp only [bp12982_3, facet12982bit, hother 5 (by decide)]
+    have e5 : facet12982blockPopcounts q 5 = facet12982blockPopcounts p 5 := by
+      simp only [bp12982_5, facet12982bit, hother 7 (by decide), hother 8 (by decide)]
+    have e6 : facet12982blockPopcounts q 6 = facet12982blockPopcounts p 6 := by
+      simp only [bp12982_6, facet12982bit, hother 9 (by decide)]
+    have e7 : facet12982blockPopcounts q 7 = facet12982blockPopcounts p 7 := by
+      simp only [bp12982_7, facet12982bit, hother 10 (by decide)]
+    have e8 : facet12982blockPopcounts q 8 = facet12982blockPopcounts p 8 := by
+      simp only [bp12982_8, facet12982bit, hother 11 (by decide)]
+    cases hpi : p 6 with
+    | false =>
+      have hqi : q 6 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e4 : facet12982blockPopcounts q 4 = facet12982blockPopcounts p 4 + 1 := by
+        first
+        | (simp only [bp12982_4, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_4, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet12982G_lip_4 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpStrict12982 p, hpi) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+    | true =>
+      have hqi : q 6 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e4 : facet12982blockPopcounts q 4 + 1 = facet12982blockPopcounts p 4 := by
+        first
+        | (simp only [bp12982_4, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_4, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts q 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts q 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e4]
+      exact facet12982G_lip_4 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts q 4) (by bpStrict12982 q, hqi) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+  · -- flip input bit 7 (block 5)
+    show (∑ j, bdiff (facet12982f p j)
+          (facet12982f (Function.update p 7 (!(p 7))) j)) ≤ 1
+    set q := Function.update p 7 (!(p 7)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 7 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet12982blockPopcounts q 0 = facet12982blockPopcounts p 0 := by
+      simp only [bp12982_0, facet12982bit, hother 0 (by decide), hother 1 (by decide)]
+    have e1 : facet12982blockPopcounts q 1 = facet12982blockPopcounts p 1 := by
+      simp only [bp12982_1, facet12982bit, hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet12982blockPopcounts q 2 = facet12982blockPopcounts p 2 := by
+      simp only [bp12982_2, facet12982bit, hother 4 (by decide)]
+    have e3 : facet12982blockPopcounts q 3 = facet12982blockPopcounts p 3 := by
+      simp only [bp12982_3, facet12982bit, hother 5 (by decide)]
+    have e4 : facet12982blockPopcounts q 4 = facet12982blockPopcounts p 4 := by
+      simp only [bp12982_4, facet12982bit, hother 6 (by decide)]
+    have e6 : facet12982blockPopcounts q 6 = facet12982blockPopcounts p 6 := by
+      simp only [bp12982_6, facet12982bit, hother 9 (by decide)]
+    have e7 : facet12982blockPopcounts q 7 = facet12982blockPopcounts p 7 := by
+      simp only [bp12982_7, facet12982bit, hother 10 (by decide)]
+    have e8 : facet12982blockPopcounts q 8 = facet12982blockPopcounts p 8 := by
+      simp only [bp12982_8, facet12982bit, hother 11 (by decide)]
+    cases hpi : p 7 with
+    | false =>
+      have hqi : q 7 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e5 : facet12982blockPopcounts q 5 = facet12982blockPopcounts p 5 + 1 := by
+        first
+        | (simp only [bp12982_5, facet12982bit, hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_5, facet12982bit, hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet12982G_lip_5 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpStrict12982 p, hpi) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+    | true =>
+      have hqi : q 7 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e5 : facet12982blockPopcounts q 5 + 1 = facet12982blockPopcounts p 5 := by
+        first
+        | (simp only [bp12982_5, facet12982bit, hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_5, facet12982bit, hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts q 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts q 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e5]
+      exact facet12982G_lip_5 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts q 5) (by bpStrict12982 q, hqi) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+  · -- flip input bit 8 (block 5)
+    show (∑ j, bdiff (facet12982f p j)
+          (facet12982f (Function.update p 8 (!(p 8))) j)) ≤ 1
+    set q := Function.update p 8 (!(p 8)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 8 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet12982blockPopcounts q 0 = facet12982blockPopcounts p 0 := by
+      simp only [bp12982_0, facet12982bit, hother 0 (by decide), hother 1 (by decide)]
+    have e1 : facet12982blockPopcounts q 1 = facet12982blockPopcounts p 1 := by
+      simp only [bp12982_1, facet12982bit, hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet12982blockPopcounts q 2 = facet12982blockPopcounts p 2 := by
+      simp only [bp12982_2, facet12982bit, hother 4 (by decide)]
+    have e3 : facet12982blockPopcounts q 3 = facet12982blockPopcounts p 3 := by
+      simp only [bp12982_3, facet12982bit, hother 5 (by decide)]
+    have e4 : facet12982blockPopcounts q 4 = facet12982blockPopcounts p 4 := by
+      simp only [bp12982_4, facet12982bit, hother 6 (by decide)]
+    have e6 : facet12982blockPopcounts q 6 = facet12982blockPopcounts p 6 := by
+      simp only [bp12982_6, facet12982bit, hother 9 (by decide)]
+    have e7 : facet12982blockPopcounts q 7 = facet12982blockPopcounts p 7 := by
+      simp only [bp12982_7, facet12982bit, hother 10 (by decide)]
+    have e8 : facet12982blockPopcounts q 8 = facet12982blockPopcounts p 8 := by
+      simp only [bp12982_8, facet12982bit, hother 11 (by decide)]
+    cases hpi : p 8 with
+    | false =>
+      have hqi : q 8 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e5 : facet12982blockPopcounts q 5 = facet12982blockPopcounts p 5 + 1 := by
+        first
+        | (simp only [bp12982_5, facet12982bit, hother 7 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_5, facet12982bit, hother 7 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet12982G_lip_5 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpStrict12982 p, hpi) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+    | true =>
+      have hqi : q 8 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e5 : facet12982blockPopcounts q 5 + 1 = facet12982blockPopcounts p 5 := by
+        first
+        | (simp only [bp12982_5, facet12982bit, hother 7 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_5, facet12982bit, hother 7 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts q 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts q 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e5]
+      exact facet12982G_lip_5 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts q 5) (by bpStrict12982 q, hqi) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+  · -- flip input bit 9 (block 6)
+    show (∑ j, bdiff (facet12982f p j)
+          (facet12982f (Function.update p 9 (!(p 9))) j)) ≤ 1
+    set q := Function.update p 9 (!(p 9)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 9 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet12982blockPopcounts q 0 = facet12982blockPopcounts p 0 := by
+      simp only [bp12982_0, facet12982bit, hother 0 (by decide), hother 1 (by decide)]
+    have e1 : facet12982blockPopcounts q 1 = facet12982blockPopcounts p 1 := by
+      simp only [bp12982_1, facet12982bit, hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet12982blockPopcounts q 2 = facet12982blockPopcounts p 2 := by
+      simp only [bp12982_2, facet12982bit, hother 4 (by decide)]
+    have e3 : facet12982blockPopcounts q 3 = facet12982blockPopcounts p 3 := by
+      simp only [bp12982_3, facet12982bit, hother 5 (by decide)]
+    have e4 : facet12982blockPopcounts q 4 = facet12982blockPopcounts p 4 := by
+      simp only [bp12982_4, facet12982bit, hother 6 (by decide)]
+    have e5 : facet12982blockPopcounts q 5 = facet12982blockPopcounts p 5 := by
+      simp only [bp12982_5, facet12982bit, hother 7 (by decide), hother 8 (by decide)]
+    have e7 : facet12982blockPopcounts q 7 = facet12982blockPopcounts p 7 := by
+      simp only [bp12982_7, facet12982bit, hother 10 (by decide)]
+    have e8 : facet12982blockPopcounts q 8 = facet12982blockPopcounts p 8 := by
+      simp only [bp12982_8, facet12982bit, hother 11 (by decide)]
+    cases hpi : p 9 with
+    | false =>
+      have hqi : q 9 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e6 : facet12982blockPopcounts q 6 = facet12982blockPopcounts p 6 + 1 := by
+        first
+        | (simp only [bp12982_6, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_6, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet12982G_lip_6 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpStrict12982 p, hpi) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+    | true =>
+      have hqi : q 9 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e6 : facet12982blockPopcounts q 6 + 1 = facet12982blockPopcounts p 6 := by
+        first
+        | (simp only [bp12982_6, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_6, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e7, e8]
+      rw [show (∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts q 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts q 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e6]
+      exact facet12982G_lip_6 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts q 6) (by bpStrict12982 q, hqi) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+  · -- flip input bit 10 (block 7)
+    show (∑ j, bdiff (facet12982f p j)
+          (facet12982f (Function.update p 10 (!(p 10))) j)) ≤ 1
+    set q := Function.update p 10 (!(p 10)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 10 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet12982blockPopcounts q 0 = facet12982blockPopcounts p 0 := by
+      simp only [bp12982_0, facet12982bit, hother 0 (by decide), hother 1 (by decide)]
+    have e1 : facet12982blockPopcounts q 1 = facet12982blockPopcounts p 1 := by
+      simp only [bp12982_1, facet12982bit, hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet12982blockPopcounts q 2 = facet12982blockPopcounts p 2 := by
+      simp only [bp12982_2, facet12982bit, hother 4 (by decide)]
+    have e3 : facet12982blockPopcounts q 3 = facet12982blockPopcounts p 3 := by
+      simp only [bp12982_3, facet12982bit, hother 5 (by decide)]
+    have e4 : facet12982blockPopcounts q 4 = facet12982blockPopcounts p 4 := by
+      simp only [bp12982_4, facet12982bit, hother 6 (by decide)]
+    have e5 : facet12982blockPopcounts q 5 = facet12982blockPopcounts p 5 := by
+      simp only [bp12982_5, facet12982bit, hother 7 (by decide), hother 8 (by decide)]
+    have e6 : facet12982blockPopcounts q 6 = facet12982blockPopcounts p 6 := by
+      simp only [bp12982_6, facet12982bit, hother 9 (by decide)]
+    have e8 : facet12982blockPopcounts q 8 = facet12982blockPopcounts p 8 := by
+      simp only [bp12982_8, facet12982bit, hother 11 (by decide)]
+    cases hpi : p 10 with
+    | false =>
+      have hqi : q 10 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e7 : facet12982blockPopcounts q 7 = facet12982blockPopcounts p 7 + 1 := by
+        first
+        | (simp only [bp12982_7, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_7, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet12982G_lip_7 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpStrict12982 p, hpi) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+    | true =>
+      have hqi : q 10 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e7 : facet12982blockPopcounts q 7 + 1 = facet12982blockPopcounts p 7 := by
+        first
+        | (simp only [bp12982_7, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_7, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e8]
+      rw [show (∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts q 7) (facet12982blockPopcounts p 8) j))
+          = ∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts q 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e7]
+      exact facet12982G_lip_7 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts q 7) (by bpStrict12982 q, hqi) (facet12982blockPopcounts p 8) (by bpLoose12982 p)
+  · -- flip input bit 11 (block 8)
+    show (∑ j, bdiff (facet12982f p j)
+          (facet12982f (Function.update p 11 (!(p 11))) j)) ≤ 1
+    set q := Function.update p 11 (!(p 11)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 11 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet12982blockPopcounts q 0 = facet12982blockPopcounts p 0 := by
+      simp only [bp12982_0, facet12982bit, hother 0 (by decide), hother 1 (by decide)]
+    have e1 : facet12982blockPopcounts q 1 = facet12982blockPopcounts p 1 := by
+      simp only [bp12982_1, facet12982bit, hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet12982blockPopcounts q 2 = facet12982blockPopcounts p 2 := by
+      simp only [bp12982_2, facet12982bit, hother 4 (by decide)]
+    have e3 : facet12982blockPopcounts q 3 = facet12982blockPopcounts p 3 := by
+      simp only [bp12982_3, facet12982bit, hother 5 (by decide)]
+    have e4 : facet12982blockPopcounts q 4 = facet12982blockPopcounts p 4 := by
+      simp only [bp12982_4, facet12982bit, hother 6 (by decide)]
+    have e5 : facet12982blockPopcounts q 5 = facet12982blockPopcounts p 5 := by
+      simp only [bp12982_5, facet12982bit, hother 7 (by decide), hother 8 (by decide)]
+    have e6 : facet12982blockPopcounts q 6 = facet12982blockPopcounts p 6 := by
+      simp only [bp12982_6, facet12982bit, hother 9 (by decide)]
+    have e7 : facet12982blockPopcounts q 7 = facet12982blockPopcounts p 7 := by
+      simp only [bp12982_7, facet12982bit, hother 10 (by decide)]
+    cases hpi : p 11 with
+    | false =>
+      have hqi : q 11 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e8 : facet12982blockPopcounts q 8 = facet12982blockPopcounts p 8 + 1 := by
+        first
+        | (simp only [bp12982_8, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_8, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      exact facet12982G_lip_8 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts p 8) (by bpStrict12982 p, hpi)
+    | true =>
+      have hqi : q 11 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e8 : facet12982blockPopcounts q 8 + 1 = facet12982blockPopcounts p 8 := by
+        first
+        | (simp only [bp12982_8, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp12982_8, facet12982bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet12982f_eq p, facet12982f_eq q, e0, e1, e2, e3, e4, e5, e6, e7]
+      rw [show (∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts q 8) j))
+          = ∑ j, bdiff (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts q 8) j) (facet12982G (facet12982blockPopcounts p 0) (facet12982blockPopcounts p 1) (facet12982blockPopcounts p 2) (facet12982blockPopcounts p 3) (facet12982blockPopcounts p 4) (facet12982blockPopcounts p 5) (facet12982blockPopcounts p 6) (facet12982blockPopcounts p 7) (facet12982blockPopcounts p 8) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e8]
+      exact facet12982G_lip_8 (facet12982blockPopcounts p 0) (by bpLoose12982 p) (facet12982blockPopcounts p 1) (by bpLoose12982 p) (facet12982blockPopcounts p 2) (by bpLoose12982 p) (facet12982blockPopcounts p 3) (by bpLoose12982 p) (facet12982blockPopcounts p 4) (by bpLoose12982 p) (facet12982blockPopcounts p 5) (by bpLoose12982 p) (facet12982blockPopcounts p 6) (by bpLoose12982 p) (facet12982blockPopcounts p 7) (by bpLoose12982 p) (facet12982blockPopcounts q 8) (by bpStrict12982 q, hqi)
+
+
+variable {bd : Finset V}
+variable {A : Fin 6 → Finset V}
+
+/-- The `i`-th larger-side region. -/
+def facet12982L (A : Fin 6 → Finset V) (i : Fin 12) : Finset V := (facet12982L_reg i).biUnion A
+
+/-- The `j`-th bounded-side region. -/
+def facet12982R (A : Fin 6 → Finset V) (j : Fin 15) : Finset V := (facet12982R_reg j).biUnion A
+
+/-- **Global nonexpansiveness of `facet12982f`, derived from the single-flip reduction.** -/
+theorem facet12982f_nonexpansive_via_singleFlip (p q : Fin 12 → Bool) :
+    (∑ j, bdiff (facet12982f p j) (facet12982f q j)) ≤ ∑ i, bdiff (p i) (q i) :=
+  nonexpansive_of_singleFlip facet12982f facet12982f_singleFlip p q
+
+/-- The boundary input patterns map through `facet12982f` exactly to the bounded-region pattern. -/
+lemma facet12982f_boundary (c : Fin 6) :
+    facet12982f (fun i => decide (c ∈ facet12982L_reg i)) = fun j => decide (c ∈ facet12982R_reg j) := by
+  fin_cases c <;> · funext j; fin_cases j <;> rfl
+
+/-- The purifier pattern maps to all `false`. -/
+lemma facet12982f_zero : facet12982f (fun _ => false) = fun _ => false := by
+  funext j; fin_cases j <;> rfl
+
+/-- Membership of `v ∈ A c` in a larger-side region. -/
+lemma mem_facet12982L_of_color (hR : Regions6 bd A) {v : V} {c : Fin 6} (hv : v ∈ A c) (i : Fin 12) :
+    v ∈ facet12982L A i ↔ c ∈ facet12982L_reg i := by
+  unfold facet12982L
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- `facet12982R A j ⊆ bd`. -/
+lemma facet12982R_sub (hR : Regions6 bd A) (j : Fin 15) : facet12982R A j ⊆ bd := by
+  unfold facet12982R
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- `facet12982L A i ⊆ bd`. -/
+lemma facet12982L_sub (hR : Regions6 bd A) (i : Fin 12) : facet12982L A i ⊆ bd := by
+  unfold facet12982L
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- Membership of `v ∈ A c` in a bounded region. -/
+lemma mem_facet12982R_of_color (hR : Regions6 bd A) {v : V} {c : Fin 6} (hv : v ∈ A c) (j : Fin 15) :
+    v ∈ facet12982R A j ↔ c ∈ facet12982R_reg j := by
+  unfold facet12982R
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- For a boundary vertex of color `c`, the achieving cuts realize the larger-side pattern. -/
+lemma contractionPattern_of_color_12982 (hR : Regions6 bd A)
+    (X : Fin 12 → Finset V) (hX : ∀ i, IsRTCut bd (facet12982L A i) (X i))
+    {v : V} {c : Fin 6} (hv : v ∈ A c) :
+    contractionPattern X v = fun i => decide (c ∈ facet12982L_reg i) := by
+  funext i
+  simp only [contractionPattern, mem]
+  by_cases hc : c ∈ facet12982L_reg i
+  · have : v ∈ X i := (hX i).1 ((mem_facet12982L_of_color hR hv i).2 hc)
+    simp [this, hc]
+  · have hvL : v ∉ facet12982L A i := fun h => hc ((mem_facet12982L_of_color hR hv i).1 h)
+    have : v ∉ X i := (hX i).2 v (hR.sub c hv) hvL
+    simp [this, hc]
+
+/-- For a purifier vertex, the achieving cuts realize the all-`false` pattern. -/
+lemma contractionPattern_of_purifier_12982
+    (X : Fin 12 → Finset V) (hX : ∀ i, IsRTCut bd (facet12982L A i) (X i))
+    {v : V} (hvbd : v ∈ bd) (hvout : ∀ c, v ∉ A c) :
+    contractionPattern X v = fun _ => false := by
+  funext i
+  simp only [contractionPattern, mem]
+  have hvL : v ∉ facet12982L A i := by
+    unfold facet12982L
+    rw [Finset.mem_biUnion]
+    rintro ⟨c, _, hvc⟩
+    exact hvout c hvc
+  have : v ∉ X i := (hX i).2 v hvbd hvL
+  simp [this]
+
+/-- **Validity of the recombined candidate cuts.** -/
+lemma facet12982_hvalid (hR : Regions6 bd A)
+    (X : Fin 12 → Finset V) (hX : ∀ i, IsRTCut bd (facet12982L A i) (X i)) (j : Fin 15) :
+    IsRTCut bd (facet12982R A j) (contractionCut X facet12982f j) := by
+  have hkey : ∀ v ∈ bd, mem (contractionCut X facet12982f j) v = mem (facet12982R A j) v := by
+    intro v hvbd
+    rw [mem_contractionCut]
+    by_cases hcolor : ∃ c, v ∈ A c
+    · obtain ⟨c, hvc⟩ := hcolor
+      rw [contractionPattern_of_color_12982 hR X hX hvc, facet12982f_boundary c]
+      simp only [mem]
+      rw [decide_eq_decide]
+      exact (mem_facet12982R_of_color hR hvc j).symm
+    · simp only [not_exists] at hcolor
+      rw [contractionPattern_of_purifier_12982 X hX hvbd hcolor, facet12982f_zero]
+      have : v ∉ facet12982R A j := by
+        unfold facet12982R
+        rw [Finset.mem_biUnion]
+        rintro ⟨c, _, hvc⟩
+        exact hcolor c hvc
+      simp [mem, this]
+  refine ⟨fun x hx => ?_, fun x hxbd hxout => ?_⟩
+  · have hxbd : x ∈ bd := facet12982R_sub hR j hx
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact this.2 hx
+  · intro hxin
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact hxout (this.1 hxin)
+
+/-- **A six-party holographic entropy cone facet (database index 12982).**
+For six pairwise-disjoint boundary regions in any finite undirected nonnegative-real-weighted
+graph, the 12 larger-side regions dominate the 15 bounded-side regions. Source: the six-party
+holographic entropy cone / Hernandez-Cuenca holographic entropy cone database. The contraction map
+is handled by a count-lattice factorisation (`facet12982f = facet12982G ∘ facet12982blockPopcounts`);
+its Hamming-nonexpansiveness comes from the single-flip reduction over the block-popcount lattice. -/
+theorem rtEntropyR_newFacet_n6_12982 (G : GraphR V) {bd : Finset V} {A : Fin 6 → Finset V}
+    (hR : Regions6 bd A) :
+    (∑ j, rtEntropyR G bd (facet12982R A j) (facet12982R_sub hR j))
+      ≤ ∑ i, rtEntropyR G bd (facet12982L A i) (facet12982L_sub hR i) := by
+  have hXex : ∀ i, ∃ S, IsRTCut bd (facet12982L A i) S
+      ∧ rtEntropyR G bd (facet12982L A i) (facet12982L_sub hR i) = cutCapacityR G S :=
+    fun i => rtEntropyR_eq_cap G (facet12982L_sub hR i)
+  choose X hXcut hXcap using hXex
+  have hXok : ∀ i, IsRTCut bd (facet12982L A i) (X i)
+      ∧ cutCapacityR G (X i) = rtEntropyR G bd (facet12982L A i) (facet12982L_sub hR i) :=
+    fun i => ⟨hXcut i, (hXcap i).symm⟩
+  have hvalid : ∀ j, IsRTCut bd (facet12982R A j) (contractionCut X facet12982f j) :=
+    fun j => facet12982_hvalid hR X hXcut j
+  exact entropyR_ineq_of_contraction G (facet12982L A) (facet12982R A)
+    (facet12982L_sub hR) (facet12982R_sub hR) X hXok facet12982f hvalid
+    facet12982f_nonexpansive_via_singleFlip
+
+/-! ### Anti-vacuity witness: a strict six-party instance on the perfect-tensor star. -/
+
+/-- `facet12982R star6A j ⊆ star6Bd`. -/
+lemma star6_facet12982R_sub (j : Fin 15) : facet12982R star6A j ⊆ star6Bd :=
+  facet12982R_sub star6A_regions j
+/-- `facet12982L star6A i ⊆ star6Bd`. -/
+lemma star6_facet12982L_sub (i : Fin 12) : facet12982L star6A i ⊆ star6Bd :=
+  facet12982L_sub star6A_regions i
+
+/-- Each bounded-region entropy of the star witness, as a vector of values. -/
+lemma star6_facet12982R (j : Fin 15) :
+    rtEntropy star6Graph star6Bd (facet12982R star6A j) (star6_facet12982R_sub j)
+      = ((![1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 2, 2] : Fin 15 → ℕ) j) := by
+  fin_cases j <;> · unfold facet12982R facet12982R_reg star6A; decide
+
+/-- Each larger-side region entropy of the star witness, as a vector of values. -/
+lemma star6_facet12982L (i : Fin 12) :
+    rtEntropy star6Graph star6Bd (facet12982L star6A i) (star6_facet12982L_sub i)
+      = ((![3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3] : Fin 12 → ℕ) i) := by
+  fin_cases i <;> · unfold facet12982L facet12982L_reg star6A; decide
+
+/-- **Strict six-party anti-vacuity witness.** On the cast star graph the facet inequality is
+strict: the bounded side sums to 30 and the larger side to 36 (slack 6). -/
+theorem rtEntropyR_newFacet_n6_12982_strict_witness :
+    (∑ j, rtEntropyR (castGraph star6Graph) star6Bd (facet12982R star6A j)
+        (facet12982R_sub (A := star6A) star6A_regions j))
+      < ∑ i, rtEntropyR (castGraph star6Graph) star6Bd (facet12982L star6A i)
+        (facet12982L_sub (A := star6A) star6A_regions i) := by
+  have hreg : ∀ j, rtEntropyR (castGraph star6Graph) star6Bd (facet12982R star6A j)
+      (facet12982R_sub (A := star6A) star6A_regions j) = ((![1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 2, 2] : Fin 15 → ℕ) j : ℝ) := by
+    intro j
+    rw [rtEntropyR_castGraph, star6_facet12982R j]
+  have hlar : ∀ i, rtEntropyR (castGraph star6Graph) star6Bd (facet12982L star6A i)
+      (facet12982L_sub (A := star6A) star6A_regions i) = ((![3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3] : Fin 12 → ℕ) i : ℝ) := by
+    intro i
+    rw [rtEntropyR_castGraph, star6_facet12982L i]
+  rw [Finset.sum_congr rfl (fun j _ => hreg j), Finset.sum_congr rfl (fun i _ => hlar i)]
+  simp [Fin.sum_univ_succ]
+  norm_num
+
+/-- All min-cut entropies in the six-party strict witness are strictly positive. -/
+theorem rtEntropyR_newFacet_n6_12982_witness_mincuts_pos :
+    (∀ j, 0 < rtEntropyR (castGraph star6Graph) star6Bd (facet12982R star6A j)
+        (facet12982R_sub (A := star6A) star6A_regions j))
+      ∧ ∀ i, 0 < rtEntropyR (castGraph star6Graph) star6Bd (facet12982L star6A i)
+        (facet12982L_sub (A := star6A) star6A_regions i) := by
+  refine ⟨fun j => ?_, fun i => ?_⟩
+  · rw [rtEntropyR_castGraph, star6_facet12982R j]; fin_cases j <;> norm_num
+  · rw [rtEntropyR_castGraph, star6_facet12982L i]; fin_cases i <;> norm_num
+
+end Facet6n12982
+
+
+/-! ### A six-party holographic entropy cone facet (database index 7451)
+
+A count-lattice boolean contraction map with 12 larger-side regions and 15 bounded-side regions,
+drawn from the six-party holographic entropy cone / Hernández-Cuenca holographic entropy cone
+database, realized in the undirected min-cut model. -/
+namespace Facet6n7451
+
+open Physlib.UndirectedMMICertificate.Facet6n174
+
+def facet7451L_reg : Fin 12 → Finset (Fin 6) := ![{2, 3}, {0, 2, 4}, {0, 4, 5}, {1, 2, 4}, {1, 4, 5}, {2, 3, 5}, {2, 4, 5}, {2, 4, 5}, {2, 4, 5}, {3, 4, 5}, {0, 1, 2, 5}, {0, 1, 3, 5}]
+def facet7451R_reg : Fin 15 → Finset (Fin 6) := ![{0}, {1}, {2}, {3}, {2, 4}, {2, 4}, {2, 5}, {3, 5}, {4, 5}, {4, 5}, {0, 1, 4, 5}, {0, 2, 4, 5}, {1, 2, 4, 5}, {2, 3, 4, 5}, {0, 1, 2, 3, 5}]
+
+/-! Block-popcount accessors (definitional). -/
+@[simp] lemma bp7451_0 (p : Fin 12 → Bool) : facet7451blockPopcounts p 0 = facet7451bit p 0 := rfl
+@[simp] lemma bp7451_1 (p : Fin 12 → Bool) : facet7451blockPopcounts p 1 = facet7451bit p 1 := rfl
+@[simp] lemma bp7451_2 (p : Fin 12 → Bool) : facet7451blockPopcounts p 2 = facet7451bit p 2 := rfl
+@[simp] lemma bp7451_3 (p : Fin 12 → Bool) : facet7451blockPopcounts p 3 = facet7451bit p 3 := rfl
+@[simp] lemma bp7451_4 (p : Fin 12 → Bool) : facet7451blockPopcounts p 4 = facet7451bit p 4 := rfl
+@[simp] lemma bp7451_5 (p : Fin 12 → Bool) : facet7451blockPopcounts p 5 = facet7451bit p 5 := rfl
+@[simp] lemma bp7451_6 (p : Fin 12 → Bool) : facet7451blockPopcounts p 6 = facet7451bit p 6 + facet7451bit p 7 + facet7451bit p 8 := rfl
+@[simp] lemma bp7451_7 (p : Fin 12 → Bool) : facet7451blockPopcounts p 7 = facet7451bit p 9 := rfl
+@[simp] lemma bp7451_8 (p : Fin 12 → Bool) : facet7451blockPopcounts p 8 = facet7451bit p 10 := rfl
+@[simp] lemma bp7451_9 (p : Fin 12 → Bool) : facet7451blockPopcounts p 9 = facet7451bit p 11 := rfl
+
+lemma facet7451f_eq (p : Fin 12 → Bool) :
+    facet7451f p = facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) := rfl
+
+lemma facet7451bit_le_one (p : Fin 12 → Bool) (i : Fin 12) : facet7451bit p i ≤ 1 := by
+  unfold facet7451bit; split_ifs <;> omega
+lemma facet7451bit_eq_zero_of_false (p : Fin 12 → Bool) (i : Fin 12) (hp : p i = false) :
+    facet7451bit p i = 0 := by
+  unfold facet7451bit; rw [hp]; simp
+
+macro "bpLoose7451" x:term : tactic =>
+  `(tactic|
+    (simp only [bp7451_0, bp7451_1, bp7451_2, bp7451_3, bp7451_4, bp7451_5, bp7451_6, bp7451_7, bp7451_8, bp7451_9]
+     have _hb0 := facet7451bit_le_one $x 0
+     have _hb1 := facet7451bit_le_one $x 1
+     have _hb2 := facet7451bit_le_one $x 2
+     have _hb3 := facet7451bit_le_one $x 3
+     have _hb4 := facet7451bit_le_one $x 4
+     have _hb5 := facet7451bit_le_one $x 5
+     have _hb6 := facet7451bit_le_one $x 6
+     have _hb7 := facet7451bit_le_one $x 7
+     have _hb8 := facet7451bit_le_one $x 8
+     have _hb9 := facet7451bit_le_one $x 9
+     have _hb10 := facet7451bit_le_one $x 10
+     have _hb11 := facet7451bit_le_one $x 11
+     omega))
+macro "bpStrict7451" x:term "," h:ident : tactic =>
+  `(tactic|
+    (simp only [bp7451_0, bp7451_1, bp7451_2, bp7451_3, bp7451_4, bp7451_5, bp7451_6, bp7451_7, bp7451_8, bp7451_9,
+       facet7451bit_eq_zero_of_false $x _ $h]
+     have _hb0 := facet7451bit_le_one $x 0
+     have _hb1 := facet7451bit_le_one $x 1
+     have _hb2 := facet7451bit_le_one $x 2
+     have _hb3 := facet7451bit_le_one $x 3
+     have _hb4 := facet7451bit_le_one $x 4
+     have _hb5 := facet7451bit_le_one $x 5
+     have _hb6 := facet7451bit_le_one $x 6
+     have _hb7 := facet7451bit_le_one $x 7
+     have _hb8 := facet7451bit_le_one $x 8
+     have _hb9 := facet7451bit_le_one $x 9
+     have _hb10 := facet7451bit_le_one $x 10
+     have _hb11 := facet7451bit_le_one $x 11
+     omega))
+
+set_option maxHeartbeats 2000000 in
+/-- **Single-flip (edge) nonexpansiveness of `facet7451f`.** -/
+theorem facet7451f_singleFlip :
+    ∀ (p : Fin 12 → Bool) (i : Fin 12),
+      (∑ j, bdiff (facet7451f p j) (facet7451f (Function.update p i (!(p i))) j)) ≤ 1 := by
+  intro p i
+  fin_cases i
+  · -- flip input bit 0 (block 0)
+    show (∑ j, bdiff (facet7451f p j)
+          (facet7451f (Function.update p 0 (!(p 0))) j)) ≤ 1
+    set q := Function.update p 0 (!(p 0)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 0 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e1 : facet7451blockPopcounts q 1 = facet7451blockPopcounts p 1 := by
+      simp only [bp7451_1, facet7451bit, hother 1 (by decide)]
+    have e2 : facet7451blockPopcounts q 2 = facet7451blockPopcounts p 2 := by
+      simp only [bp7451_2, facet7451bit, hother 2 (by decide)]
+    have e3 : facet7451blockPopcounts q 3 = facet7451blockPopcounts p 3 := by
+      simp only [bp7451_3, facet7451bit, hother 3 (by decide)]
+    have e4 : facet7451blockPopcounts q 4 = facet7451blockPopcounts p 4 := by
+      simp only [bp7451_4, facet7451bit, hother 4 (by decide)]
+    have e5 : facet7451blockPopcounts q 5 = facet7451blockPopcounts p 5 := by
+      simp only [bp7451_5, facet7451bit, hother 5 (by decide)]
+    have e6 : facet7451blockPopcounts q 6 = facet7451blockPopcounts p 6 := by
+      simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hother 8 (by decide)]
+    have e7 : facet7451blockPopcounts q 7 = facet7451blockPopcounts p 7 := by
+      simp only [bp7451_7, facet7451bit, hother 9 (by decide)]
+    have e8 : facet7451blockPopcounts q 8 = facet7451blockPopcounts p 8 := by
+      simp only [bp7451_8, facet7451bit, hother 10 (by decide)]
+    have e9 : facet7451blockPopcounts q 9 = facet7451blockPopcounts p 9 := by
+      simp only [bp7451_9, facet7451bit, hother 11 (by decide)]
+    cases hpi : p 0 with
+    | false =>
+      have hqi : q 0 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e0 : facet7451blockPopcounts q 0 = facet7451blockPopcounts p 0 + 1 := by
+        first
+        | (simp only [bp7451_0, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_0, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      exact facet7451G_lip_0 (facet7451blockPopcounts p 0) (by bpStrict7451 p, hpi) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+    | true =>
+      have hqi : q 0 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e0 : facet7451blockPopcounts q 0 + 1 = facet7451blockPopcounts p 0 := by
+        first
+        | (simp only [bp7451_0, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_0, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      rw [show (∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts q 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j))
+          = ∑ j, bdiff (facet7451G (facet7451blockPopcounts q 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e0]
+      exact facet7451G_lip_0 (facet7451blockPopcounts q 0) (by bpStrict7451 q, hqi) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+  · -- flip input bit 1 (block 1)
+    show (∑ j, bdiff (facet7451f p j)
+          (facet7451f (Function.update p 1 (!(p 1))) j)) ≤ 1
+    set q := Function.update p 1 (!(p 1)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 1 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet7451blockPopcounts q 0 = facet7451blockPopcounts p 0 := by
+      simp only [bp7451_0, facet7451bit, hother 0 (by decide)]
+    have e2 : facet7451blockPopcounts q 2 = facet7451blockPopcounts p 2 := by
+      simp only [bp7451_2, facet7451bit, hother 2 (by decide)]
+    have e3 : facet7451blockPopcounts q 3 = facet7451blockPopcounts p 3 := by
+      simp only [bp7451_3, facet7451bit, hother 3 (by decide)]
+    have e4 : facet7451blockPopcounts q 4 = facet7451blockPopcounts p 4 := by
+      simp only [bp7451_4, facet7451bit, hother 4 (by decide)]
+    have e5 : facet7451blockPopcounts q 5 = facet7451blockPopcounts p 5 := by
+      simp only [bp7451_5, facet7451bit, hother 5 (by decide)]
+    have e6 : facet7451blockPopcounts q 6 = facet7451blockPopcounts p 6 := by
+      simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hother 8 (by decide)]
+    have e7 : facet7451blockPopcounts q 7 = facet7451blockPopcounts p 7 := by
+      simp only [bp7451_7, facet7451bit, hother 9 (by decide)]
+    have e8 : facet7451blockPopcounts q 8 = facet7451blockPopcounts p 8 := by
+      simp only [bp7451_8, facet7451bit, hother 10 (by decide)]
+    have e9 : facet7451blockPopcounts q 9 = facet7451blockPopcounts p 9 := by
+      simp only [bp7451_9, facet7451bit, hother 11 (by decide)]
+    cases hpi : p 1 with
+    | false =>
+      have hqi : q 1 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet7451blockPopcounts q 1 = facet7451blockPopcounts p 1 + 1 := by
+        first
+        | (simp only [bp7451_1, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_1, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      exact facet7451G_lip_1 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpStrict7451 p, hpi) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+    | true =>
+      have hqi : q 1 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet7451blockPopcounts q 1 + 1 = facet7451blockPopcounts p 1 := by
+        first
+        | (simp only [bp7451_1, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_1, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e2, e3, e4, e5, e6, e7, e8, e9]
+      rw [show (∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts q 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j))
+          = ∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts q 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e1]
+      exact facet7451G_lip_1 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts q 1) (by bpStrict7451 q, hqi) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+  · -- flip input bit 2 (block 2)
+    show (∑ j, bdiff (facet7451f p j)
+          (facet7451f (Function.update p 2 (!(p 2))) j)) ≤ 1
+    set q := Function.update p 2 (!(p 2)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 2 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet7451blockPopcounts q 0 = facet7451blockPopcounts p 0 := by
+      simp only [bp7451_0, facet7451bit, hother 0 (by decide)]
+    have e1 : facet7451blockPopcounts q 1 = facet7451blockPopcounts p 1 := by
+      simp only [bp7451_1, facet7451bit, hother 1 (by decide)]
+    have e3 : facet7451blockPopcounts q 3 = facet7451blockPopcounts p 3 := by
+      simp only [bp7451_3, facet7451bit, hother 3 (by decide)]
+    have e4 : facet7451blockPopcounts q 4 = facet7451blockPopcounts p 4 := by
+      simp only [bp7451_4, facet7451bit, hother 4 (by decide)]
+    have e5 : facet7451blockPopcounts q 5 = facet7451blockPopcounts p 5 := by
+      simp only [bp7451_5, facet7451bit, hother 5 (by decide)]
+    have e6 : facet7451blockPopcounts q 6 = facet7451blockPopcounts p 6 := by
+      simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hother 8 (by decide)]
+    have e7 : facet7451blockPopcounts q 7 = facet7451blockPopcounts p 7 := by
+      simp only [bp7451_7, facet7451bit, hother 9 (by decide)]
+    have e8 : facet7451blockPopcounts q 8 = facet7451blockPopcounts p 8 := by
+      simp only [bp7451_8, facet7451bit, hother 10 (by decide)]
+    have e9 : facet7451blockPopcounts q 9 = facet7451blockPopcounts p 9 := by
+      simp only [bp7451_9, facet7451bit, hother 11 (by decide)]
+    cases hpi : p 2 with
+    | false =>
+      have hqi : q 2 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e2 : facet7451blockPopcounts q 2 = facet7451blockPopcounts p 2 + 1 := by
+        first
+        | (simp only [bp7451_2, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_2, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      exact facet7451G_lip_2 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpStrict7451 p, hpi) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+    | true =>
+      have hqi : q 2 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e2 : facet7451blockPopcounts q 2 + 1 = facet7451blockPopcounts p 2 := by
+        first
+        | (simp only [bp7451_2, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_2, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e3, e4, e5, e6, e7, e8, e9]
+      rw [show (∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts q 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j))
+          = ∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts q 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e2]
+      exact facet7451G_lip_2 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts q 2) (by bpStrict7451 q, hqi) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+  · -- flip input bit 3 (block 3)
+    show (∑ j, bdiff (facet7451f p j)
+          (facet7451f (Function.update p 3 (!(p 3))) j)) ≤ 1
+    set q := Function.update p 3 (!(p 3)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 3 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet7451blockPopcounts q 0 = facet7451blockPopcounts p 0 := by
+      simp only [bp7451_0, facet7451bit, hother 0 (by decide)]
+    have e1 : facet7451blockPopcounts q 1 = facet7451blockPopcounts p 1 := by
+      simp only [bp7451_1, facet7451bit, hother 1 (by decide)]
+    have e2 : facet7451blockPopcounts q 2 = facet7451blockPopcounts p 2 := by
+      simp only [bp7451_2, facet7451bit, hother 2 (by decide)]
+    have e4 : facet7451blockPopcounts q 4 = facet7451blockPopcounts p 4 := by
+      simp only [bp7451_4, facet7451bit, hother 4 (by decide)]
+    have e5 : facet7451blockPopcounts q 5 = facet7451blockPopcounts p 5 := by
+      simp only [bp7451_5, facet7451bit, hother 5 (by decide)]
+    have e6 : facet7451blockPopcounts q 6 = facet7451blockPopcounts p 6 := by
+      simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hother 8 (by decide)]
+    have e7 : facet7451blockPopcounts q 7 = facet7451blockPopcounts p 7 := by
+      simp only [bp7451_7, facet7451bit, hother 9 (by decide)]
+    have e8 : facet7451blockPopcounts q 8 = facet7451blockPopcounts p 8 := by
+      simp only [bp7451_8, facet7451bit, hother 10 (by decide)]
+    have e9 : facet7451blockPopcounts q 9 = facet7451blockPopcounts p 9 := by
+      simp only [bp7451_9, facet7451bit, hother 11 (by decide)]
+    cases hpi : p 3 with
+    | false =>
+      have hqi : q 3 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e3 : facet7451blockPopcounts q 3 = facet7451blockPopcounts p 3 + 1 := by
+        first
+        | (simp only [bp7451_3, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_3, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      exact facet7451G_lip_3 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpStrict7451 p, hpi) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+    | true =>
+      have hqi : q 3 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e3 : facet7451blockPopcounts q 3 + 1 = facet7451blockPopcounts p 3 := by
+        first
+        | (simp only [bp7451_3, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_3, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e4, e5, e6, e7, e8, e9]
+      rw [show (∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts q 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j))
+          = ∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts q 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e3]
+      exact facet7451G_lip_3 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts q 3) (by bpStrict7451 q, hqi) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+  · -- flip input bit 4 (block 4)
+    show (∑ j, bdiff (facet7451f p j)
+          (facet7451f (Function.update p 4 (!(p 4))) j)) ≤ 1
+    set q := Function.update p 4 (!(p 4)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 4 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet7451blockPopcounts q 0 = facet7451blockPopcounts p 0 := by
+      simp only [bp7451_0, facet7451bit, hother 0 (by decide)]
+    have e1 : facet7451blockPopcounts q 1 = facet7451blockPopcounts p 1 := by
+      simp only [bp7451_1, facet7451bit, hother 1 (by decide)]
+    have e2 : facet7451blockPopcounts q 2 = facet7451blockPopcounts p 2 := by
+      simp only [bp7451_2, facet7451bit, hother 2 (by decide)]
+    have e3 : facet7451blockPopcounts q 3 = facet7451blockPopcounts p 3 := by
+      simp only [bp7451_3, facet7451bit, hother 3 (by decide)]
+    have e5 : facet7451blockPopcounts q 5 = facet7451blockPopcounts p 5 := by
+      simp only [bp7451_5, facet7451bit, hother 5 (by decide)]
+    have e6 : facet7451blockPopcounts q 6 = facet7451blockPopcounts p 6 := by
+      simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hother 8 (by decide)]
+    have e7 : facet7451blockPopcounts q 7 = facet7451blockPopcounts p 7 := by
+      simp only [bp7451_7, facet7451bit, hother 9 (by decide)]
+    have e8 : facet7451blockPopcounts q 8 = facet7451blockPopcounts p 8 := by
+      simp only [bp7451_8, facet7451bit, hother 10 (by decide)]
+    have e9 : facet7451blockPopcounts q 9 = facet7451blockPopcounts p 9 := by
+      simp only [bp7451_9, facet7451bit, hother 11 (by decide)]
+    cases hpi : p 4 with
+    | false =>
+      have hqi : q 4 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e4 : facet7451blockPopcounts q 4 = facet7451blockPopcounts p 4 + 1 := by
+        first
+        | (simp only [bp7451_4, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_4, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      exact facet7451G_lip_4 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpStrict7451 p, hpi) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+    | true =>
+      have hqi : q 4 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e4 : facet7451blockPopcounts q 4 + 1 = facet7451blockPopcounts p 4 := by
+        first
+        | (simp only [bp7451_4, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_4, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e5, e6, e7, e8, e9]
+      rw [show (∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts q 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j))
+          = ∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts q 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e4]
+      exact facet7451G_lip_4 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts q 4) (by bpStrict7451 q, hqi) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+  · -- flip input bit 5 (block 5)
+    show (∑ j, bdiff (facet7451f p j)
+          (facet7451f (Function.update p 5 (!(p 5))) j)) ≤ 1
+    set q := Function.update p 5 (!(p 5)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 5 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet7451blockPopcounts q 0 = facet7451blockPopcounts p 0 := by
+      simp only [bp7451_0, facet7451bit, hother 0 (by decide)]
+    have e1 : facet7451blockPopcounts q 1 = facet7451blockPopcounts p 1 := by
+      simp only [bp7451_1, facet7451bit, hother 1 (by decide)]
+    have e2 : facet7451blockPopcounts q 2 = facet7451blockPopcounts p 2 := by
+      simp only [bp7451_2, facet7451bit, hother 2 (by decide)]
+    have e3 : facet7451blockPopcounts q 3 = facet7451blockPopcounts p 3 := by
+      simp only [bp7451_3, facet7451bit, hother 3 (by decide)]
+    have e4 : facet7451blockPopcounts q 4 = facet7451blockPopcounts p 4 := by
+      simp only [bp7451_4, facet7451bit, hother 4 (by decide)]
+    have e6 : facet7451blockPopcounts q 6 = facet7451blockPopcounts p 6 := by
+      simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hother 8 (by decide)]
+    have e7 : facet7451blockPopcounts q 7 = facet7451blockPopcounts p 7 := by
+      simp only [bp7451_7, facet7451bit, hother 9 (by decide)]
+    have e8 : facet7451blockPopcounts q 8 = facet7451blockPopcounts p 8 := by
+      simp only [bp7451_8, facet7451bit, hother 10 (by decide)]
+    have e9 : facet7451blockPopcounts q 9 = facet7451blockPopcounts p 9 := by
+      simp only [bp7451_9, facet7451bit, hother 11 (by decide)]
+    cases hpi : p 5 with
+    | false =>
+      have hqi : q 5 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e5 : facet7451blockPopcounts q 5 = facet7451blockPopcounts p 5 + 1 := by
+        first
+        | (simp only [bp7451_5, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_5, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      exact facet7451G_lip_5 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpStrict7451 p, hpi) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+    | true =>
+      have hqi : q 5 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e5 : facet7451blockPopcounts q 5 + 1 = facet7451blockPopcounts p 5 := by
+        first
+        | (simp only [bp7451_5, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_5, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e6, e7, e8, e9]
+      rw [show (∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts q 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j))
+          = ∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts q 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e5]
+      exact facet7451G_lip_5 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts q 5) (by bpStrict7451 q, hqi) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+  · -- flip input bit 6 (block 6)
+    show (∑ j, bdiff (facet7451f p j)
+          (facet7451f (Function.update p 6 (!(p 6))) j)) ≤ 1
+    set q := Function.update p 6 (!(p 6)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 6 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet7451blockPopcounts q 0 = facet7451blockPopcounts p 0 := by
+      simp only [bp7451_0, facet7451bit, hother 0 (by decide)]
+    have e1 : facet7451blockPopcounts q 1 = facet7451blockPopcounts p 1 := by
+      simp only [bp7451_1, facet7451bit, hother 1 (by decide)]
+    have e2 : facet7451blockPopcounts q 2 = facet7451blockPopcounts p 2 := by
+      simp only [bp7451_2, facet7451bit, hother 2 (by decide)]
+    have e3 : facet7451blockPopcounts q 3 = facet7451blockPopcounts p 3 := by
+      simp only [bp7451_3, facet7451bit, hother 3 (by decide)]
+    have e4 : facet7451blockPopcounts q 4 = facet7451blockPopcounts p 4 := by
+      simp only [bp7451_4, facet7451bit, hother 4 (by decide)]
+    have e5 : facet7451blockPopcounts q 5 = facet7451blockPopcounts p 5 := by
+      simp only [bp7451_5, facet7451bit, hother 5 (by decide)]
+    have e7 : facet7451blockPopcounts q 7 = facet7451blockPopcounts p 7 := by
+      simp only [bp7451_7, facet7451bit, hother 9 (by decide)]
+    have e8 : facet7451blockPopcounts q 8 = facet7451blockPopcounts p 8 := by
+      simp only [bp7451_8, facet7451bit, hother 10 (by decide)]
+    have e9 : facet7451blockPopcounts q 9 = facet7451blockPopcounts p 9 := by
+      simp only [bp7451_9, facet7451bit, hother 11 (by decide)]
+    cases hpi : p 6 with
+    | false =>
+      have hqi : q 6 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e6 : facet7451blockPopcounts q 6 = facet7451blockPopcounts p 6 + 1 := by
+        first
+        | (simp only [bp7451_6, facet7451bit, hother 7 (by decide), hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_6, facet7451bit, hother 7 (by decide), hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      exact facet7451G_lip_6 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpStrict7451 p, hpi) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+    | true =>
+      have hqi : q 6 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e6 : facet7451blockPopcounts q 6 + 1 = facet7451blockPopcounts p 6 := by
+        first
+        | (simp only [bp7451_6, facet7451bit, hother 7 (by decide), hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_6, facet7451bit, hother 7 (by decide), hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e7, e8, e9]
+      rw [show (∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts q 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j))
+          = ∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts q 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e6]
+      exact facet7451G_lip_6 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts q 6) (by bpStrict7451 q, hqi) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+  · -- flip input bit 7 (block 6)
+    show (∑ j, bdiff (facet7451f p j)
+          (facet7451f (Function.update p 7 (!(p 7))) j)) ≤ 1
+    set q := Function.update p 7 (!(p 7)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 7 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet7451blockPopcounts q 0 = facet7451blockPopcounts p 0 := by
+      simp only [bp7451_0, facet7451bit, hother 0 (by decide)]
+    have e1 : facet7451blockPopcounts q 1 = facet7451blockPopcounts p 1 := by
+      simp only [bp7451_1, facet7451bit, hother 1 (by decide)]
+    have e2 : facet7451blockPopcounts q 2 = facet7451blockPopcounts p 2 := by
+      simp only [bp7451_2, facet7451bit, hother 2 (by decide)]
+    have e3 : facet7451blockPopcounts q 3 = facet7451blockPopcounts p 3 := by
+      simp only [bp7451_3, facet7451bit, hother 3 (by decide)]
+    have e4 : facet7451blockPopcounts q 4 = facet7451blockPopcounts p 4 := by
+      simp only [bp7451_4, facet7451bit, hother 4 (by decide)]
+    have e5 : facet7451blockPopcounts q 5 = facet7451blockPopcounts p 5 := by
+      simp only [bp7451_5, facet7451bit, hother 5 (by decide)]
+    have e7 : facet7451blockPopcounts q 7 = facet7451blockPopcounts p 7 := by
+      simp only [bp7451_7, facet7451bit, hother 9 (by decide)]
+    have e8 : facet7451blockPopcounts q 8 = facet7451blockPopcounts p 8 := by
+      simp only [bp7451_8, facet7451bit, hother 10 (by decide)]
+    have e9 : facet7451blockPopcounts q 9 = facet7451blockPopcounts p 9 := by
+      simp only [bp7451_9, facet7451bit, hother 11 (by decide)]
+    cases hpi : p 7 with
+    | false =>
+      have hqi : q 7 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e6 : facet7451blockPopcounts q 6 = facet7451blockPopcounts p 6 + 1 := by
+        first
+        | (simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      exact facet7451G_lip_6 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpStrict7451 p, hpi) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+    | true =>
+      have hqi : q 7 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e6 : facet7451blockPopcounts q 6 + 1 = facet7451blockPopcounts p 6 := by
+        first
+        | (simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 8 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e7, e8, e9]
+      rw [show (∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts q 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j))
+          = ∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts q 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e6]
+      exact facet7451G_lip_6 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts q 6) (by bpStrict7451 q, hqi) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+  · -- flip input bit 8 (block 6)
+    show (∑ j, bdiff (facet7451f p j)
+          (facet7451f (Function.update p 8 (!(p 8))) j)) ≤ 1
+    set q := Function.update p 8 (!(p 8)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 8 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet7451blockPopcounts q 0 = facet7451blockPopcounts p 0 := by
+      simp only [bp7451_0, facet7451bit, hother 0 (by decide)]
+    have e1 : facet7451blockPopcounts q 1 = facet7451blockPopcounts p 1 := by
+      simp only [bp7451_1, facet7451bit, hother 1 (by decide)]
+    have e2 : facet7451blockPopcounts q 2 = facet7451blockPopcounts p 2 := by
+      simp only [bp7451_2, facet7451bit, hother 2 (by decide)]
+    have e3 : facet7451blockPopcounts q 3 = facet7451blockPopcounts p 3 := by
+      simp only [bp7451_3, facet7451bit, hother 3 (by decide)]
+    have e4 : facet7451blockPopcounts q 4 = facet7451blockPopcounts p 4 := by
+      simp only [bp7451_4, facet7451bit, hother 4 (by decide)]
+    have e5 : facet7451blockPopcounts q 5 = facet7451blockPopcounts p 5 := by
+      simp only [bp7451_5, facet7451bit, hother 5 (by decide)]
+    have e7 : facet7451blockPopcounts q 7 = facet7451blockPopcounts p 7 := by
+      simp only [bp7451_7, facet7451bit, hother 9 (by decide)]
+    have e8 : facet7451blockPopcounts q 8 = facet7451blockPopcounts p 8 := by
+      simp only [bp7451_8, facet7451bit, hother 10 (by decide)]
+    have e9 : facet7451blockPopcounts q 9 = facet7451blockPopcounts p 9 := by
+      simp only [bp7451_9, facet7451bit, hother 11 (by decide)]
+    cases hpi : p 8 with
+    | false =>
+      have hqi : q 8 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e6 : facet7451blockPopcounts q 6 = facet7451blockPopcounts p 6 + 1 := by
+        first
+        | (simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      exact facet7451G_lip_6 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpStrict7451 p, hpi) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+    | true =>
+      have hqi : q 8 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e6 : facet7451blockPopcounts q 6 + 1 = facet7451blockPopcounts p 6 := by
+        first
+        | (simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e7, e8, e9]
+      rw [show (∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts q 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j))
+          = ∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts q 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e6]
+      exact facet7451G_lip_6 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts q 6) (by bpStrict7451 q, hqi) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+  · -- flip input bit 9 (block 7)
+    show (∑ j, bdiff (facet7451f p j)
+          (facet7451f (Function.update p 9 (!(p 9))) j)) ≤ 1
+    set q := Function.update p 9 (!(p 9)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 9 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet7451blockPopcounts q 0 = facet7451blockPopcounts p 0 := by
+      simp only [bp7451_0, facet7451bit, hother 0 (by decide)]
+    have e1 : facet7451blockPopcounts q 1 = facet7451blockPopcounts p 1 := by
+      simp only [bp7451_1, facet7451bit, hother 1 (by decide)]
+    have e2 : facet7451blockPopcounts q 2 = facet7451blockPopcounts p 2 := by
+      simp only [bp7451_2, facet7451bit, hother 2 (by decide)]
+    have e3 : facet7451blockPopcounts q 3 = facet7451blockPopcounts p 3 := by
+      simp only [bp7451_3, facet7451bit, hother 3 (by decide)]
+    have e4 : facet7451blockPopcounts q 4 = facet7451blockPopcounts p 4 := by
+      simp only [bp7451_4, facet7451bit, hother 4 (by decide)]
+    have e5 : facet7451blockPopcounts q 5 = facet7451blockPopcounts p 5 := by
+      simp only [bp7451_5, facet7451bit, hother 5 (by decide)]
+    have e6 : facet7451blockPopcounts q 6 = facet7451blockPopcounts p 6 := by
+      simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hother 8 (by decide)]
+    have e8 : facet7451blockPopcounts q 8 = facet7451blockPopcounts p 8 := by
+      simp only [bp7451_8, facet7451bit, hother 10 (by decide)]
+    have e9 : facet7451blockPopcounts q 9 = facet7451blockPopcounts p 9 := by
+      simp only [bp7451_9, facet7451bit, hother 11 (by decide)]
+    cases hpi : p 9 with
+    | false =>
+      have hqi : q 9 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e7 : facet7451blockPopcounts q 7 = facet7451blockPopcounts p 7 + 1 := by
+        first
+        | (simp only [bp7451_7, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_7, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      exact facet7451G_lip_7 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpStrict7451 p, hpi) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+    | true =>
+      have hqi : q 9 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e7 : facet7451blockPopcounts q 7 + 1 = facet7451blockPopcounts p 7 := by
+        first
+        | (simp only [bp7451_7, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_7, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e8, e9]
+      rw [show (∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts q 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j))
+          = ∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts q 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e7]
+      exact facet7451G_lip_7 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts q 7) (by bpStrict7451 q, hqi) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+  · -- flip input bit 10 (block 8)
+    show (∑ j, bdiff (facet7451f p j)
+          (facet7451f (Function.update p 10 (!(p 10))) j)) ≤ 1
+    set q := Function.update p 10 (!(p 10)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 10 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet7451blockPopcounts q 0 = facet7451blockPopcounts p 0 := by
+      simp only [bp7451_0, facet7451bit, hother 0 (by decide)]
+    have e1 : facet7451blockPopcounts q 1 = facet7451blockPopcounts p 1 := by
+      simp only [bp7451_1, facet7451bit, hother 1 (by decide)]
+    have e2 : facet7451blockPopcounts q 2 = facet7451blockPopcounts p 2 := by
+      simp only [bp7451_2, facet7451bit, hother 2 (by decide)]
+    have e3 : facet7451blockPopcounts q 3 = facet7451blockPopcounts p 3 := by
+      simp only [bp7451_3, facet7451bit, hother 3 (by decide)]
+    have e4 : facet7451blockPopcounts q 4 = facet7451blockPopcounts p 4 := by
+      simp only [bp7451_4, facet7451bit, hother 4 (by decide)]
+    have e5 : facet7451blockPopcounts q 5 = facet7451blockPopcounts p 5 := by
+      simp only [bp7451_5, facet7451bit, hother 5 (by decide)]
+    have e6 : facet7451blockPopcounts q 6 = facet7451blockPopcounts p 6 := by
+      simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hother 8 (by decide)]
+    have e7 : facet7451blockPopcounts q 7 = facet7451blockPopcounts p 7 := by
+      simp only [bp7451_7, facet7451bit, hother 9 (by decide)]
+    have e9 : facet7451blockPopcounts q 9 = facet7451blockPopcounts p 9 := by
+      simp only [bp7451_9, facet7451bit, hother 11 (by decide)]
+    cases hpi : p 10 with
+    | false =>
+      have hqi : q 10 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e8 : facet7451blockPopcounts q 8 = facet7451blockPopcounts p 8 + 1 := by
+        first
+        | (simp only [bp7451_8, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_8, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      exact facet7451G_lip_8 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpStrict7451 p, hpi) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+    | true =>
+      have hqi : q 10 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e8 : facet7451blockPopcounts q 8 + 1 = facet7451blockPopcounts p 8 := by
+        first
+        | (simp only [bp7451_8, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_8, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e9]
+      rw [show (∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts q 8) (facet7451blockPopcounts p 9) j))
+          = ∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts q 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e8]
+      exact facet7451G_lip_8 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts q 8) (by bpStrict7451 q, hqi) (facet7451blockPopcounts p 9) (by bpLoose7451 p)
+  · -- flip input bit 11 (block 9)
+    show (∑ j, bdiff (facet7451f p j)
+          (facet7451f (Function.update p 11 (!(p 11))) j)) ≤ 1
+    set q := Function.update p 11 (!(p 11)) with hq
+    have hother : ∀ x : Fin 12, x ≠ 11 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet7451blockPopcounts q 0 = facet7451blockPopcounts p 0 := by
+      simp only [bp7451_0, facet7451bit, hother 0 (by decide)]
+    have e1 : facet7451blockPopcounts q 1 = facet7451blockPopcounts p 1 := by
+      simp only [bp7451_1, facet7451bit, hother 1 (by decide)]
+    have e2 : facet7451blockPopcounts q 2 = facet7451blockPopcounts p 2 := by
+      simp only [bp7451_2, facet7451bit, hother 2 (by decide)]
+    have e3 : facet7451blockPopcounts q 3 = facet7451blockPopcounts p 3 := by
+      simp only [bp7451_3, facet7451bit, hother 3 (by decide)]
+    have e4 : facet7451blockPopcounts q 4 = facet7451blockPopcounts p 4 := by
+      simp only [bp7451_4, facet7451bit, hother 4 (by decide)]
+    have e5 : facet7451blockPopcounts q 5 = facet7451blockPopcounts p 5 := by
+      simp only [bp7451_5, facet7451bit, hother 5 (by decide)]
+    have e6 : facet7451blockPopcounts q 6 = facet7451blockPopcounts p 6 := by
+      simp only [bp7451_6, facet7451bit, hother 6 (by decide), hother 7 (by decide), hother 8 (by decide)]
+    have e7 : facet7451blockPopcounts q 7 = facet7451blockPopcounts p 7 := by
+      simp only [bp7451_7, facet7451bit, hother 9 (by decide)]
+    have e8 : facet7451blockPopcounts q 8 = facet7451blockPopcounts p 8 := by
+      simp only [bp7451_8, facet7451bit, hother 10 (by decide)]
+    cases hpi : p 11 with
+    | false =>
+      have hqi : q 11 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e9 : facet7451blockPopcounts q 9 = facet7451blockPopcounts p 9 + 1 := by
+        first
+        | (simp only [bp7451_9, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_9, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      exact facet7451G_lip_9 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts p 9) (by bpStrict7451 p, hpi)
+    | true =>
+      have hqi : q 11 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e9 : facet7451blockPopcounts q 9 + 1 = facet7451blockPopcounts p 9 := by
+        first
+        | (simp only [bp7451_9, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp7451_9, facet7451bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet7451f_eq p, facet7451f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8]
+      rw [show (∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts q 9) j))
+          = ∑ j, bdiff (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts q 9) j) (facet7451G (facet7451blockPopcounts p 0) (facet7451blockPopcounts p 1) (facet7451blockPopcounts p 2) (facet7451blockPopcounts p 3) (facet7451blockPopcounts p 4) (facet7451blockPopcounts p 5) (facet7451blockPopcounts p 6) (facet7451blockPopcounts p 7) (facet7451blockPopcounts p 8) (facet7451blockPopcounts p 9) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e9]
+      exact facet7451G_lip_9 (facet7451blockPopcounts p 0) (by bpLoose7451 p) (facet7451blockPopcounts p 1) (by bpLoose7451 p) (facet7451blockPopcounts p 2) (by bpLoose7451 p) (facet7451blockPopcounts p 3) (by bpLoose7451 p) (facet7451blockPopcounts p 4) (by bpLoose7451 p) (facet7451blockPopcounts p 5) (by bpLoose7451 p) (facet7451blockPopcounts p 6) (by bpLoose7451 p) (facet7451blockPopcounts p 7) (by bpLoose7451 p) (facet7451blockPopcounts p 8) (by bpLoose7451 p) (facet7451blockPopcounts q 9) (by bpStrict7451 q, hqi)
+
+
+variable {bd : Finset V}
+variable {A : Fin 6 → Finset V}
+
+/-- The `i`-th larger-side region. -/
+def facet7451L (A : Fin 6 → Finset V) (i : Fin 12) : Finset V := (facet7451L_reg i).biUnion A
+
+/-- The `j`-th bounded-side region. -/
+def facet7451R (A : Fin 6 → Finset V) (j : Fin 15) : Finset V := (facet7451R_reg j).biUnion A
+
+/-- **Global nonexpansiveness of `facet7451f`, derived from the single-flip reduction.** -/
+theorem facet7451f_nonexpansive_via_singleFlip (p q : Fin 12 → Bool) :
+    (∑ j, bdiff (facet7451f p j) (facet7451f q j)) ≤ ∑ i, bdiff (p i) (q i) :=
+  nonexpansive_of_singleFlip facet7451f facet7451f_singleFlip p q
+
+/-- The boundary input patterns map through `facet7451f` exactly to the bounded-region pattern. -/
+lemma facet7451f_boundary (c : Fin 6) :
+    facet7451f (fun i => decide (c ∈ facet7451L_reg i)) = fun j => decide (c ∈ facet7451R_reg j) := by
+  fin_cases c <;> · funext j; fin_cases j <;> rfl
+
+/-- The purifier pattern maps to all `false`. -/
+lemma facet7451f_zero : facet7451f (fun _ => false) = fun _ => false := by
+  funext j; fin_cases j <;> rfl
+
+/-- Membership of `v ∈ A c` in a larger-side region. -/
+lemma mem_facet7451L_of_color (hR : Regions6 bd A) {v : V} {c : Fin 6} (hv : v ∈ A c) (i : Fin 12) :
+    v ∈ facet7451L A i ↔ c ∈ facet7451L_reg i := by
+  unfold facet7451L
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- `facet7451R A j ⊆ bd`. -/
+lemma facet7451R_sub (hR : Regions6 bd A) (j : Fin 15) : facet7451R A j ⊆ bd := by
+  unfold facet7451R
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- `facet7451L A i ⊆ bd`. -/
+lemma facet7451L_sub (hR : Regions6 bd A) (i : Fin 12) : facet7451L A i ⊆ bd := by
+  unfold facet7451L
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- Membership of `v ∈ A c` in a bounded region. -/
+lemma mem_facet7451R_of_color (hR : Regions6 bd A) {v : V} {c : Fin 6} (hv : v ∈ A c) (j : Fin 15) :
+    v ∈ facet7451R A j ↔ c ∈ facet7451R_reg j := by
+  unfold facet7451R
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- For a boundary vertex of color `c`, the achieving cuts realize the larger-side pattern. -/
+lemma contractionPattern_of_color_7451 (hR : Regions6 bd A)
+    (X : Fin 12 → Finset V) (hX : ∀ i, IsRTCut bd (facet7451L A i) (X i))
+    {v : V} {c : Fin 6} (hv : v ∈ A c) :
+    contractionPattern X v = fun i => decide (c ∈ facet7451L_reg i) := by
+  funext i
+  simp only [contractionPattern, mem]
+  by_cases hc : c ∈ facet7451L_reg i
+  · have : v ∈ X i := (hX i).1 ((mem_facet7451L_of_color hR hv i).2 hc)
+    simp [this, hc]
+  · have hvL : v ∉ facet7451L A i := fun h => hc ((mem_facet7451L_of_color hR hv i).1 h)
+    have : v ∉ X i := (hX i).2 v (hR.sub c hv) hvL
+    simp [this, hc]
+
+/-- For a purifier vertex, the achieving cuts realize the all-`false` pattern. -/
+lemma contractionPattern_of_purifier_7451
+    (X : Fin 12 → Finset V) (hX : ∀ i, IsRTCut bd (facet7451L A i) (X i))
+    {v : V} (hvbd : v ∈ bd) (hvout : ∀ c, v ∉ A c) :
+    contractionPattern X v = fun _ => false := by
+  funext i
+  simp only [contractionPattern, mem]
+  have hvL : v ∉ facet7451L A i := by
+    unfold facet7451L
+    rw [Finset.mem_biUnion]
+    rintro ⟨c, _, hvc⟩
+    exact hvout c hvc
+  have : v ∉ X i := (hX i).2 v hvbd hvL
+  simp [this]
+
+/-- **Validity of the recombined candidate cuts.** -/
+lemma facet7451_hvalid (hR : Regions6 bd A)
+    (X : Fin 12 → Finset V) (hX : ∀ i, IsRTCut bd (facet7451L A i) (X i)) (j : Fin 15) :
+    IsRTCut bd (facet7451R A j) (contractionCut X facet7451f j) := by
+  have hkey : ∀ v ∈ bd, mem (contractionCut X facet7451f j) v = mem (facet7451R A j) v := by
+    intro v hvbd
+    rw [mem_contractionCut]
+    by_cases hcolor : ∃ c, v ∈ A c
+    · obtain ⟨c, hvc⟩ := hcolor
+      rw [contractionPattern_of_color_7451 hR X hX hvc, facet7451f_boundary c]
+      simp only [mem]
+      rw [decide_eq_decide]
+      exact (mem_facet7451R_of_color hR hvc j).symm
+    · simp only [not_exists] at hcolor
+      rw [contractionPattern_of_purifier_7451 X hX hvbd hcolor, facet7451f_zero]
+      have : v ∉ facet7451R A j := by
+        unfold facet7451R
+        rw [Finset.mem_biUnion]
+        rintro ⟨c, _, hvc⟩
+        exact hcolor c hvc
+      simp [mem, this]
+  refine ⟨fun x hx => ?_, fun x hxbd hxout => ?_⟩
+  · have hxbd : x ∈ bd := facet7451R_sub hR j hx
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact this.2 hx
+  · intro hxin
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact hxout (this.1 hxin)
+
+/-- **A six-party holographic entropy cone facet (database index 7451).**
+For six pairwise-disjoint boundary regions in any finite undirected nonnegative-real-weighted
+graph, the 12 larger-side regions dominate the 15 bounded-side regions. Source: the six-party
+holographic entropy cone / Hernandez-Cuenca holographic entropy cone database. The contraction map
+is handled by a count-lattice factorisation (`facet7451f = facet7451G ∘ facet7451blockPopcounts`);
+its Hamming-nonexpansiveness comes from the single-flip reduction over the block-popcount lattice. -/
+theorem rtEntropyR_newFacet_n6_7451 (G : GraphR V) {bd : Finset V} {A : Fin 6 → Finset V}
+    (hR : Regions6 bd A) :
+    (∑ j, rtEntropyR G bd (facet7451R A j) (facet7451R_sub hR j))
+      ≤ ∑ i, rtEntropyR G bd (facet7451L A i) (facet7451L_sub hR i) := by
+  have hXex : ∀ i, ∃ S, IsRTCut bd (facet7451L A i) S
+      ∧ rtEntropyR G bd (facet7451L A i) (facet7451L_sub hR i) = cutCapacityR G S :=
+    fun i => rtEntropyR_eq_cap G (facet7451L_sub hR i)
+  choose X hXcut hXcap using hXex
+  have hXok : ∀ i, IsRTCut bd (facet7451L A i) (X i)
+      ∧ cutCapacityR G (X i) = rtEntropyR G bd (facet7451L A i) (facet7451L_sub hR i) :=
+    fun i => ⟨hXcut i, (hXcap i).symm⟩
+  have hvalid : ∀ j, IsRTCut bd (facet7451R A j) (contractionCut X facet7451f j) :=
+    fun j => facet7451_hvalid hR X hXcut j
+  exact entropyR_ineq_of_contraction G (facet7451L A) (facet7451R A)
+    (facet7451L_sub hR) (facet7451R_sub hR) X hXok facet7451f hvalid
+    facet7451f_nonexpansive_via_singleFlip
+
+/-! ### Anti-vacuity witness: a strict six-party instance on the perfect-tensor star. -/
+
+/-- `facet7451R star6A j ⊆ star6Bd`. -/
+lemma star6_facet7451R_sub (j : Fin 15) : facet7451R star6A j ⊆ star6Bd :=
+  facet7451R_sub star6A_regions j
+/-- `facet7451L star6A i ⊆ star6Bd`. -/
+lemma star6_facet7451L_sub (i : Fin 12) : facet7451L star6A i ⊆ star6Bd :=
+  facet7451L_sub star6A_regions i
+
+/-- Each bounded-region entropy of the star witness, as a vector of values. -/
+lemma star6_facet7451R (j : Fin 15) :
+    rtEntropy star6Graph star6Bd (facet7451R star6A j) (star6_facet7451R_sub j)
+      = ((![1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 2] : Fin 15 → ℕ) j) := by
+  fin_cases j <;> · unfold facet7451R facet7451R_reg star6A; decide
+
+/-- Each larger-side region entropy of the star witness, as a vector of values. -/
+lemma star6_facet7451L (i : Fin 12) :
+    rtEntropy star6Graph star6Bd (facet7451L star6A i) (star6_facet7451L_sub i)
+      = ((![2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3] : Fin 12 → ℕ) i) := by
+  fin_cases i <;> · unfold facet7451L facet7451L_reg star6A; decide
+
+/-- **Strict six-party anti-vacuity witness.** On the cast star graph the facet inequality is
+strict: the bounded side sums to 30 and the larger side to 35 (slack 5). -/
+theorem rtEntropyR_newFacet_n6_7451_strict_witness :
+    (∑ j, rtEntropyR (castGraph star6Graph) star6Bd (facet7451R star6A j)
+        (facet7451R_sub (A := star6A) star6A_regions j))
+      < ∑ i, rtEntropyR (castGraph star6Graph) star6Bd (facet7451L star6A i)
+        (facet7451L_sub (A := star6A) star6A_regions i) := by
+  have hreg : ∀ j, rtEntropyR (castGraph star6Graph) star6Bd (facet7451R star6A j)
+      (facet7451R_sub (A := star6A) star6A_regions j) = ((![1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 2] : Fin 15 → ℕ) j : ℝ) := by
+    intro j
+    rw [rtEntropyR_castGraph, star6_facet7451R j]
+  have hlar : ∀ i, rtEntropyR (castGraph star6Graph) star6Bd (facet7451L star6A i)
+      (facet7451L_sub (A := star6A) star6A_regions i) = ((![2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3] : Fin 12 → ℕ) i : ℝ) := by
+    intro i
+    rw [rtEntropyR_castGraph, star6_facet7451L i]
+  rw [Finset.sum_congr rfl (fun j _ => hreg j), Finset.sum_congr rfl (fun i _ => hlar i)]
+  simp [Fin.sum_univ_succ]
+  norm_num
+
+/-- All min-cut entropies in the six-party strict witness are strictly positive. -/
+theorem rtEntropyR_newFacet_n6_7451_witness_mincuts_pos :
+    (∀ j, 0 < rtEntropyR (castGraph star6Graph) star6Bd (facet7451R star6A j)
+        (facet7451R_sub (A := star6A) star6A_regions j))
+      ∧ ∀ i, 0 < rtEntropyR (castGraph star6Graph) star6Bd (facet7451L star6A i)
+        (facet7451L_sub (A := star6A) star6A_regions i) := by
+  refine ⟨fun j => ?_, fun i => ?_⟩
+  · rw [rtEntropyR_castGraph, star6_facet7451R j]; fin_cases j <;> norm_num
+  · rw [rtEntropyR_castGraph, star6_facet7451L i]; fin_cases i <;> norm_num
+
+end Facet6n7451
 
 
 end Physlib.UndirectedMMICertificate
