@@ -21,6 +21,17 @@ public import Physlib.Foundations.Facet6Lip9
 public import Physlib.Foundations.FacetN61411Lip
 public import Physlib.Foundations.FacetN612982Lip
 public import Physlib.Foundations.FacetN67451Lip
+public import Physlib.Foundations.FacetN61234Lip0
+public import Physlib.Foundations.FacetN61234Lip1
+public import Physlib.Foundations.FacetN61234Lip2
+public import Physlib.Foundations.FacetN61234Lip3
+public import Physlib.Foundations.FacetN61234Lip4
+public import Physlib.Foundations.FacetN61234Lip5
+public import Physlib.Foundations.FacetN61234Lip6
+public import Physlib.Foundations.FacetN61234Lip7
+public import Physlib.Foundations.FacetN61234Lip8
+public import Physlib.Foundations.FacetN61234Lip9
+public import Physlib.Foundations.FacetN61234Lip10
 
 /-!
 # The undirected min-cut model satisfies monogamy of mutual information
@@ -9748,6 +9759,894 @@ theorem rtEntropyR_newFacet_n6_7451_witness_mincuts_pos :
   · rw [rtEntropyR_castGraph, star6_facet7451L i]; fin_cases i <;> norm_num
 
 end Facet6n7451
+
+
+/-! ### A six-party holographic entropy cone facet (database index 1234)
+
+A count-lattice boolean contraction map with 13 larger-side regions and 17 bounded-side
+regions, drawn from the six-party holographic entropy cone / Hernández-Cuenca holographic entropy
+cone database, realized in the undirected min-cut model.  The larger-side regions fall into 11
+equal-region blocks (one of multiplicity three), so the contraction map factors through the
+block popcounts. -/
+namespace Facet6n1234
+
+open Physlib.UndirectedMMICertificate.Facet6n174
+
+def facet1234L_reg : Fin 13 → Finset (Fin 6) := ![{0, 1, 2}, {0, 1, 4}, {0, 1, 4}, {0, 1, 4}, {0, 2, 5}, {1, 2, 5}, {1, 4, 5}, {2, 3, 5}, {0, 1, 3, 5}, {0, 2, 3, 4}, {0, 2, 4, 5}, {1, 2, 3, 4}, {1, 2, 4, 5}]
+def facet1234R_reg : Fin 17 → Finset (Fin 6) := ![{0}, {0}, {1}, {2}, {3}, {0, 4}, {1, 4}, {1, 4}, {1, 5}, {2, 5}, {2, 5}, {0, 1, 2, 4}, {0, 1, 4, 5}, {2, 3, 4, 5}, {0, 1, 2, 3, 4}, {0, 1, 2, 3, 5}, {0, 1, 2, 4, 5}]
+
+/-! Block-popcount accessors (definitional). -/
+@[simp] lemma bp1234_0 (p : Fin 13 → Bool) : facet1234blockPopcounts p 0 = facet1234bit p 0 := rfl
+@[simp] lemma bp1234_1 (p : Fin 13 → Bool) : facet1234blockPopcounts p 1 = facet1234bit p 1+facet1234bit p 2+facet1234bit p 3 := rfl
+@[simp] lemma bp1234_2 (p : Fin 13 → Bool) : facet1234blockPopcounts p 2 = facet1234bit p 4 := rfl
+@[simp] lemma bp1234_3 (p : Fin 13 → Bool) : facet1234blockPopcounts p 3 = facet1234bit p 5 := rfl
+@[simp] lemma bp1234_4 (p : Fin 13 → Bool) : facet1234blockPopcounts p 4 = facet1234bit p 6 := rfl
+@[simp] lemma bp1234_5 (p : Fin 13 → Bool) : facet1234blockPopcounts p 5 = facet1234bit p 7 := rfl
+@[simp] lemma bp1234_6 (p : Fin 13 → Bool) : facet1234blockPopcounts p 6 = facet1234bit p 8 := rfl
+@[simp] lemma bp1234_7 (p : Fin 13 → Bool) : facet1234blockPopcounts p 7 = facet1234bit p 9 := rfl
+@[simp] lemma bp1234_8 (p : Fin 13 → Bool) : facet1234blockPopcounts p 8 = facet1234bit p 10 := rfl
+@[simp] lemma bp1234_9 (p : Fin 13 → Bool) : facet1234blockPopcounts p 9 = facet1234bit p 11 := rfl
+@[simp] lemma bp1234_10 (p : Fin 13 → Bool) : facet1234blockPopcounts p 10 = facet1234bit p 12 := rfl
+
+lemma facet1234f_eq (p : Fin 13 → Bool) :
+    facet1234f p = facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) := rfl
+
+lemma facet1234bit_le_one (p : Fin 13 → Bool) (i : Fin 13) : facet1234bit p i ≤ 1 := by
+  unfold facet1234bit; split_ifs <;> omega
+lemma facet1234bit_eq_zero_of_false (p : Fin 13 → Bool) (i : Fin 13) (hp : p i = false) :
+    facet1234bit p i = 0 := by
+  unfold facet1234bit; rw [hp]; simp
+
+macro "bpLoose1234" x:term : tactic =>
+  `(tactic|
+    (simp only [bp1234_0, bp1234_1, bp1234_2, bp1234_3, bp1234_4, bp1234_5, bp1234_6, bp1234_7, bp1234_8, bp1234_9, bp1234_10]
+     have _hb0 := facet1234bit_le_one $x 0
+     have _hb1 := facet1234bit_le_one $x 1
+     have _hb2 := facet1234bit_le_one $x 2
+     have _hb3 := facet1234bit_le_one $x 3
+     have _hb4 := facet1234bit_le_one $x 4
+     have _hb5 := facet1234bit_le_one $x 5
+     have _hb6 := facet1234bit_le_one $x 6
+     have _hb7 := facet1234bit_le_one $x 7
+     have _hb8 := facet1234bit_le_one $x 8
+     have _hb9 := facet1234bit_le_one $x 9
+     have _hb10 := facet1234bit_le_one $x 10
+     have _hb11 := facet1234bit_le_one $x 11
+     have _hb12 := facet1234bit_le_one $x 12
+     omega))
+macro "bpStrict1234" x:term "," h:ident : tactic =>
+  `(tactic|
+    (simp only [bp1234_0, bp1234_1, bp1234_2, bp1234_3, bp1234_4, bp1234_5, bp1234_6, bp1234_7, bp1234_8, bp1234_9, bp1234_10,
+       facet1234bit_eq_zero_of_false $x _ $h]
+     have _hb0 := facet1234bit_le_one $x 0
+     have _hb1 := facet1234bit_le_one $x 1
+     have _hb2 := facet1234bit_le_one $x 2
+     have _hb3 := facet1234bit_le_one $x 3
+     have _hb4 := facet1234bit_le_one $x 4
+     have _hb5 := facet1234bit_le_one $x 5
+     have _hb6 := facet1234bit_le_one $x 6
+     have _hb7 := facet1234bit_le_one $x 7
+     have _hb8 := facet1234bit_le_one $x 8
+     have _hb9 := facet1234bit_le_one $x 9
+     have _hb10 := facet1234bit_le_one $x 10
+     have _hb11 := facet1234bit_le_one $x 11
+     have _hb12 := facet1234bit_le_one $x 12
+     omega))
+
+set_option maxHeartbeats 4000000 in
+/-- **Single-flip (edge) nonexpansiveness of `facet1234f`.** -/
+theorem facet1234f_singleFlip :
+    ∀ (p : Fin 13 → Bool) (i : Fin 13),
+      (∑ j, bdiff (facet1234f p j) (facet1234f (Function.update p i (!(p i))) j)) ≤ 1 := by
+  intro p i
+  fin_cases i
+  · -- flip input bit 0 (block 0)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 0 (!(p 0))) j)) ≤ 1
+    set q := Function.update p 0 (!(p 0)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 0 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 := by
+      simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 := by
+      simp only [bp1234_2, facet1234bit, hother 4 (by decide)]
+    have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 := by
+      simp only [bp1234_3, facet1234bit, hother 5 (by decide)]
+    have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 := by
+      simp only [bp1234_4, facet1234bit, hother 6 (by decide)]
+    have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 := by
+      simp only [bp1234_5, facet1234bit, hother 7 (by decide)]
+    have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 := by
+      simp only [bp1234_6, facet1234bit, hother 8 (by decide)]
+    have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 := by
+      simp only [bp1234_7, facet1234bit, hother 9 (by decide)]
+    have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 := by
+      simp only [bp1234_8, facet1234bit, hother 10 (by decide)]
+    have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 := by
+      simp only [bp1234_9, facet1234bit, hother 11 (by decide)]
+    have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 := by
+      simp only [bp1234_10, facet1234bit, hother 12 (by decide)]
+    cases hpi : p 0 with
+    | false =>
+      have hqi : q 0 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 + 1 := by
+        first
+        | (simp only [bp1234_0, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_0, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_0 (facet1234blockPopcounts p 0) (by bpStrict1234 p, hpi) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+    | true =>
+      have hqi : q 0 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e0 : facet1234blockPopcounts q 0 + 1 = facet1234blockPopcounts p 0 := by
+        first
+        | (simp only [bp1234_0, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_0, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts q 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts q 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e0]
+      exact facet1234G_lip_0 (facet1234blockPopcounts q 0) (by bpStrict1234 q, hqi) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+  · -- flip input bit 1 (block 1)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 1 (!(p 1))) j)) ≤ 1
+    set q := Function.update p 1 (!(p 1)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 1 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 := by
+      simp only [bp1234_0, facet1234bit, hother 0 (by decide)]
+    have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 := by
+      simp only [bp1234_2, facet1234bit, hother 4 (by decide)]
+    have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 := by
+      simp only [bp1234_3, facet1234bit, hother 5 (by decide)]
+    have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 := by
+      simp only [bp1234_4, facet1234bit, hother 6 (by decide)]
+    have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 := by
+      simp only [bp1234_5, facet1234bit, hother 7 (by decide)]
+    have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 := by
+      simp only [bp1234_6, facet1234bit, hother 8 (by decide)]
+    have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 := by
+      simp only [bp1234_7, facet1234bit, hother 9 (by decide)]
+    have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 := by
+      simp only [bp1234_8, facet1234bit, hother 10 (by decide)]
+    have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 := by
+      simp only [bp1234_9, facet1234bit, hother 11 (by decide)]
+    have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 := by
+      simp only [bp1234_10, facet1234bit, hother 12 (by decide)]
+    cases hpi : p 1 with
+    | false =>
+      have hqi : q 1 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 + 1 := by
+        first
+        | (simp only [bp1234_1, facet1234bit, hother 2 (by decide), hother 3 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_1, facet1234bit, hother 2 (by decide), hother 3 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_1 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpStrict1234 p, hpi) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+    | true =>
+      have hqi : q 1 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet1234blockPopcounts q 1 + 1 = facet1234blockPopcounts p 1 := by
+        first
+        | (simp only [bp1234_1, facet1234bit, hother 2 (by decide), hother 3 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_1, facet1234bit, hother 2 (by decide), hother 3 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts q 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts q 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e1]
+      exact facet1234G_lip_1 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts q 1) (by bpStrict1234 q, hqi) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+  · -- flip input bit 2 (block 1)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 2 (!(p 2))) j)) ≤ 1
+    set q := Function.update p 2 (!(p 2)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 2 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 := by
+      simp only [bp1234_0, facet1234bit, hother 0 (by decide)]
+    have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 := by
+      simp only [bp1234_2, facet1234bit, hother 4 (by decide)]
+    have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 := by
+      simp only [bp1234_3, facet1234bit, hother 5 (by decide)]
+    have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 := by
+      simp only [bp1234_4, facet1234bit, hother 6 (by decide)]
+    have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 := by
+      simp only [bp1234_5, facet1234bit, hother 7 (by decide)]
+    have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 := by
+      simp only [bp1234_6, facet1234bit, hother 8 (by decide)]
+    have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 := by
+      simp only [bp1234_7, facet1234bit, hother 9 (by decide)]
+    have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 := by
+      simp only [bp1234_8, facet1234bit, hother 10 (by decide)]
+    have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 := by
+      simp only [bp1234_9, facet1234bit, hother 11 (by decide)]
+    have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 := by
+      simp only [bp1234_10, facet1234bit, hother 12 (by decide)]
+    cases hpi : p 2 with
+    | false =>
+      have hqi : q 2 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 + 1 := by
+        first
+        | (simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 3 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 3 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_1 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpStrict1234 p, hpi) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+    | true =>
+      have hqi : q 2 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet1234blockPopcounts q 1 + 1 = facet1234blockPopcounts p 1 := by
+        first
+        | (simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 3 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 3 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts q 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts q 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e1]
+      exact facet1234G_lip_1 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts q 1) (by bpStrict1234 q, hqi) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+  · -- flip input bit 3 (block 1)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 3 (!(p 3))) j)) ≤ 1
+    set q := Function.update p 3 (!(p 3)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 3 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 := by
+      simp only [bp1234_0, facet1234bit, hother 0 (by decide)]
+    have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 := by
+      simp only [bp1234_2, facet1234bit, hother 4 (by decide)]
+    have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 := by
+      simp only [bp1234_3, facet1234bit, hother 5 (by decide)]
+    have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 := by
+      simp only [bp1234_4, facet1234bit, hother 6 (by decide)]
+    have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 := by
+      simp only [bp1234_5, facet1234bit, hother 7 (by decide)]
+    have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 := by
+      simp only [bp1234_6, facet1234bit, hother 8 (by decide)]
+    have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 := by
+      simp only [bp1234_7, facet1234bit, hother 9 (by decide)]
+    have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 := by
+      simp only [bp1234_8, facet1234bit, hother 10 (by decide)]
+    have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 := by
+      simp only [bp1234_9, facet1234bit, hother 11 (by decide)]
+    have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 := by
+      simp only [bp1234_10, facet1234bit, hother 12 (by decide)]
+    cases hpi : p 3 with
+    | false =>
+      have hqi : q 3 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 + 1 := by
+        first
+        | (simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_1 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpStrict1234 p, hpi) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+    | true =>
+      have hqi : q 3 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e1 : facet1234blockPopcounts q 1 + 1 = facet1234blockPopcounts p 1 := by
+        first
+        | (simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts q 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts q 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e1]
+      exact facet1234G_lip_1 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts q 1) (by bpStrict1234 q, hqi) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+  · -- flip input bit 4 (block 2)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 4 (!(p 4))) j)) ≤ 1
+    set q := Function.update p 4 (!(p 4)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 4 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 := by
+      simp only [bp1234_0, facet1234bit, hother 0 (by decide)]
+    have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 := by
+      simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hother 3 (by decide)]
+    have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 := by
+      simp only [bp1234_3, facet1234bit, hother 5 (by decide)]
+    have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 := by
+      simp only [bp1234_4, facet1234bit, hother 6 (by decide)]
+    have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 := by
+      simp only [bp1234_5, facet1234bit, hother 7 (by decide)]
+    have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 := by
+      simp only [bp1234_6, facet1234bit, hother 8 (by decide)]
+    have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 := by
+      simp only [bp1234_7, facet1234bit, hother 9 (by decide)]
+    have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 := by
+      simp only [bp1234_8, facet1234bit, hother 10 (by decide)]
+    have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 := by
+      simp only [bp1234_9, facet1234bit, hother 11 (by decide)]
+    have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 := by
+      simp only [bp1234_10, facet1234bit, hother 12 (by decide)]
+    cases hpi : p 4 with
+    | false =>
+      have hqi : q 4 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 + 1 := by
+        first
+        | (simp only [bp1234_2, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_2, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_2 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpStrict1234 p, hpi) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+    | true =>
+      have hqi : q 4 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e2 : facet1234blockPopcounts q 2 + 1 = facet1234blockPopcounts p 2 := by
+        first
+        | (simp only [bp1234_2, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_2, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e3, e4, e5, e6, e7, e8, e9, e10]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts q 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts q 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e2]
+      exact facet1234G_lip_2 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts q 2) (by bpStrict1234 q, hqi) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+  · -- flip input bit 5 (block 3)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 5 (!(p 5))) j)) ≤ 1
+    set q := Function.update p 5 (!(p 5)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 5 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 := by
+      simp only [bp1234_0, facet1234bit, hother 0 (by decide)]
+    have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 := by
+      simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 := by
+      simp only [bp1234_2, facet1234bit, hother 4 (by decide)]
+    have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 := by
+      simp only [bp1234_4, facet1234bit, hother 6 (by decide)]
+    have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 := by
+      simp only [bp1234_5, facet1234bit, hother 7 (by decide)]
+    have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 := by
+      simp only [bp1234_6, facet1234bit, hother 8 (by decide)]
+    have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 := by
+      simp only [bp1234_7, facet1234bit, hother 9 (by decide)]
+    have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 := by
+      simp only [bp1234_8, facet1234bit, hother 10 (by decide)]
+    have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 := by
+      simp only [bp1234_9, facet1234bit, hother 11 (by decide)]
+    have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 := by
+      simp only [bp1234_10, facet1234bit, hother 12 (by decide)]
+    cases hpi : p 5 with
+    | false =>
+      have hqi : q 5 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 + 1 := by
+        first
+        | (simp only [bp1234_3, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_3, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_3 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpStrict1234 p, hpi) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+    | true =>
+      have hqi : q 5 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e3 : facet1234blockPopcounts q 3 + 1 = facet1234blockPopcounts p 3 := by
+        first
+        | (simp only [bp1234_3, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_3, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e4, e5, e6, e7, e8, e9, e10]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts q 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts q 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e3]
+      exact facet1234G_lip_3 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts q 3) (by bpStrict1234 q, hqi) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+  · -- flip input bit 6 (block 4)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 6 (!(p 6))) j)) ≤ 1
+    set q := Function.update p 6 (!(p 6)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 6 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 := by
+      simp only [bp1234_0, facet1234bit, hother 0 (by decide)]
+    have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 := by
+      simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 := by
+      simp only [bp1234_2, facet1234bit, hother 4 (by decide)]
+    have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 := by
+      simp only [bp1234_3, facet1234bit, hother 5 (by decide)]
+    have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 := by
+      simp only [bp1234_5, facet1234bit, hother 7 (by decide)]
+    have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 := by
+      simp only [bp1234_6, facet1234bit, hother 8 (by decide)]
+    have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 := by
+      simp only [bp1234_7, facet1234bit, hother 9 (by decide)]
+    have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 := by
+      simp only [bp1234_8, facet1234bit, hother 10 (by decide)]
+    have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 := by
+      simp only [bp1234_9, facet1234bit, hother 11 (by decide)]
+    have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 := by
+      simp only [bp1234_10, facet1234bit, hother 12 (by decide)]
+    cases hpi : p 6 with
+    | false =>
+      have hqi : q 6 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 + 1 := by
+        first
+        | (simp only [bp1234_4, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_4, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_4 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpStrict1234 p, hpi) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+    | true =>
+      have hqi : q 6 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e4 : facet1234blockPopcounts q 4 + 1 = facet1234blockPopcounts p 4 := by
+        first
+        | (simp only [bp1234_4, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_4, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e5, e6, e7, e8, e9, e10]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts q 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts q 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e4]
+      exact facet1234G_lip_4 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts q 4) (by bpStrict1234 q, hqi) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+  · -- flip input bit 7 (block 5)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 7 (!(p 7))) j)) ≤ 1
+    set q := Function.update p 7 (!(p 7)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 7 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 := by
+      simp only [bp1234_0, facet1234bit, hother 0 (by decide)]
+    have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 := by
+      simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 := by
+      simp only [bp1234_2, facet1234bit, hother 4 (by decide)]
+    have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 := by
+      simp only [bp1234_3, facet1234bit, hother 5 (by decide)]
+    have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 := by
+      simp only [bp1234_4, facet1234bit, hother 6 (by decide)]
+    have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 := by
+      simp only [bp1234_6, facet1234bit, hother 8 (by decide)]
+    have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 := by
+      simp only [bp1234_7, facet1234bit, hother 9 (by decide)]
+    have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 := by
+      simp only [bp1234_8, facet1234bit, hother 10 (by decide)]
+    have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 := by
+      simp only [bp1234_9, facet1234bit, hother 11 (by decide)]
+    have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 := by
+      simp only [bp1234_10, facet1234bit, hother 12 (by decide)]
+    cases hpi : p 7 with
+    | false =>
+      have hqi : q 7 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 + 1 := by
+        first
+        | (simp only [bp1234_5, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_5, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_5 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpStrict1234 p, hpi) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+    | true =>
+      have hqi : q 7 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e5 : facet1234blockPopcounts q 5 + 1 = facet1234blockPopcounts p 5 := by
+        first
+        | (simp only [bp1234_5, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_5, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e6, e7, e8, e9, e10]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts q 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts q 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e5]
+      exact facet1234G_lip_5 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts q 5) (by bpStrict1234 q, hqi) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+  · -- flip input bit 8 (block 6)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 8 (!(p 8))) j)) ≤ 1
+    set q := Function.update p 8 (!(p 8)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 8 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 := by
+      simp only [bp1234_0, facet1234bit, hother 0 (by decide)]
+    have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 := by
+      simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 := by
+      simp only [bp1234_2, facet1234bit, hother 4 (by decide)]
+    have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 := by
+      simp only [bp1234_3, facet1234bit, hother 5 (by decide)]
+    have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 := by
+      simp only [bp1234_4, facet1234bit, hother 6 (by decide)]
+    have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 := by
+      simp only [bp1234_5, facet1234bit, hother 7 (by decide)]
+    have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 := by
+      simp only [bp1234_7, facet1234bit, hother 9 (by decide)]
+    have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 := by
+      simp only [bp1234_8, facet1234bit, hother 10 (by decide)]
+    have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 := by
+      simp only [bp1234_9, facet1234bit, hother 11 (by decide)]
+    have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 := by
+      simp only [bp1234_10, facet1234bit, hother 12 (by decide)]
+    cases hpi : p 8 with
+    | false =>
+      have hqi : q 8 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 + 1 := by
+        first
+        | (simp only [bp1234_6, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_6, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_6 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpStrict1234 p, hpi) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+    | true =>
+      have hqi : q 8 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e6 : facet1234blockPopcounts q 6 + 1 = facet1234blockPopcounts p 6 := by
+        first
+        | (simp only [bp1234_6, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_6, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e7, e8, e9, e10]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts q 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts q 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e6]
+      exact facet1234G_lip_6 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts q 6) (by bpStrict1234 q, hqi) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+  · -- flip input bit 9 (block 7)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 9 (!(p 9))) j)) ≤ 1
+    set q := Function.update p 9 (!(p 9)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 9 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 := by
+      simp only [bp1234_0, facet1234bit, hother 0 (by decide)]
+    have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 := by
+      simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 := by
+      simp only [bp1234_2, facet1234bit, hother 4 (by decide)]
+    have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 := by
+      simp only [bp1234_3, facet1234bit, hother 5 (by decide)]
+    have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 := by
+      simp only [bp1234_4, facet1234bit, hother 6 (by decide)]
+    have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 := by
+      simp only [bp1234_5, facet1234bit, hother 7 (by decide)]
+    have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 := by
+      simp only [bp1234_6, facet1234bit, hother 8 (by decide)]
+    have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 := by
+      simp only [bp1234_8, facet1234bit, hother 10 (by decide)]
+    have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 := by
+      simp only [bp1234_9, facet1234bit, hother 11 (by decide)]
+    have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 := by
+      simp only [bp1234_10, facet1234bit, hother 12 (by decide)]
+    cases hpi : p 9 with
+    | false =>
+      have hqi : q 9 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 + 1 := by
+        first
+        | (simp only [bp1234_7, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_7, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_7 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpStrict1234 p, hpi) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+    | true =>
+      have hqi : q 9 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e7 : facet1234blockPopcounts q 7 + 1 = facet1234blockPopcounts p 7 := by
+        first
+        | (simp only [bp1234_7, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_7, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e8, e9, e10]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts q 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts q 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e7]
+      exact facet1234G_lip_7 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts q 7) (by bpStrict1234 q, hqi) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+  · -- flip input bit 10 (block 8)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 10 (!(p 10))) j)) ≤ 1
+    set q := Function.update p 10 (!(p 10)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 10 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 := by
+      simp only [bp1234_0, facet1234bit, hother 0 (by decide)]
+    have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 := by
+      simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 := by
+      simp only [bp1234_2, facet1234bit, hother 4 (by decide)]
+    have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 := by
+      simp only [bp1234_3, facet1234bit, hother 5 (by decide)]
+    have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 := by
+      simp only [bp1234_4, facet1234bit, hother 6 (by decide)]
+    have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 := by
+      simp only [bp1234_5, facet1234bit, hother 7 (by decide)]
+    have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 := by
+      simp only [bp1234_6, facet1234bit, hother 8 (by decide)]
+    have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 := by
+      simp only [bp1234_7, facet1234bit, hother 9 (by decide)]
+    have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 := by
+      simp only [bp1234_9, facet1234bit, hother 11 (by decide)]
+    have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 := by
+      simp only [bp1234_10, facet1234bit, hother 12 (by decide)]
+    cases hpi : p 10 with
+    | false =>
+      have hqi : q 10 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 + 1 := by
+        first
+        | (simp only [bp1234_8, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_8, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_8 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpStrict1234 p, hpi) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+    | true =>
+      have hqi : q 10 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e8 : facet1234blockPopcounts q 8 + 1 = facet1234blockPopcounts p 8 := by
+        first
+        | (simp only [bp1234_8, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_8, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e9, e10]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts q 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts q 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e8]
+      exact facet1234G_lip_8 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts q 8) (by bpStrict1234 q, hqi) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+  · -- flip input bit 11 (block 9)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 11 (!(p 11))) j)) ≤ 1
+    set q := Function.update p 11 (!(p 11)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 11 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 := by
+      simp only [bp1234_0, facet1234bit, hother 0 (by decide)]
+    have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 := by
+      simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 := by
+      simp only [bp1234_2, facet1234bit, hother 4 (by decide)]
+    have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 := by
+      simp only [bp1234_3, facet1234bit, hother 5 (by decide)]
+    have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 := by
+      simp only [bp1234_4, facet1234bit, hother 6 (by decide)]
+    have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 := by
+      simp only [bp1234_5, facet1234bit, hother 7 (by decide)]
+    have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 := by
+      simp only [bp1234_6, facet1234bit, hother 8 (by decide)]
+    have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 := by
+      simp only [bp1234_7, facet1234bit, hother 9 (by decide)]
+    have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 := by
+      simp only [bp1234_8, facet1234bit, hother 10 (by decide)]
+    have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 := by
+      simp only [bp1234_10, facet1234bit, hother 12 (by decide)]
+    cases hpi : p 11 with
+    | false =>
+      have hqi : q 11 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 + 1 := by
+        first
+        | (simp only [bp1234_9, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_9, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_9 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpStrict1234 p, hpi) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+    | true =>
+      have hqi : q 11 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e9 : facet1234blockPopcounts q 9 + 1 = facet1234blockPopcounts p 9 := by
+        first
+        | (simp only [bp1234_9, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_9, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e10]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts q 9) (facet1234blockPopcounts p 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts q 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e9]
+      exact facet1234G_lip_9 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts q 9) (by bpStrict1234 q, hqi) (facet1234blockPopcounts p 10) (by bpLoose1234 p)
+  · -- flip input bit 12 (block 10)
+    show (∑ j, bdiff (facet1234f p j)
+          (facet1234f (Function.update p 12 (!(p 12))) j)) ≤ 1
+    set q := Function.update p 12 (!(p 12)) with hq
+    have hother : ∀ x : Fin 13, x ≠ 12 → q x = p x :=
+      fun x hx => Function.update_of_ne hx _ _
+    have e0 : facet1234blockPopcounts q 0 = facet1234blockPopcounts p 0 := by
+      simp only [bp1234_0, facet1234bit, hother 0 (by decide)]
+    have e1 : facet1234blockPopcounts q 1 = facet1234blockPopcounts p 1 := by
+      simp only [bp1234_1, facet1234bit, hother 1 (by decide), hother 2 (by decide), hother 3 (by decide)]
+    have e2 : facet1234blockPopcounts q 2 = facet1234blockPopcounts p 2 := by
+      simp only [bp1234_2, facet1234bit, hother 4 (by decide)]
+    have e3 : facet1234blockPopcounts q 3 = facet1234blockPopcounts p 3 := by
+      simp only [bp1234_3, facet1234bit, hother 5 (by decide)]
+    have e4 : facet1234blockPopcounts q 4 = facet1234blockPopcounts p 4 := by
+      simp only [bp1234_4, facet1234bit, hother 6 (by decide)]
+    have e5 : facet1234blockPopcounts q 5 = facet1234blockPopcounts p 5 := by
+      simp only [bp1234_5, facet1234bit, hother 7 (by decide)]
+    have e6 : facet1234blockPopcounts q 6 = facet1234blockPopcounts p 6 := by
+      simp only [bp1234_6, facet1234bit, hother 8 (by decide)]
+    have e7 : facet1234blockPopcounts q 7 = facet1234blockPopcounts p 7 := by
+      simp only [bp1234_7, facet1234bit, hother 9 (by decide)]
+    have e8 : facet1234blockPopcounts q 8 = facet1234blockPopcounts p 8 := by
+      simp only [bp1234_8, facet1234bit, hother 10 (by decide)]
+    have e9 : facet1234blockPopcounts q 9 = facet1234blockPopcounts p 9 := by
+      simp only [bp1234_9, facet1234bit, hother 11 (by decide)]
+    cases hpi : p 12 with
+    | false =>
+      have hqi : q 12 = true := by rw [hq, Function.update_self, hpi]; rfl
+      have e10 : facet1234blockPopcounts q 10 = facet1234blockPopcounts p 10 + 1 := by
+        first
+        | (simp only [bp1234_10, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_10, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10]
+      exact facet1234G_lip_10 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts p 10) (by bpStrict1234 p, hpi)
+    | true =>
+      have hqi : q 12 = false := by rw [hq, Function.update_self, hpi]; rfl
+      have e10 : facet1234blockPopcounts q 10 + 1 = facet1234blockPopcounts p 10 := by
+        first
+        | (simp only [bp1234_10, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]; omega)
+        | simp only [bp1234_10, facet1234bit, hqi, hpi, Bool.false_eq_true, if_false, if_true]
+      rw [facet1234f_eq p, facet1234f_eq q, e0, e1, e2, e3, e4, e5, e6, e7, e8, e9]
+      rw [show (∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts q 10) j))
+          = ∑ j, bdiff (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts q 10) j) (facet1234G (facet1234blockPopcounts p 0) (facet1234blockPopcounts p 1) (facet1234blockPopcounts p 2) (facet1234blockPopcounts p 3) (facet1234blockPopcounts p 4) (facet1234blockPopcounts p 5) (facet1234blockPopcounts p 6) (facet1234blockPopcounts p 7) (facet1234blockPopcounts p 8) (facet1234blockPopcounts p 9) (facet1234blockPopcounts p 10) j)
+        from Finset.sum_congr rfl (fun j _ => bdiff_comm _ _)]
+      rw [← e10]
+      exact facet1234G_lip_10 (facet1234blockPopcounts p 0) (by bpLoose1234 p) (facet1234blockPopcounts p 1) (by bpLoose1234 p) (facet1234blockPopcounts p 2) (by bpLoose1234 p) (facet1234blockPopcounts p 3) (by bpLoose1234 p) (facet1234blockPopcounts p 4) (by bpLoose1234 p) (facet1234blockPopcounts p 5) (by bpLoose1234 p) (facet1234blockPopcounts p 6) (by bpLoose1234 p) (facet1234blockPopcounts p 7) (by bpLoose1234 p) (facet1234blockPopcounts p 8) (by bpLoose1234 p) (facet1234blockPopcounts p 9) (by bpLoose1234 p) (facet1234blockPopcounts q 10) (by bpStrict1234 q, hqi)
+
+
+variable {bd : Finset V}
+variable {A : Fin 6 → Finset V}
+
+/-- The `i`-th larger-side region. -/
+def facet1234L (A : Fin 6 → Finset V) (i : Fin 13) : Finset V := (facet1234L_reg i).biUnion A
+
+/-- The `j`-th bounded-side region. -/
+def facet1234R (A : Fin 6 → Finset V) (j : Fin 17) : Finset V := (facet1234R_reg j).biUnion A
+
+/-- **Global nonexpansiveness of `facet1234f`, derived from the single-flip reduction.** -/
+theorem facet1234f_nonexpansive_via_singleFlip (p q : Fin 13 → Bool) :
+    (∑ j, bdiff (facet1234f p j) (facet1234f q j)) ≤ ∑ i, bdiff (p i) (q i) :=
+  nonexpansive_of_singleFlip facet1234f facet1234f_singleFlip p q
+
+/-- The boundary input patterns map through `facet1234f` exactly to the bounded-region pattern. -/
+lemma facet1234f_boundary (c : Fin 6) :
+    facet1234f (fun i => decide (c ∈ facet1234L_reg i)) = fun j => decide (c ∈ facet1234R_reg j) := by
+  fin_cases c <;> · funext j; fin_cases j <;> rfl
+
+/-- The purifier pattern maps to all `false`. -/
+lemma facet1234f_zero : facet1234f (fun _ => false) = fun _ => false := by
+  funext j; fin_cases j <;> rfl
+
+/-- Membership of `v ∈ A c` in a larger-side region. -/
+lemma mem_facet1234L_of_color (hR : Regions6 bd A) {v : V} {c : Fin 6} (hv : v ∈ A c) (i : Fin 13) :
+    v ∈ facet1234L A i ↔ c ∈ facet1234L_reg i := by
+  unfold facet1234L
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- `facet1234R A j ⊆ bd`. -/
+lemma facet1234R_sub (hR : Regions6 bd A) (j : Fin 17) : facet1234R A j ⊆ bd := by
+  unfold facet1234R
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- `facet1234L A i ⊆ bd`. -/
+lemma facet1234L_sub (hR : Regions6 bd A) (i : Fin 13) : facet1234L A i ⊆ bd := by
+  unfold facet1234L
+  exact Finset.biUnion_subset.2 (fun c _ => hR.sub c)
+
+/-- Membership of `v ∈ A c` in a bounded region. -/
+lemma mem_facet1234R_of_color (hR : Regions6 bd A) {v : V} {c : Fin 6} (hv : v ∈ A c) (j : Fin 17) :
+    v ∈ facet1234R A j ↔ c ∈ facet1234R_reg j := by
+  unfold facet1234R
+  rw [Finset.mem_biUnion]
+  constructor
+  · rintro ⟨c', hc', hvc'⟩
+    by_cases h : c = c'
+    · rwa [h]
+    · exact absurd rfl ((hR.disj c c' h).forall_ne_finset hv hvc')
+  · exact fun hc => ⟨c, hc, hv⟩
+
+/-- For a boundary vertex of color `c`, the achieving cuts realize the larger-side pattern. -/
+lemma contractionPattern_of_color_1234 (hR : Regions6 bd A)
+    (X : Fin 13 → Finset V) (hX : ∀ i, IsRTCut bd (facet1234L A i) (X i))
+    {v : V} {c : Fin 6} (hv : v ∈ A c) :
+    contractionPattern X v = fun i => decide (c ∈ facet1234L_reg i) := by
+  funext i
+  simp only [contractionPattern, mem]
+  by_cases hc : c ∈ facet1234L_reg i
+  · have : v ∈ X i := (hX i).1 ((mem_facet1234L_of_color hR hv i).2 hc)
+    simp [this, hc]
+  · have hvL : v ∉ facet1234L A i := fun h => hc ((mem_facet1234L_of_color hR hv i).1 h)
+    have : v ∉ X i := (hX i).2 v (hR.sub c hv) hvL
+    simp [this, hc]
+
+/-- For a purifier vertex, the achieving cuts realize the all-`false` pattern. -/
+lemma contractionPattern_of_purifier_1234
+    (X : Fin 13 → Finset V) (hX : ∀ i, IsRTCut bd (facet1234L A i) (X i))
+    {v : V} (hvbd : v ∈ bd) (hvout : ∀ c, v ∉ A c) :
+    contractionPattern X v = fun _ => false := by
+  funext i
+  simp only [contractionPattern, mem]
+  have hvL : v ∉ facet1234L A i := by
+    unfold facet1234L
+    rw [Finset.mem_biUnion]
+    rintro ⟨c, _, hvc⟩
+    exact hvout c hvc
+  have : v ∉ X i := (hX i).2 v hvbd hvL
+  simp [this]
+
+/-- **Validity of the recombined candidate cuts.** -/
+lemma facet1234_hvalid (hR : Regions6 bd A)
+    (X : Fin 13 → Finset V) (hX : ∀ i, IsRTCut bd (facet1234L A i) (X i)) (j : Fin 17) :
+    IsRTCut bd (facet1234R A j) (contractionCut X facet1234f j) := by
+  have hkey : ∀ v ∈ bd, mem (contractionCut X facet1234f j) v = mem (facet1234R A j) v := by
+    intro v hvbd
+    rw [mem_contractionCut]
+    by_cases hcolor : ∃ c, v ∈ A c
+    · obtain ⟨c, hvc⟩ := hcolor
+      rw [contractionPattern_of_color_1234 hR X hX hvc, facet1234f_boundary c]
+      simp only [mem]
+      rw [decide_eq_decide]
+      exact (mem_facet1234R_of_color hR hvc j).symm
+    · simp only [not_exists] at hcolor
+      rw [contractionPattern_of_purifier_1234 X hX hvbd hcolor, facet1234f_zero]
+      have : v ∉ facet1234R A j := by
+        unfold facet1234R
+        rw [Finset.mem_biUnion]
+        rintro ⟨c, _, hvc⟩
+        exact hcolor c hvc
+      simp [mem, this]
+  refine ⟨fun x hx => ?_, fun x hxbd hxout => ?_⟩
+  · have hxbd : x ∈ bd := facet1234R_sub hR j hx
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact this.2 hx
+  · intro hxin
+    have := hkey x hxbd
+    simp only [mem] at this
+    rw [decide_eq_decide] at this
+    exact hxout (this.1 hxin)
+
+/-- **A six-party holographic entropy cone facet (database index 1234).**
+For six pairwise-disjoint boundary regions in any finite undirected nonnegative-real-weighted
+graph, the 13 larger-side regions dominate the 17 bounded-side regions. Source: the
+six-party holographic entropy cone / Hernández-Cuenca holographic entropy cone database. The
+contraction map is handled by a count-lattice factorisation
+(`facet1234f = facet1234G ∘ facet1234blockPopcounts`); its Hamming-nonexpansiveness comes from
+the single-flip reduction over the block-popcount lattice (one block has multiplicity three). -/
+theorem rtEntropyR_newFacet_n6_1234 (G : GraphR V) {bd : Finset V} {A : Fin 6 → Finset V}
+    (hR : Regions6 bd A) :
+    (∑ j, rtEntropyR G bd (facet1234R A j) (facet1234R_sub hR j))
+      ≤ ∑ i, rtEntropyR G bd (facet1234L A i) (facet1234L_sub hR i) := by
+  have hXex : ∀ i, ∃ S, IsRTCut bd (facet1234L A i) S
+      ∧ rtEntropyR G bd (facet1234L A i) (facet1234L_sub hR i) = cutCapacityR G S :=
+    fun i => rtEntropyR_eq_cap G (facet1234L_sub hR i)
+  choose X hXcut hXcap using hXex
+  have hXok : ∀ i, IsRTCut bd (facet1234L A i) (X i)
+      ∧ cutCapacityR G (X i) = rtEntropyR G bd (facet1234L A i) (facet1234L_sub hR i) :=
+    fun i => ⟨hXcut i, (hXcap i).symm⟩
+  have hvalid : ∀ j, IsRTCut bd (facet1234R A j) (contractionCut X facet1234f j) :=
+    fun j => facet1234_hvalid hR X hXcut j
+  exact entropyR_ineq_of_contraction G (facet1234L A) (facet1234R A)
+    (facet1234L_sub hR) (facet1234R_sub hR) X hXok facet1234f hvalid
+    facet1234f_nonexpansive_via_singleFlip
+
+/-! ### Anti-vacuity witness: a strict six-party instance on the perfect-tensor star. -/
+
+/-- `facet1234R star6A j ⊆ star6Bd`. -/
+lemma star6_facet1234R_sub (j : Fin 17) : facet1234R star6A j ⊆ star6Bd :=
+  facet1234R_sub star6A_regions j
+/-- `facet1234L star6A i ⊆ star6Bd`. -/
+lemma star6_facet1234L_sub (i : Fin 13) : facet1234L star6A i ⊆ star6Bd :=
+  facet1234L_sub star6A_regions i
+
+/-- Each bounded-region entropy of the star witness, as a vector of values. -/
+lemma star6_facet1234R (j : Fin 17) :
+    rtEntropy star6Graph star6Bd (facet1234R star6A j) (star6_facet1234R_sub j)
+      = ((![1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 2, 2, 2] : Fin 17 → ℕ) j) := by
+  fin_cases j <;> · unfold facet1234R facet1234R_reg star6A; decide
+
+/-- Each larger-side region entropy of the star witness, as a vector of values. -/
+lemma star6_facet1234L (i : Fin 13) :
+    rtEntropy star6Graph star6Bd (facet1234L star6A i) (star6_facet1234L_sub i)
+      = ((![3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3] : Fin 13 → ℕ) i) := by
+  fin_cases i <;> · unfold facet1234L facet1234L_reg star6A; decide
+
+/-- **Strict six-party anti-vacuity witness.** On the cast star graph the facet inequality is
+strict: the bounded side sums to 32 and the larger side to 39 (slack 7). -/
+theorem rtEntropyR_newFacet_n6_1234_strict_witness :
+    (∑ j, rtEntropyR (castGraph star6Graph) star6Bd (facet1234R star6A j)
+        (facet1234R_sub (A := star6A) star6A_regions j))
+      < ∑ i, rtEntropyR (castGraph star6Graph) star6Bd (facet1234L star6A i)
+        (facet1234L_sub (A := star6A) star6A_regions i) := by
+  have hreg : ∀ j, rtEntropyR (castGraph star6Graph) star6Bd (facet1234R star6A j)
+      (facet1234R_sub (A := star6A) star6A_regions j) = ((![1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 2, 2, 2] : Fin 17 → ℕ) j : ℝ) := by
+    intro j
+    rw [rtEntropyR_castGraph, star6_facet1234R j]
+  have hlar : ∀ i, rtEntropyR (castGraph star6Graph) star6Bd (facet1234L star6A i)
+      (facet1234L_sub (A := star6A) star6A_regions i) = ((![3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3] : Fin 13 → ℕ) i : ℝ) := by
+    intro i
+    rw [rtEntropyR_castGraph, star6_facet1234L i]
+  rw [Finset.sum_congr rfl (fun j _ => hreg j), Finset.sum_congr rfl (fun i _ => hlar i)]
+  simp [Fin.sum_univ_succ]
+  norm_num
+
+/-- All min-cut entropies in the six-party strict witness are strictly positive. -/
+theorem rtEntropyR_newFacet_n6_1234_witness_mincuts_pos :
+    (∀ j, 0 < rtEntropyR (castGraph star6Graph) star6Bd (facet1234R star6A j)
+        (facet1234R_sub (A := star6A) star6A_regions j))
+      ∧ ∀ i, 0 < rtEntropyR (castGraph star6Graph) star6Bd (facet1234L star6A i)
+        (facet1234L_sub (A := star6A) star6A_regions i) := by
+  refine ⟨fun j => ?_, fun i => ?_⟩
+  · rw [rtEntropyR_castGraph, star6_facet1234R j]; fin_cases j <;> norm_num
+  · rw [rtEntropyR_castGraph, star6_facet1234L i]; fin_cases i <;> norm_num
+
+end Facet6n1234
 
 
 end Physlib.UndirectedMMICertificate
